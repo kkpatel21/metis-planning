@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { Button, Checkbox, Form } from 'semantic-ui-react'
 
 let Login = ({}) => {
   return (
-    <Form>
+    <Form inverted>
       <Form.Field>
         <label>Email</label>
         <input placeholder='Email' />

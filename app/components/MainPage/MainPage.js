@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { Header, Button, Checkbox, Form, Divider} from 'semantic-ui-react'
 import Login from '../Login/Login.js';
 import SignUp from '../SignUp/SignUp.js';
@@ -13,14 +12,16 @@ let MainPage = ({}) => {
 
         <div className="main-page">
           <div className="Login">
-            <Header className="loginHeader" size="large"> Log In </Header>
+            <h2 className="loginHeader" color="#ffffff"> Log In </h2>
+            <Divider />
             <Login />
           </div>
 
           <Divider vertical> Or </Divider>
 
           <div className="SignUp">
-            <Header className="signupHeader" size="large"> Sign Up </Header>
+            <h2 className="signupHeader" color="#ffffff"> Sign Up </h2>
+            <Divider />
             <SignUp />
           </div>
         </div>
