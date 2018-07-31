@@ -1,96 +1,37 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Button, Checkbox, Form } from 'semantic-ui-react'
 
 
-let MainPage = ({handleRegister}) => {
+let MainPage = ({}) => {
   return (
-
-    <div>
-      <div style={{
-        display: 'flex',
-        height: '100%',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#ffffff'
-        }}>
-        <input type="text" placeholder="Email"></input> <br />
-        <input type="text" placeholder="First name"></input> <br />
-        <input type="text" placeholder="Last name"></input> <br />
-        <input type="password" placeholder="Password"></input> <br />
-        <input type="password" placeholder="Repeat password"></input><br />
-        <div style={{fontFamily:'Lucida, sans-serif', fontSize:"30px", padding: 10, color: "white"}}>
-          <button
-            type="button"
-            style={{
-            width: "50px",
-            height: "50px",
-            fontSize: "18px",
-            borderRadius: "25px",
-            border: 'none',
-            fontSize: "30x",
-            color: "white",
-            backgroundColor: "#095997",
-            backgroundColor: "#c6b8ce",
-            float: "right"
-          }}
-          onClick={handleRegister}>
-            Register
-          </button>
-        </div>
-      </div>
-
-
-      <div style={{
-        display: 'flex',
-        height: '100%',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#ffffff'
-        }}>
-      <input type="text" placeholder="Email"></input> <br />
-      <input type="text" placeholder="First name"></input> <br />
-      <input type="text" placeholder="Last name"></input> <br />
-      <input type="password" placeholder="Password"></input> <br />
-      <input type="password" placeholder="Repeat password"></input><br />
-      <div style={{fontFamily:'Lucida, sans-serif', fontSize:"30px", padding: 10, color: "white"}}>
-        <button
-          type="button"
-          style={{
-          width: "50px",
-          height: "50px",
-          fontSize: "18px",
-          borderRadius: "25px",
-          border: 'none',
-          fontSize: "30x",
-          color: "white",
-          backgroundColor: "#095997",
-          backgroundColor: "#c6b8ce",
-          float: "right"
-        }}
-        onClick={handleRegister}>
-          Register
-        </button>
-      </div>
-    </div>
-    </div>
+    <Form>
+      <Form.Field>
+        <label>First Name</label>
+        <input placeholder='First Name' />
+      </Form.Field>
+      <Form.Field>
+        <label>Last Name</label>
+        <input placeholder='Last Name' />
+      </Form.Field>
+      <Form.Field>
+        <label>Email</label>
+        <input placeholder='Email' />
+      </Form.Field>
+      <Form.Field>
+        <label>Password</label>
+        <input placeholder='Password' />
+      </Form.Field>
+      <Form.Field>
+        <label>Password Repeat</label>
+        <input placeholder='Password Repeat' />
+      </Form.Field>
+      <Form.Field>
+        <Checkbox label='I agree to the Terms and Conditions' />
+      </Form.Field>
+      <Button type='submit'>Submit</Button>
+    </Form>
   )
 }
-
-
-// class App extends Component {
-//   render() {
-//     return (
-//       <div className="App">
-//         <header className="App-header">
-//           <img src={logo} className="App-logo" alt="logo" />
-//           <h1 className="App-title">Welcome to Metis, Event Planning 101, Something To Be Planned</h1>
-//         </header>
-//         <p className="App-intro">
-//           To get started, edit <code>src/App.js</code> and save to reload.
-//         </p>
-//       </div>
-//     );
-//   }
-// }
 
 export default MainPage;
