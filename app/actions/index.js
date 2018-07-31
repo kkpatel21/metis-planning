@@ -1,10 +1,9 @@
-//Actions
-
-//export function addTodo(id, task) {
-//   return {
-//     type: 'ADD_TODO',
-//     id,
-//     task,
-//     completed: false
-//   }
-// }
+export function registerUser(firstname, lastname, email, password) {
+  return {
+    type: 'REGISTER_USER',
+    firstname,
+    lastname,
+    email,
+    password,
+  }
+}

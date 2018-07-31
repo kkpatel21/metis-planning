@@ -2,16 +2,22 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Button, Checkbox, Form } from 'semantic-ui-react'
 
-let SignUp = ({}) => {
+let SignUp = ({handleSignUp}) => {
   return (
     <Form>
       <Form.Field>
         <label>First Name</label>
-        <input placeholder='First Name' />
+        <input
+          placeholder='First Name'
+          onChange={() }
+        />
       </Form.Field>
       <Form.Field>
         <label>Last Name</label>
-        <input placeholder='Last Name' />
+        <input
+          placeholder='Last Name'
+          onChange={() }
+         />
       </Form.Field>
       <Form.Field>
         <label>Email</label>
@@ -28,7 +34,7 @@ let SignUp = ({}) => {
       <Form.Field>
         <Checkbox label='I agree to the Terms and Conditions' />
       </Form.Field>
-      <Button type='submit'>Submit</Button>
+      <Button onClick={handleSignUp} type='submit'>Submit</Button>
     </Form>
   )
 }

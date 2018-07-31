@@ -8,7 +8,7 @@ import MainPage from './components/MainPage/MainPage.js'
 // let store = createStore(reducer);
 // store={store}
 ReactDOM.render(
-  <Provider>
+  <Provider store={store}>
     <MainPage />
   </Provider>,
   document.getElementById('root')
