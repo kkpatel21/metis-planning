@@ -3,9 +3,10 @@ import { Header, Button, Checkbox, Form, Divider} from 'semantic-ui-react'
 import Login from '../Login/Login.js';
 import SignUp from '../SignUp/SignUp.js';
 import './MainPage.css';
+import { registerUser } from '../../actions/index'
 
 
-let MainPage = ({}) => {
+let MainPage = ({registerUser}) => {
   return (
     <div className="entire-page">
       <h1 className="header"> Welcome to Metis </h1>
@@ -18,7 +19,6 @@ let MainPage = ({}) => {
           </div>
 
           <Divider vertical> Or </Divider>
-
           <div className="SignUp">
             <h2 className="signupHeader" color="#ffffff"> Sign Up </h2>
             <Divider />
