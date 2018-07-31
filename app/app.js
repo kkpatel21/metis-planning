@@ -6,7 +6,7 @@ import { Provider } from 'react-redux';
 import MainPage from './components/MainPage/MainPage.js'
 
 // let store = createStore(reducer);
-// store={store
+// store={store}
 ReactDOM.render(
   <Provider>
     <MainPage />
