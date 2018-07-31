@@ -1,0 +1,24 @@
+.intro-page {
+  display: flex;
+  justify-content: center;
+  color: red
+}
+
+.divider {
+  margin: auto;
+
+}
+
+.ui.vertical.divider {
+  height: 30%;
+}
+
+.SignUp {
+  margin-left: 60px;
+  margin-top: 20%
+}
+
+.Login {
+  margin-right: 30px;
+  margin-top: 20%;
+}
