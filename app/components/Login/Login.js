@@ -12,7 +12,7 @@ class Login extends React.Component {
   }
 
   onLogin = () => {
-    fetch("http://localhost:8888/login",{
+    fetch("/api/login",{
       method:"POST",
       headers:{
         "Content-Type" : 'application/json',
