@@ -4,18 +4,22 @@ const Strategy = LocalStrategy.Strategy;
 import User from '../models/user';
 
 passport.serializeUser(function(user, done) {
+
   done(null, user._id);
 });
 
 passport.deserializeUser(function(id, done) {
+
   User.findById(id, function(err, user) {
     done(err, user);
   });
 });
 
 passport.use(new Strategy(function(email, password, done) {
+
   User.findOne({ email: email, password: password }, function (err, user) {
     // if there's an error, finish trying to authenticate (auth failed)
+
     if (err) {
       console.log(err);
       return done(err);
