@@ -12,7 +12,7 @@ class Login extends React.Component {
   }
 
   onLogin = () => {
-    fetch("/api/login",{
+    fetch('/api/login',{
       method:"POST",
       headers:{
         "Content-Type" : 'application/json',
@@ -46,7 +46,7 @@ class Login extends React.Component {
             <label>Password</label>
             <input placeholder='Password' type="password" onChange={(e)=>this.setState({password:e.target.value})} />
           </Form.Field>
-        <Button type='submit' onClick={()=>this.onLogin()} >Submit</Button>
+        <Button type='submit' onClick={()=>this.onLogin()} >Login</Button>
         <br />
         <br />
         <br />

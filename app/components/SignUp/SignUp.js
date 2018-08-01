@@ -100,7 +100,7 @@ class SignUp extends React.Component {
           <Checkbox inline label='I agree to the terms and conditions.' />
         </div>
         </Form.Field>
-        <Button type='submit' onClick={this.onSignUp}>Submit</Button>
+        <Button type='submit' onClick={this.onSignUp}>Sign Up</Button>
       </Form>
     )
   }
