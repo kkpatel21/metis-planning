@@ -26,6 +26,7 @@ class Login extends React.Component {
     .then(json => {
       console.log(json)
       if(json.success === true){
+        this.props.toggleLogged();
         alert("Logging in!")
       }
     })

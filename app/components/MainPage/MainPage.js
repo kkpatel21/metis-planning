@@ -3,32 +3,36 @@ import { Grid, Header, Button, Checkbox, Form, Divider, Segment} from 'semantic-
 import Login from '../Login/Login.js';
 import SignUp from '../SignUp/SignUp.js';
 import './MainPage.css';
+import UserDash from '../UserDash/UserDash.js';
 
 class MainPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      login: true
+      logged: false
     };
   }
 
-
-help = () => {
-  console.log('help')
+toggleLogged = () => {
+  this.setState({
+    logged: !this.state.logged
+  })
 }
 
 render() {
-  return (
-    <div className="entire-page">
-      <h1 className="header"> Welcome to Metis </h1>
+  let renderLog;
+
+  if (!this.state.logged) {
+    renderLog = (
       <div className="main-page">
+        <h1 className="header"> Welcome to Metis </h1>
         <Grid divided>
             <Grid.Row>
               <Grid.Column width={8}>
                 <div className="Login">
                   <h2 className="loginHeader"> Log In </h2>
                   <Divider />
-                  <Login />
+                  <Login toggleLogged={this.toggleLogged} />
                 </div>
               </Grid.Column>
               <Grid.Column width={8}>
@@ -40,7 +44,17 @@ render() {
               </Grid.Column>
             </Grid.Row>
         </Grid>
-      </div>
+      </div>)
+  } else {
+    renderLog = (
+      <UserDash />
+    )
+  }
+
+
+  return (
+    <div className="entire-page">
+      { renderLog }
     </div>
     )
   }

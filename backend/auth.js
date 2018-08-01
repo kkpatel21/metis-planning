@@ -45,11 +45,6 @@ module.exports = function(passport) {
     };
   });
 
-  router.post('/login', function(req,res, next){
-    console.log("got /login!")
-    next();
-  })
-
   //login
   router.post('/login', passport.authenticate('local'), (req, res) => {
     res.json({
