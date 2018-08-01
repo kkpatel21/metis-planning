@@ -58,11 +58,7 @@ module.exports = (passport) => {
     })
   });
 
-<<<<<<< HEAD
   //logout
-=======
-  // //logout
->>>>>>> b037f89bc9c1dd07d957effcd7d77f5019a649f6
   // router.get('/logout', function(req, res) {
   //   req.logout();
   //   res.send(true);
