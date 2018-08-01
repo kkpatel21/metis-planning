@@ -5,7 +5,33 @@ import { Button, Checkbox, Form, Icon } from 'semantic-ui-react'
 class Login extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      email: "",
+      password: ""
+    };
+  }
+
+  onLogin = () => {
+    fetch("http://localhost:8888/login",{
+      method:"POST",
+      headers:{
+        "Content-Type" : 'application/json',
+      },
+      body: JSON.stringify({
+        username: this.state.email,
+        password: this.state.password
+      })
+    })
+    .then(user => user.json())
+    .then(json => {
+      console.log(json)
+      if(json.success === true){
+        alert("Logging in!")
+      }
+    })
+    .catch(error => {
+      alert("error: " + error)
+    })
   }
 
   render() {
@@ -13,13 +39,13 @@ class Login extends React.Component {
       <Form inverted>
           <Form.Field>
             <label>Email</label>
-            <input placeholder='Email' />
+            <input placeholder='Email' onChange={(e)=>this.setState({email:e.target.value})} />
           </Form.Field>
           <Form.Field>
             <label>Password</label>
-            <input placeholder='Password' />
+            <input placeholder='Password' type="password" onChange={(e)=>this.setState({password:e.target.value})} />
           </Form.Field>
-        <Button type='submit'>Submit</Button>
+        <Button type='submit' onClick={()=>this.onLogin()} >Submit</Button>
         <br />
         <br />
         <br />
