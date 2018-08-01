@@ -1,36 +1,40 @@
+.entire-page {
+  display: flex;
+  margin-left: 10%;
+  margin-right: 10%;
+  flex-direction: column;
+  padding-top: 5%;
+}
 
 .header {
-  padding-top: 50px;
-  justify-content: center;
-  display: flex;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  color: white;
 }
 
 .main-page {
-  display: flex;
-  justify-content: center;
-  margin: auto;
-}
-
-.entire-page {
-  color: white;
-  background: #00d2ff; /* fallback for old browsers */
-  background: -webkit-linear-gradient(to right, #00d2ff, #3a7bd5); /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(to right, #00d2ff, #3a7bd5); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-  padding-bottom: 30%
-}
-
-
-.ui.vertical.divider {
-  height: 30%;
-}
-
-.SignUp {
-  margin-left: 60px;
-  margin-top: 8%;
-
+  padding-top: 10%;
 }
 
 .Login {
-  margin-right: 30px;
-  margin-top: 8%;
+  display: inline;
+  margin-right: 5%;
+}
+
+.loginHeader {
+  color: white;
+}
+
+.SignUp {
+  display: inline;
+  margin-left: 5%;
+}
+
+.signupHeader {
+  color: white;
+}
+
+.socialButtons {
+  display: inline;
 }
