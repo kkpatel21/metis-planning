@@ -17,19 +17,24 @@ class SignUp extends React.Component {
 
       <Form inverted>
         <Form.Field>
-          <Form.Input label="First Name" placeholder="First Name" width={16} />
+          <label>First Name</label>
+          <input placeholder='First Name' />
         </Form.Field>
         <Form.Field>
-          <Form.Input label="Last Name" placeholder="Last Name" width={16} />
+          <label>Last Name</label>
+          <input placeholder='Last Name' />
         </Form.Field>
         <Form.Field>
-          <Form.Input label="Email" placeholder="Email" width={16} />
+          <label>Email</label>
+          <input placeholder='Email' />
         </Form.Field>
         <Form.Field>
-          <Form.Input label="Password" placeholder="Password" width={16} />
+          <label>Password</label>
+          <input type="password" placeholder='Password' />
         </Form.Field>
         <Form.Field>
-          <Form.Input label="Password Repeat" placeholder="Password" width={16} />
+          <label>Password Repeat</label>
+          <input type="password" placeholder='Password Repeat' />
         </Form.Field>
         <Form.Field>
           <Checkbox label='I agree to the Terms and Conditions' />
