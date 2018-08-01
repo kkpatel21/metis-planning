@@ -15,6 +15,7 @@ module.exports = function(passport) {
   }
 
   router.post('/signup', function(req, res) {
+    console.log('backend fired')
     if (!validateReq(req.body)) {
       return res.send('incomplete')
     } else if(!validatePassword(req.body)) {
@@ -44,19 +45,19 @@ module.exports = function(passport) {
     };
   });
 
-  //login
-  router.post('/login', passport.authenticate('local'), (req, res) => {
-    res.json({
-      userId: req.user._id,
-      success: true
-    })
-  });
-
-  //logout
-  router.get('/logout', function(req, res) {
-    req.logout();
-    res.send(true);
-  });
+  // //login
+  // router.post('/login', passport.authenticate('local'), (req, res) => {
+  //   res.json({
+  //     userId: req.user._id,
+  //     success: true
+  //   })
+  // });
+  //
+  // //logout
+  // router.get('/logout', function(req, res) {
+  //   req.logout();
+  //   res.send(true);
+  // });
 
   return router;
 }
