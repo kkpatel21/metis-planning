@@ -4,7 +4,7 @@ import path from 'path';
 import mongoose from 'mongoose';
 let router = express.Router()
 
-module.exports = function(passport) {
+module.exports = (passport) => {
   //registration
   var validateReq = function(userData) {
     return (userData.firstname && userData.lastname && userData.email && userData.password && userData.passwordRepeat);
@@ -14,10 +14,15 @@ module.exports = function(passport) {
     return (userData.password === userData.passwordRepeat)
   }
 
+  var validateEmail = function(userData) {
+    return (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(userData.email))
+  }
+
   router.post('/signup', function(req, res) {
-    console.log('backend fired')
     if (!validateReq(req.body)) {
       return res.send('incomplete')
+    } else if(!validateEmail(req.body)) {
+      return res.send('email')
     } else if(!validatePassword(req.body)) {
       return res.send('passwords')
     } else {
@@ -53,7 +58,11 @@ module.exports = function(passport) {
     })
   });
 
+<<<<<<< HEAD
   //logout
+=======
+  // //logout
+>>>>>>> b037f89bc9c1dd07d957effcd7d77f5019a649f6
   // router.get('/logout', function(req, res) {
   //   req.logout();
   //   res.send(true);

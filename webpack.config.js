@@ -26,6 +26,11 @@ module.exports = {
       }
     ]
   },
+  devServer: {
+    proxy: {
+      '/api': 'http://localhost:8888'
+    }
+  },
   stats: {
     colors: true
   },
