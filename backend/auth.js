@@ -45,13 +45,18 @@ module.exports = function(passport) {
     };
   });
 
-  // //login
-  // router.post('/login', passport.authenticate('local'), (req, res) => {
-  //   res.json({
-  //     userId: req.user._id,
-  //     success: true
-  //   })
-  // });
+  router.post('/login', function(req,res, next){
+    console.log("got /login!")
+    next();
+  })
+
+  //login
+  router.post('/login', passport.authenticate('local'), (req, res) => {
+    res.json({
+      userId: req.user._id,
+      success: true
+    })
+  });
   //
   // //logout
   // router.get('/logout', function(req, res) {
