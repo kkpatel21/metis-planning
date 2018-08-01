@@ -13,10 +13,6 @@ class MainPage extends React.Component {
   }
 
 
-help = () => {
-  console.log('help')
-}
-
 render() {
   return (
     <div className="entire-page">
