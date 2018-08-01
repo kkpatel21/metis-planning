@@ -4,6 +4,7 @@ import Login from '../Login/Login.js';
 import SignUp from '../SignUp/SignUp.js';
 import './MainPage.css';
 import UserDash from '../UserDash/UserDash.js';
+import NavBar from '../NavBar/NavBar.js';
 
 class MainPage extends React.Component {
   constructor(props) {
@@ -47,7 +48,10 @@ render() {
       </div>)
   } else {
     renderLog = (
-      <UserDash />
+      <div>
+        <NavBar toggleLogged={this.toggleLogged}/>
+        <UserDash />
+      </div>
     )
   }
 
