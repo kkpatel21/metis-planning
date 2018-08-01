@@ -29,6 +29,7 @@
     "react-dom": "^15.5.4",
     "react-modal": "^3.5.1",
     "react-redux": "^5.0.7",
+    "react-toggle": "^4.0.2",
     "redux": "^4.0.0",
     "semantic-ui-react": "^0.82.1",
     "webpack": "^2.6.1"
