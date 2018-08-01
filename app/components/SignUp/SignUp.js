@@ -9,12 +9,20 @@ class SignUp extends React.Component {
       lName: "",
       email: "",
       pWord: "",
-      pWordR: ""
+      pWordR: "",
+      checked: false
     }
   }
 
+  onChecked = () => {
+    this.setState({checked: !this.state.checked})
+  }
+
   onSignUp = () => {
-    fetch('http://localhost:8888/signup', {
+    if(this.state.checked === false) {
+      return alert('Please agree to the Terms & Conditions.')
+    }
+    fetch('/api/signup', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -33,10 +41,12 @@ class SignUp extends React.Component {
         alert('Please fill in all fields.')
       } else if(text === 'passwords') {
         alert('Passwords must match.')
+      } else if(text === 'email') {
+        alert('Please enter a valid email.')
       } else if(text === 'exists') {
         alert('Account already exists. Please log in.')
       } else {
-        alert('User Signed Up!')
+        alert('You are registered!')
       }
     })
     .catch((error) => {
@@ -86,7 +96,9 @@ class SignUp extends React.Component {
           />
         </Form.Field>
         <Form.Field>
-          <Checkbox inline label='I agree to the terms and conditions' required />
+          <div onClick={this.onChecked}>
+          <Checkbox inline label='I agree to the terms and conditions.' />
+        </div>
         </Form.Field>
         <Button type='submit' onClick={this.onSignUp}>Submit</Button>
       </Form>
