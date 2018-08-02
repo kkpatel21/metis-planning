@@ -60,10 +60,10 @@ module.exports = (passport) => {
   });
 
   //logout
-  // router.get('/logout', function(req, res) {
-  //   req.logout();
-  //   res.send(true);
-  // });
+  router.get('/logout', function(req, res) {
+    req.logout();
+    res.send(true);
+  });
 
   //new event
   router.post("/newEvent", function(req,res){

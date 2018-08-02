@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Menu, Input, Icon, Button} from 'semantic-ui-react'
+import { Menu, Input, Table, Icon, Label} from 'semantic-ui-react'
 import './UserDash.css';
+import CalendarView from '../CalendarView/CalendarView.js'
 import Toggle from 'react-toggle'
 import AddEventModal from '../Modals/AddEventModal.js'
 
@@ -20,6 +21,48 @@ class UserDash extends React.Component {
   }
 
   render() {
+    let viewRender
+    if (!this.state.view) {
+      viewRender = (<div className="scrolling-events">
+        <div class="card">
+          <h2>Card</h2>
+        </div>
+        <div class="card">
+          <h2>Card</h2>
+        </div>
+        <div class="card">
+          <h2>Card</h2>
+        </div>
+        <div class="card">
+          <h2>Card</h2>
+        </div>
+        <div class="card">
+          <h2>Card</h2>
+        </div>
+        <div class="card">
+          <h2>Card</h2>
+        </div>
+        <div class="card">
+          <h2>Card</h2>
+        </div>
+        <div class="card">
+          <h2>Card</h2>
+        </div>
+        <div class="card">
+          <h2>Card</h2>
+        </div>
+        <div class="card">
+          <h2>Card</h2>
+        </div>
+      </div>)
+    } else {
+      viewRender = (
+        <div className="calendar">
+          <CalendarView />
+        </div>)
+    }
+
+
     return (
       <div className="dashboard">
         <span className="greetings"> Welcome Krish </span>
@@ -34,12 +77,12 @@ class UserDash extends React.Component {
           />
         </div>
 
-        <div className="events">
+        {viewRender}
 
-        </div>
         <div className="addIcon">
           <AddEventModal />
         </div>
+
         <div className="trashIcon">
           <Icon inverted color='grey' name='trash alternate' size="big" />
         </div>
@@ -48,5 +91,4 @@ class UserDash extends React.Component {
   }
 };
 
-
-export default UserDash;
+export default UserDash

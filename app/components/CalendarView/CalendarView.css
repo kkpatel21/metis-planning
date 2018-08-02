@@ -1,0 +1,13 @@
+.date-number {
+  font-size: 18px;
+}
+
+.month-heading {
+  color: white;
+  text-align: center;
+  padding-bottom: 30px;
+}
+
+.day-names {
+  font-size: 20px;
+}
