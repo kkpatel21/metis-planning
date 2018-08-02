@@ -28,7 +28,13 @@ app.use(bodyParser.json());
 //Passport Implementation
 app.use(session({
   secret: 'yer',
-  store: new MongoStore({mongooseConnection: require('mongoose').connection})
+  store: new MongoStore({
+    mongooseConnection: require('mongoose').connection,
+    autoRemove: 'native' 
+  }),
+  // cookie: {
+  //   maxAge: 60 * 60 * 24 * 14 
+  // }
 }));
 
 app.use(passport.initialize());

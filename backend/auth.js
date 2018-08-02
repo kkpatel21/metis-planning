@@ -61,8 +61,13 @@ module.exports = (passport) => {
 
   //logout
   router.get('/logout', function(req, res) {
+    console.log(req.user)
+    // mongoose.sessions.remove({ 'session.user': req.userId. });
+    // req.session = null;
     req.logout();
-    res.send(true);
+    res.json({
+      success: true
+    })
   });
 
   //new event
