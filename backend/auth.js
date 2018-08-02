@@ -5,6 +5,7 @@ import path from 'path';
 import mongoose from 'mongoose';
 let router = express.Router()
 
+
 module.exports = (passport) => {
   //registration
   var validateReq = function(userData) {
@@ -82,6 +83,9 @@ module.exports = (passport) => {
       res.sendStatus(200)
     })
   })
+
+
+
 
   return router;
 }

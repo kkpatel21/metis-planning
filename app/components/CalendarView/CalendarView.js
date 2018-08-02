@@ -3,6 +3,8 @@ import { Table } from 'semantic-ui-react';
 import './CalendarView.css'
 import AddEventModal from '../Modals/AddEventModal.js'
 
+
+
 export default class CalendarView extends React.Component {
   constructor(props) {
     super(props);
