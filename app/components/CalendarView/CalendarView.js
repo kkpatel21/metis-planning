@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Table } from 'semantic-ui-react';
 import './CalendarView.css'
+import AddEventModal from '../Modals/AddEventModal.js'
 
 export default class CalendarView extends React.Component {
   constructor(props) {
@@ -31,11 +32,7 @@ export default class CalendarView extends React.Component {
 
           <Table.Body>
             <Table.Row textAlign='left' verticalAlign='top' className='date-number'>
-              <Table.Cell onClick={this.createNewEvent}>
-                1<br />
-                Event 1<br />
-                2PM - 5PM<br />
-              </Table.Cell>
+              <Table.Cell onClick={this.createNewEvent}>1</Table.Cell>
               <Table.Cell onClick={this.createNewEvent}>2</Table.Cell>
               <Table.Cell onClick={this.createNewEvent}>3</Table.Cell>
               <Table.Cell onClick={this.createNewEvent}>4</Table.Cell>
@@ -44,12 +41,7 @@ export default class CalendarView extends React.Component {
               <Table.Cell onClick={this.createNewEvent}>7</Table.Cell>
             </Table.Row>
             <Table.Row textAlign='left' verticalAlign='top' className='date-number'>
-              <Table.Cell onClick={this.createNewEvent}>
-                <p>8</p>
-                <p> </p>
-                <p> </p>
-                <p> </p>
-              </Table.Cell>
+              <Table.Cell onClick={this.createNewEvent}>8</Table.Cell>
               <Table.Cell onClick={this.createNewEvent}>9</Table.Cell>
               <Table.Cell onClick={this.createNewEvent}>10</Table.Cell>
               <Table.Cell onClick={this.createNewEvent}>11</Table.Cell>
