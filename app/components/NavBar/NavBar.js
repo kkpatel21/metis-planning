@@ -12,6 +12,9 @@ class UserDash extends React.Component {
 
   handleItemClick = (e, { name }) => this.setState({ activeItem: name})
 
+  handleLogout = () => {
+    
+  }
 
   render() {
     return (
