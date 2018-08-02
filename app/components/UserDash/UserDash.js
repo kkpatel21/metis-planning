@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Menu, Input, Icon, Button} from 'semantic-ui-react'
 import './UserDash.css';
 import Toggle from 'react-toggle'
-import AddEModal from '../Modals/AddEModal.js'
+import AddEventModal from '../Modals/AddEventModal.js'
 
 class UserDash extends React.Component {
   constructor(props) {
@@ -38,7 +38,7 @@ class UserDash extends React.Component {
 
         </div>
         <div className="addIcon">
-
+          <AddEventModal />
         </div>
         <div className="trashIcon">
           <Icon inverted color='grey' name='trash alternate' size="big" />

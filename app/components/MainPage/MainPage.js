@@ -13,7 +13,7 @@ import SignUp from "../SignUp/SignUp.js";
 import "./MainPage.css";
 import UserDash from "../UserDash/UserDash.js";
 import NavBar from "../NavBar/NavBar.js";
-import Modal from "./modal"
+
 
 class MainPage extends React.Component {
   constructor(props) {
@@ -60,7 +60,6 @@ class MainPage extends React.Component {
       renderLog = (
         <div>
           <NavBar toggleLogged={this.toggleLogged} />
-          <Modal />
           <UserDash />
         </div>
       );

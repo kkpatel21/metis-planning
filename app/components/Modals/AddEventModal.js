@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Header, Image, Modal, Form, Menu, Dropdown, Icon } from "semantic-ui-react";
 
-export default class ModalModalExample extends React.Component {
+class AddEventModal extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -50,9 +50,9 @@ export default class ModalModalExample extends React.Component {
               <Form.Field>
                 <label>Priority</label>
                 <Menu compact>
-                  <Dropdown 
+                  <Dropdown
                     onChange={this.onPriority}
-                    placeholder="Priority" 
+                    placeholder="Priority"
                     selection
                     options={options}
                     value={value}
@@ -66,6 +66,8 @@ export default class ModalModalExample extends React.Component {
           </Modal.Description>
         </Modal.Content>
       </Modal>
-    );
+    )
   }
-}
+};
+
+export default AddEventModal;
