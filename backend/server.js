@@ -7,7 +7,12 @@ import mongoose from 'mongoose';
 import LocalStrategy from 'passport-local'
 const Strategy = LocalStrategy.Strategy;
 import passport from './passport'
-import routes from './auth.js';
+import auth from './auth.js';
+import index from './index.js';
+import http, {createServer} from 'http'
+import socketIO from 'socket.io'
+const server = createServer(app)
+const io = socketIO(server)
 var MongoStore = require('connect-mongo')(session);
 
 mongoose.connection.on('connected', () =>{
@@ -34,6 +39,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use('/api', routes(passport));
+app.use('/api', auth(passport));
+index(io)
 
-app.listen(process.env.PORT || 8888)
+server.listen(process.env.PORT || 8888)
