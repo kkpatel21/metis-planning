@@ -175,3 +175,21 @@
   -moz-box-shadow: 0px 0px 5px 5px #0099E0;
   box-shadow: 0px 0px 5px 5px #0099E0;
 }
+
+.scrolling-events {
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+  margin-left: 3%;
+  margin-right: 3%;
+  margin-top: 20%
+}
+
+.card {
+  display: inline-block;
+  border: 1px solid white;
+  margin-right: 10px;
+  width: 250px;
+  height: 350px;
+  background: white;
+}

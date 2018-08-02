@@ -20,6 +20,48 @@ class UserDash extends React.Component {
   }
 
   render() {
+    let viewRender
+    if (!this.state.view) {
+      viewRender = (<div className="scrolling-events">
+        <div class="card">
+          <h2>Card</h2>
+        </div>
+        <div class="card">
+          <h2>Card</h2>
+        </div>
+        <div class="card">
+          <h2>Card</h2>
+        </div>
+        <div class="card">
+          <h2>Card</h2>
+        </div>
+        <div class="card">
+          <h2>Card</h2>
+        </div>
+        <div class="card">
+          <h2>Card</h2>
+        </div>
+        <div class="card">
+          <h2>Card</h2>
+        </div>
+        <div class="card">
+          <h2>Card</h2>
+        </div>
+        <div class="card">
+          <h2>Card</h2>
+        </div>
+        <div class="card">
+          <h2>Card</h2>
+        </div>
+      </div>)
+    } else {
+      viewRender = (
+        <div>
+          Hey
+        </div>)
+    }
+
+    
     return (
       <div className="dashboard">
         <span className="greetings"> Welcome Krish </span>
@@ -34,12 +76,12 @@ class UserDash extends React.Component {
           />
         </div>
 
-        <div className="events">
+        {viewRender}
 
-        </div>
         <div className="addIcon">
           <AddEventModal />
         </div>
+
         <div className="trashIcon">
           <Icon inverted color='grey' name='trash alternate' size="big" />
         </div>
