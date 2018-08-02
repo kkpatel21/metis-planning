@@ -49,9 +49,7 @@ class UserDash extends React.Component {
             onChange={this.viewChange}
           />
         </div>
-
         {viewRender}
-
         <div className="addIcon">
           <AddEventModal />
         </div>
