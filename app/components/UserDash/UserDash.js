@@ -4,6 +4,7 @@ import './UserDash.css';
 import CalendarView from '../CalendarView/CalendarView.js'
 import Toggle from 'react-toggle'
 import AddEventModal from '../Modals/AddEventModal.js'
+import ScrollerView from '../ScrollerView/ScrollerView.js'
 
 class UserDash extends React.Component {
   constructor(props) {
@@ -23,38 +24,10 @@ class UserDash extends React.Component {
   render() {
     let viewRender
     if (!this.state.view) {
-      viewRender = (<div className="scrolling-events">
-        <div class="card">
-          <h2>Card</h2>
-        </div>
-        <div class="card">
-          <h2>Card</h2>
-        </div>
-        <div class="card">
-          <h2>Card</h2>
-        </div>
-        <div class="card">
-          <h2>Card</h2>
-        </div>
-        <div class="card">
-          <h2>Card</h2>
-        </div>
-        <div class="card">
-          <h2>Card</h2>
-        </div>
-        <div class="card">
-          <h2>Card</h2>
-        </div>
-        <div class="card">
-          <h2>Card</h2>
-        </div>
-        <div class="card">
-          <h2>Card</h2>
-        </div>
-        <div class="card">
-          <h2>Card</h2>
-        </div>
-      </div>)
+      viewRender = (
+        <div className="scrolling-events">
+          <ScrollerView />
+        </div>)
     } else {
       viewRender = (
         <div className="calendar">
