@@ -1,26 +1,27 @@
 import mongoose from 'mongoose';
 
 var EventSchema = new mongoose.Schema({
-  Attendees: {
-    type: Array,
+  priority: {
+    type: String,
     required: true
   },
-  lastname: {
+  title: {
     type: String,
-    required: true,
-    trim: true
+    required: true
   },
-  email: {
-    type: String,
-    required: true,
-    trim: true
+  date: {
+    type: Date,
+    required: true
   },
-  password: {
+  startTime:{
     type: String,
-    required: true,
-    trim: true
+    required: true
+  },
+  endTime:{
+    type: String,
+    required:true
   }
 });
 
-var User = mongoose.model('User', UserSchema);
-module.exports = User;
+var Event = mongoose.model('Event', EventSchema);
+module.exports = Event;

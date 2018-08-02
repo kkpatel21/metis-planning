@@ -7,15 +7,50 @@ class AddEventModal extends React.Component {
     this.state = {
       title: "",
       date: new Date(),
-      priority: ""
+      priority: "",
+      startTime: "",
+      endTime: "",
+      open: false
     };
   }
   onCreate = () => {
-    alert(this.state.title + this.state.date + this.state.priority);
+    console.log(this.state.startTime)
+    fetch("/api/newEvent", {
+      method:"POST",
+      headers:{
+        "Content-Type" : "application/json",
+      },
+      body: JSON.stringify({
+        title: this.state.title,
+        priority: this.state.priority,
+        date: this.state.date,
+        startTime: this.state.startTime,
+        endTime: this.state.endTime
+      })
+    })
+    .then((res) => {
+      console.log(res)
+      if(res.status === 200){
+        alert("Event made! "+this.state.title + this.state.date + this.state.priority);
+            this.setState({open:false})
+      }
+    })
+    .catch(err => {
+      alert("Error: "+ err)
+    })
+
   };
   onPriority = (e, value) => {
       console.log(value)
     this.setState({ priority: value.value })
+  }
+  onCancel = () => {
+    console.log('we out here')
+    this.setState({open:false})
+  }
+  onTrigger = () => {
+    console.log('we in here')
+    this.setState({open:true})
   }
   render() {
     const options = [
@@ -25,7 +60,11 @@ class AddEventModal extends React.Component {
       ]
     const value = this.state.priority
     return (
-      <Modal trigger={<Icon inverted color='grey' name='add' size="big" />}>
+      <Modal
+      trigger={<Icon inverted color='grey' name='add' size="big" onClick={() => this.onTrigger()} />}
+      onClose={this.onCancel}
+      open={this.state.open}
+      >
         <Modal.Header>Create a new event</Modal.Header>
         <Modal.Content image>
           <Modal.Description>
@@ -48,6 +87,22 @@ class AddEventModal extends React.Component {
                 />
               </Form.Field>
               <Form.Field>
+                <label>Event Start Time</label>
+                <input
+                  placeholder="When is this event?"
+                  type="time"
+                  onChange={e => this.setState({ startTime: e.target.value })}
+                />
+              </Form.Field>
+              <Form.Field>
+                <label>Event End Time</label>
+                <input
+                  placeholder="When is this event?"
+                  type="time"
+                  onChange={e => this.setState({ endTime: e.target.value })}
+                />
+              </Form.Field>
+              <Form.Field>
                 <label>Priority</label>
                 <Menu compact>
                   <Dropdown
@@ -61,6 +116,9 @@ class AddEventModal extends React.Component {
               </Form.Field>
               <Button type="submit" onClick={() => this.onCreate()}>
                 Create
+              </Button>
+              <Button type="submit" onClick={() => this.onCancel()}>
+                Cancel
               </Button>
             </Form>
           </Modal.Description>
