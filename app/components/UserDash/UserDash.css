@@ -24,8 +24,8 @@
 }
 
 .viewSwitch {
-  position: fixed;
-  right: 3%;
+  text-align: right;
+  margin-right: 3%;
   margin-top: 2%;
 }
 
@@ -182,7 +182,7 @@
   white-space: nowrap;
   margin-left: 3%;
   margin-right: 3%;
-  margin-top: 20%
+  margin-top: 17%
 }
 
 .card {

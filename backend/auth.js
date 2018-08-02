@@ -72,7 +72,7 @@ module.exports = (passport) => {
   });
 
   //new event
-  router.post("/newEvent", function(req,res){
+  router.post("/newEvent", function(req, res){
     new Event({
       priority: req.body.priority,
       title: req.body.title,
@@ -86,6 +86,19 @@ module.exports = (passport) => {
         return;
       }
       res.sendStatus(200)
+    })
+  })
+
+  //delete event
+  router.post("/deleteEvent", function(req, res) {
+    Event.findByIdAndRemove(req.body.id, (err, event) => {
+      if (err) {
+        res.send(err)
+        return;
+      } else {
+        console.log(event)
+        res.sendStatus(200)
+      }
     })
   })
 

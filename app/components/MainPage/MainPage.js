@@ -74,7 +74,6 @@ class MainPage extends React.Component {
         <div>
           <NavBar toggleLogged={this.toggleLogged} />
           <UserDash />
-          {/* <Event /> */}
         </div>
       );
     }

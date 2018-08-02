@@ -31,8 +31,8 @@ class AddEventModal extends React.Component {
     .then((res) => {
       console.log(res)
       if(res.status === 200){
-        alert("Event made! "+this.state.title + this.state.date + this.state.priority);
-            this.setState({open:false})
+        this.props.updateCards()
+        this.setState({open:false})
       }
     })
     .catch(err => {

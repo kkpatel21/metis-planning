@@ -5,12 +5,15 @@ import CalendarView from '../CalendarView/CalendarView.js'
 import Toggle from 'react-toggle'
 import AddEventModal from '../Modals/AddEventModal.js'
 import ScrollerView from '../ScrollerView/ScrollerView.js'
+import { Droppable } from 'react-drag-and-drop'
 
 class UserDash extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      view: false
+      view: false,
+      cards: false,
+      idBeingDeleted: "",
     };
   }
 
@@ -21,12 +24,45 @@ class UserDash extends React.Component {
     })
   }
 
+  updateCards = () => {
+    this.setState({
+      cards: !this.state.cards
+    })
+  }
+
+  sendData = (eventId) => {
+    this.setState({
+      idBeingDeleted: eventId
+    })
+  }
+
+  deleteDrop = (eventId) => {
+    console.log(eventId)
+    fetch("/api/deleteEvent", {
+      method: 'POST',
+      headers: {
+        'Content-Type' : 'application/json',
+      },
+      body: JSON.stringify({
+        id: eventId
+      })
+    })
+    .then((res) => {
+      if (res.status === 200) {
+        this.updateCards()
+      }
+    })
+    .catch(err => {
+      alert("Error: " + err)
+    })
+  }
+
   render() {
     let viewRender
     if (!this.state.view) {
       viewRender = (
         <div className="scrolling-events">
-          <ScrollerView />
+          <ScrollerView updateCards={this.updateCards} cards={this.state.cards} sendData={this.sendData} deleteId={this.state.idBeingDeleted}/>
         </div>)
     } else {
       viewRender = (
@@ -51,12 +87,12 @@ class UserDash extends React.Component {
         </div>
         {viewRender}
         <div className="addIcon">
-          <AddEventModal />
+          <AddEventModal updateCards={this.updateCards}/>
         </div>
 
-        <div className="trashIcon">
+        <Droppable type={['event']} className="trashIcon" onDrop={() => this.deleteDrop(this.state.idBeingDeleted)}>
           <Icon inverted color='grey' name='trash alternate' size="big" />
-        </div>
+        </Droppable>
       </div>
     )
   }
