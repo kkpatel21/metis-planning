@@ -10,7 +10,8 @@ class UserDash extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      view: false
+      view: false,
+      cards: false
     };
   }
 
@@ -21,12 +22,18 @@ class UserDash extends React.Component {
     })
   }
 
+  updateCards = () => {
+    this.setState({
+      cards: !this.state.cards
+    })
+  }
+
   render() {
     let viewRender
     if (!this.state.view) {
       viewRender = (
         <div className="scrolling-events">
-          <ScrollerView />
+          <ScrollerView updateCards={this.updateCards} cards={this.state.cards}/>
         </div>)
     } else {
       viewRender = (
@@ -53,7 +60,7 @@ class UserDash extends React.Component {
         {viewRender}
 
         <div className="addIcon">
-          <AddEventModal />
+          <AddEventModal updateCards={this.updateCards}/>
         </div>
 
         <div className="trashIcon">

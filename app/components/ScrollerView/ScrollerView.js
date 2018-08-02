@@ -30,7 +30,10 @@ class ScrollerView extends React.Component {
 
 
   render() {
-    console.log(this.state.events)
+    if (this.props.cards) {
+      this.getObjects()
+      this.props.updateCards()
+    }
     let eventsRender = [];
     this.state.events.forEach(event => {
       eventsRender.push((
