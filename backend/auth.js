@@ -1,5 +1,6 @@
 import express from 'express';
 import User from '../models/user';
+import Event from "../models/event";
 import path from 'path';
 import mongoose from 'mongoose';
 let router = express.Router()
@@ -63,6 +64,24 @@ module.exports = (passport) => {
     req.logout();
     res.send(true);
   });
+
+  //new event
+  router.post("/newEvent", function(req,res){
+    new Event({
+      priority: req.body.priority,
+      title: req.body.title,
+      startTime: req.body.startTime,
+      endTime: req.body.endTime,
+      date: req.body.date
+    })
+    .save(function(err, event) {
+      if(err){
+        res.send(err);
+        return;
+      }
+      res.sendStatus(200)
+    })
+  })
 
   return router;
 }
