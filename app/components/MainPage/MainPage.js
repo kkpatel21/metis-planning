@@ -13,6 +13,7 @@ import SignUp from "../SignUp/SignUp.js";
 import "./MainPage.css";
 import UserDash from "../UserDash/UserDash.js";
 import NavBar from "../NavBar/NavBar.js";
+// import Event from "../Event/Event.js";
 
 
 class MainPage extends React.Component {
@@ -24,10 +25,22 @@ class MainPage extends React.Component {
   }
 
   toggleLogged = () => {
-    this.setState({
-      logged: !this.state.logged
-    });
+    fetch("/api/logout")
+    .then(res => res.json())
+    .then(json => {
+      console.log("loggin out!")
+      if (json.success === true){
+        alert("Successfully logging out!")
+        this.setState({logged: false})
+      }
+    })
+    .catch(err => {
+      alert("Error! "+ err)
+    })
   };
+  loggedIn = () => {
+    this.setState({ logged : true })
+  }
 
   render() {
     let renderLog;
@@ -42,7 +55,7 @@ class MainPage extends React.Component {
                 <div className="Login">
                   <h2 className="loginHeader"> Log In </h2>
                   <Divider />
-                  <Login toggleLogged={this.toggleLogged} />
+                  <Login toggleLogged={this.loggedIn} />
                 </div>
               </Grid.Column>
               <Grid.Column width={8}>
@@ -61,6 +74,7 @@ class MainPage extends React.Component {
         <div>
           <NavBar toggleLogged={this.toggleLogged} />
           <UserDash />
+          {/* <Event /> */}
         </div>
       );
     }

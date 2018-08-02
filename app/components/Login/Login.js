@@ -7,7 +7,8 @@ class Login extends React.Component {
     super(props);
     this.state = {
       email: "",
-      password: ""
+      password: "",
+      userId: ""
     };
   }
 
@@ -17,6 +18,7 @@ class Login extends React.Component {
       headers:{
         "Content-Type" : 'application/json',
       },
+      credentials: "same-origin",
       body: JSON.stringify({
         username: this.state.email,
         password: this.state.password
@@ -24,10 +26,9 @@ class Login extends React.Component {
     })
     .then(user => user.json())
     .then(json => {
-      console.log(json)
       if(json.success === true){
+        this.setState({userId: json.userId})
         this.props.toggleLogged();
-        alert("Logging in!")
       }
     })
     .catch(error => {
