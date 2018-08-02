@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Menu, Input, Table, Icon, Label} from 'semantic-ui-react'
 import './UserDash.css';
-import CalendarView from './CalendarView'
+import CalendarView from '../CalendarView/CalendarView.js'
 import Toggle from 'react-toggle'
 import AddEventModal from '../Modals/AddEventModal.js'
 
@@ -57,14 +57,13 @@ class UserDash extends React.Component {
       </div>)
     } else {
       viewRender = (
-        <div>
-          Hey
+        <div className="calendar">
+          <CalendarView />
         </div>)
     }
 
-    
+
     return (
-        <CalendarView />
       <div className="dashboard">
         <span className="greetings"> Welcome Krish </span>
         <div className="viewSwitch">
