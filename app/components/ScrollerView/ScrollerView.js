@@ -30,17 +30,17 @@ class ScrollerView extends React.Component {
 
 
   render() {
-    console.log(this.state.events)
     let eventsRender = [];
     this.state.events.forEach(event => {
       eventsRender.push((
-        <div className="card">
+        <div className="card" style={{backgroundImage: `url(/images/${event.uploadFile && event.uploadFile.filename})`}}>
           <h2>
             {event.title}
           </h2>
           <p>{event.date}</p>
           <p>{event.startTime} to {event.endTime}</p>
           <p>{event.priority}</p>
+          {/* {event.uploadFile && <img src={"/images/"+event.uploadFile.filename} />} */}
         </div>))
     })
     return (
