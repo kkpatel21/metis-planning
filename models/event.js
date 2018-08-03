@@ -24,6 +24,10 @@ var EventSchema = new mongoose.Schema({
   uploadFile:{
     type: Object,
     required: false
+  },
+  owner:{
+    type: String,
+    required: true
   }
 
 });

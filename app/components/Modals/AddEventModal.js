@@ -11,7 +11,8 @@ class AddEventModal extends React.Component {
       startTime: "",
       endTime: "",
       open: false,
-      uploadFile: null
+      uploadFile: null,
+      owner: ""
     };
   }
   fileChangedHandler = (event) => {
@@ -19,6 +20,7 @@ class AddEventModal extends React.Component {
     this.setState({uploadFile: event.target.files[0]})
   }
   onCreate = () => {
+    // console.log(req.user)
     var data = new FormData()
     data.append("uploadFile", this.state.uploadFile)
     data.append("title", this.state.title)
@@ -34,6 +36,7 @@ class AddEventModal extends React.Component {
       // headers:{
       //   "Content-Type" : "multipart/form-data", // change the type 
       // },
+      credentials:"same-origin",
       body: data
     })
     .then((res) => {
@@ -56,11 +59,9 @@ class AddEventModal extends React.Component {
     this.setState({ priority: value.value })
   }
   onCancel = () => {
-    console.log('we out here')
     this.setState({open:false})
   }
   onTrigger = () => {
-    console.log('we in here')
     this.setState({open:true})
   }
   render() {

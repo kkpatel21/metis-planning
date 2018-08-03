@@ -87,7 +87,8 @@ module.exports = (passport) => {
       startTime: req.body.startTime,
       endTime: req.body.endTime,
       date: req.body.date,
-      uploadFile: req.file
+      uploadFile: req.file,
+      owner: req.user._id //credentials!!!!
     })
     .save(function(err, event) {
       if(err){
