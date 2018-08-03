@@ -83,6 +83,7 @@ module.exports = (passport) => {
   //new event
   router.post("/newEvent", upload.single("uploadFile"), function(req,res){
     console.log("req.FILE -----------> " + req.file)
+
     new Event({
       priority: req.body.priority,
       title: req.body.title,
@@ -102,7 +103,17 @@ module.exports = (passport) => {
     })
   })
 
-
+  //delete event
+  router.post("/deleteEvent", function(req, res) {
+    Event.findByIdAndRemove(req.body.id, (err, event) => {
+      if (err) {
+        res.send(err)
+        return;
+      } else {
+        res.sendStatus(200)
+      }
+    })
+  })
 
 
   return router;

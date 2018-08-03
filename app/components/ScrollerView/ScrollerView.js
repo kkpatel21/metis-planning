@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Menu, Input, Table, Icon, Label} from 'semantic-ui-react'
 import './ScrollerView.css'
 import io from 'socket.io-client'
+import { Draggable } from 'react-drag-and-drop'
+
 
 class ScrollerView extends React.Component {
   constructor(props) {
@@ -17,6 +19,7 @@ class ScrollerView extends React.Component {
       if (res.err) {
         return alert(res)
       } else {
+        console.log(res.events)
         this.setState({
           events: res.events
         })
@@ -24,24 +27,37 @@ class ScrollerView extends React.Component {
     })
   }
 
+
+
   componentDidMount() {
     this.getObjects();
   }
 
 
   render() {
+    if (this.props.cards) {
+      this.getObjects()
+      this.props.updateCards()
+    }
     let eventsRender = [];
     this.state.events.forEach(event => {
       eventsRender.push((
-        <div className="card" style={{backgroundImage: `url(/images/${event.uploadFile && event.uploadFile.filename})`}}>
-          <h2>
-            {event.title}
-          </h2>
-          <p>{event.date}</p>
-          <p>{event.startTime} to {event.endTime}</p>
-          <p>{event.priority}</p>
-          {/* {event.uploadFile && <img src={"/images/"+event.uploadFile.filename} />} */}
-        </div>))
+          <Draggable
+            className="card"
+            style={{backgroundImage: `url(/images/${event.uploadFile && event.uploadFile.filename})`}}
+            type='event'
+            onMouseDown={()=>this.props.sendData(event._id)}
+            onClick={()=>this.props.openEvent(event._id)}>
+            <div>
+              <h2>
+                {event.title}
+              </h2>
+              <p>{event.date}</p>
+              <p>{event.startTime} to {event.endTime}</p>
+              <p>{event.priority}</p>
+            </div>
+          </Draggable>
+      ))
     })
     return (
       <div>
