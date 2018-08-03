@@ -21,7 +21,7 @@ export default class Ideation extends React.Component {
     return (
       <div>
       <Tab panes={panes} />
-        
+
 
       </div>
     )
