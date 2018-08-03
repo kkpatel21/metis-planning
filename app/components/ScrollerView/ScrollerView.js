@@ -44,6 +44,7 @@ class ScrollerView extends React.Component {
       eventsRender.push((
           <Draggable
             className="card"
+            style={{backgroundImage: `url(/images/${event.uploadFile && event.uploadFile.filename})`}}
             type='event'
             onMouseDown={()=>this.props.sendData(event._id)}
             onClick={()=>this.props.openEvent(event._id)}>
