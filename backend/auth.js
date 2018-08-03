@@ -96,13 +96,10 @@ module.exports = (passport) => {
         res.send(err)
         return;
       } else {
-        console.log(event)
         res.sendStatus(200)
       }
     })
   })
-
-
 
 
   return router;

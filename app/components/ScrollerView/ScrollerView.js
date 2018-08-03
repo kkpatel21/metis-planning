@@ -3,6 +3,8 @@ import { Menu, Input, Table, Icon, Label} from 'semantic-ui-react'
 import './ScrollerView.css'
 import io from 'socket.io-client'
 import { Draggable } from 'react-drag-and-drop'
+
+
 class ScrollerView extends React.Component {
   constructor(props) {
     super(props);
@@ -25,6 +27,8 @@ class ScrollerView extends React.Component {
     })
   }
 
+
+
   componentDidMount() {
     this.getObjects();
   }
@@ -38,7 +42,11 @@ class ScrollerView extends React.Component {
     let eventsRender = [];
     this.state.events.forEach(event => {
       eventsRender.push((
-          <Draggable className="card" type='event' onMouseDown={()=>this.props.sendData(event._id)}>
+          <Draggable
+            className="card"
+            type='event'
+            onMouseDown={()=>this.props.sendData(event._id)}
+            onClick={()=>this.props.openEvent(event._id)}>
             <div>
               <h2>
                 {event.title}
