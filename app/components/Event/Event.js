@@ -4,7 +4,7 @@ import { Grid, Menu, Segment } from 'semantic-ui-react'
 export default class Event extends React.Component {
     constructor(){
         super();
-        this.state={activeItem:"bio"}
+        this.state={activeItem:"Dashboard"}
     }
     handleItemClick = (e, { name }) => this.setState({ activeItem: name })
 
