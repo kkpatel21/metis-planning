@@ -71,7 +71,6 @@ module.exports = (passport) => {
 
   //logout
   router.get('/logout', function(req, res) {
-    console.log(req.user)
     // mongoose.sessions.remove({ 'session.user': req.userId. });
     // req.session = null;
     req.logout();
@@ -82,8 +81,6 @@ module.exports = (passport) => {
 
   //new event
   router.post("/newEvent", upload.single("uploadFile"), function(req,res){
-    console.log("req.FILE -----------> " + req.file)
-
     new Event({
       priority: req.body.priority,
       title: req.body.title,

@@ -12,10 +12,10 @@ class UserDash extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      view: false,
+      view: true,
       cards: false,
       idBeingDeleted: "",
-      openEvent: false,
+      openEvent: true,
       eventId: "",
     };
   }
