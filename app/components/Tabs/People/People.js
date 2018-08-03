@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { List, Image } from 'semantic-ui-react'
+import { List, Icon } from 'semantic-ui-react'
 
 export default class People extends React.Component {
   constructor() {
@@ -12,7 +12,7 @@ export default class People extends React.Component {
       <div className="guestList">
         <List>
           <List.Item>
-
+            <Icon name="user" />
           </List.Item>
         </List>
       </div>
