@@ -20,7 +20,12 @@ var EventSchema = new mongoose.Schema({
   endTime:{
     type: String,
     required:true
+  },
+  uploadFile:{
+    type: Object,
+    required: false
   }
+
 });
 
 var Event = mongoose.model('Event', EventSchema);

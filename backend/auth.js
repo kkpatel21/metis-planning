@@ -3,6 +3,15 @@ import User from '../models/user';
 import Event from "../models/event";
 import path from 'path';
 import mongoose from 'mongoose';
+import multer from "multer";
+var storage = multer.diskStorage({
+  destination: path.resolve(__dirname,"../build/images"),
+  filename: function (req, file, cb) {
+    console.log(file)
+    cb(null, Date.now() + "_" + file.originalname)
+  }
+})
+var upload = multer({ storage: storage })
 let router = express.Router()
 
 
@@ -72,20 +81,25 @@ module.exports = (passport) => {
   });
 
   //new event
-  router.post("/newEvent", function(req, res){
+  router.post("/newEvent", upload.single("uploadFile"), function(req,res){
+    console.log("req.FILE -----------> " + req.file)
+
     new Event({
       priority: req.body.priority,
       title: req.body.title,
       startTime: req.body.startTime,
       endTime: req.body.endTime,
-      date: req.body.date
+      date: req.body.date,
+      uploadFile: req.file
     })
     .save(function(err, event) {
       if(err){
         res.send(err);
         return;
       }
-      res.sendStatus(200)
+      res.json({
+        status: "success"
+      })
     })
   })
 
