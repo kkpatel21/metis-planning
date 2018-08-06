@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { List, Icon, Button } from 'semantic-ui-react'
+import { List, Icon, Button, Grid, Divider, Message, Checkbox, Input } from 'semantic-ui-react'
+import './People.css'
 
 export default class People extends React.Component {
   constructor() {
@@ -7,26 +8,65 @@ export default class People extends React.Component {
 
   }
 
+
+  handleEmail = () => {
+
+    fetch('/api/sendEmail', {
+      method: 'POST',
+      headers: {
+        'Content-Type' : 'application/json',
+      },
+      creditials: 'same-origin',
+    })
+
+    console.log('Done')
+  }
+
   render() {
+    let statusRender;
+    let status = 'green'
+    if (status === 'red') {
+      statusRender = (<Message color='red' visibile>Not Attending</Message>)
+    } else if (status === 'green') {
+      statusRender = (<Message color='green' visibile>Attending</Message>)
+    } else {
+      statusRender = (<Message color='teal' visibile>Pending</Message>)
+    }
     return (
-      <div className="guestList">
-        <List divided verticalAlign="middle">
-          <List.Item verticalAlign='middle'>
-            <List.Content verticalAlign="middle" floated='right'>
-              <Button> Email </Button>
-            </List.Content>
-            <Icon name="user" />
-            <List.Content verticalAlign="middle"> Krish </List.Content>
-          </List.Item>
-          <List.Item>
-            <List.Content verticalAlign="middle" floated='right'>
-              <Icon name="mail" />
-            </List.Content>
-            <Icon name="user" />
-            <List.Content verticalAlign="middle"> Ellie </List.Content>
-          </List.Item>
-        </List>
-      </div>
+
+        <div className="entire list">
+          <Grid columns={5} divided='vertically'>
+            <Grid.Row>
+              <Grid.Column>
+                Name
+                <Divider />
+              </Grid.Column>
+              <Grid.Column>
+                Email
+                <Divider />
+              </Grid.Column>
+              <Grid.Column>
+                Status
+                <Divider />
+              </Grid.Column>
+              <Grid.Column>
+                Notes
+                <Divider />
+              </Grid.Column>
+              <Grid.Column>
+                Actions
+                <Divider />
+                {/*Map through all invitees of event*/}
+                <Button animated>
+                  <Button.Content hidden>Add New</Button.Content>
+                  <Button.Content visible>
+                    <Icon name='plus'/>
+                  </Button.Content>
+                </Button>
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
+        </div>
     )
   }
 }

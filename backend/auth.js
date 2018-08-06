@@ -13,7 +13,8 @@ var storage = multer.diskStorage({
 })
 var upload = multer({ storage: storage })
 let router = express.Router()
-
+import sgMail from '@sendgrid/mail'
+sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
 module.exports = (passport) => {
   //registration
@@ -110,6 +111,19 @@ module.exports = (passport) => {
       } else {
         res.sendStatus(200)
       }
+    })
+  })
+
+  router.post('/sendEmail', function(req, res) {
+    let msg = {
+      to: ['yp1075@nyu.edu', 'perry.ya@nyu.edu'],
+      from: 'kkpatel@bu.edu',
+      subject: 'Word',
+      text: `Hows the Dream Team Doing`,
+    };
+    sgMail.sendMultiple(msg)
+    .then(() => {
+      res.send('Email Sent')
     })
   })
 
