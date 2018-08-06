@@ -15,7 +15,7 @@ class UserDash extends React.Component {
       view: true,
       cards: false,
       idBeingDeleted: "",
-      openEvent: true,
+      openEvent: false,
       eventId: "",
     };
   }
