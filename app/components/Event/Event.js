@@ -9,15 +9,21 @@ export default class Event extends React.Component {
         super();
         this.state={activeItem:"Dashboard"}
     }
+
+    componentDidMount() {
+      console.log('Can something print?')
+     console.log(this.props.eventId)
+    }
+
     handleItemClick = (e, { name }) => this.setState({ activeItem: name })
 
     render() {
       const { activeItem } = this.state
       let tabRender;
       if (activeItem === 'People') {
-        tabRender = (<People />)
+        tabRender = (<People  />)
       } else if (activeItem === 'Ideation'){
-        tabRender = (<Ideation />)
+        tabRender = (<Ideation eventId={this.props.eventId} />)
       } else {
         tabRender = (<Overview />)
       }

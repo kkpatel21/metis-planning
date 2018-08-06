@@ -46,9 +46,6 @@ class AddEventModal extends React.Component {
         this.setState({open:false})
       }
     })
-    .then(json => {
-      console.log(json)
-    })
     .catch(err => {
       alert("Error: "+ err)
     })

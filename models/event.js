@@ -28,9 +28,19 @@ var EventSchema = new mongoose.Schema({
   owner:{
     type: String,
     required: true
+  },
+  ideation:{
+    type: Array,
+    required: false
+  },
+  people:{
+    type: Array,
+    required: false
   }
 
-});
+},
+{ usePushEach: true }
+);
 
 var Event = mongoose.model('Event', EventSchema);
 module.exports = Event;
