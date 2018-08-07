@@ -1,24 +1,30 @@
-import React, { Component } from 'react';
-import { Tab } from 'semantic-ui-react';
-import Invitees from "./Invitees/Invitees";
-import "./People.css";
+import React, { Component } from 'react'
+import {Tab } from 'semantic-ui-react'
+import Invitees from './Invitees/Invitees'
+import './People.css'
+import './Invitees/Invitees.css'
 
 export default class People extends React.Component {
   constructor(){
     super();
-    this.state={}
+    this.state = {
+
+    }
   }
+
 
   render() {
     const panes = [
       { menuItem: 'Invitees', render: () => <Tab.Pane><div><Invitees eventId={this.props.eventId} /></div></Tab.Pane> },
-      { menuItem: 'Guest/Performer', render: () => <Tab.Pane>Guest should be here</Tab.Pane> },
-      { menuItem: 'Team', render: () => <Tab.Pane>DREAM TEAm!</Tab.Pane> }
+      { menuItem: 'Special Guests', render: () => <Tab.Pane> Guest should be here </Tab.Pane>},
+      { menuItem: 'Team', render: () => <Tab.Pane>Dream Team!</Tab.Pane>}
     ]
     return (
       <div>
         <Tab panes={panes} />
       </div>
+
+
     )
   }
 }
