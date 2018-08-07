@@ -40,7 +40,6 @@ class UserDash extends React.Component {
   }
 
   deleteDrop = (eventId) => {
-    console.log(eventId)
     fetch("/api/deleteEvent", {
       method: 'POST',
       headers: {
@@ -61,7 +60,6 @@ class UserDash extends React.Component {
   }
 
   openEvent = (eventId) => {
-    console.log("hit?")
     this.setState({
       openEvent: true,
       eventId: eventId
