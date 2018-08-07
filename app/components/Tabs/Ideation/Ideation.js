@@ -1,21 +1,12 @@
 import React, { Component } from 'react';
 import { Tab } from 'semantic-ui-react';
 import Notepad from "./Notepad/Notepad";
-import TodoApp from './Todo/Todo';
-
-
-
-
-
 
 export default class Ideation extends React.Component {
   constructor() {
     super();
     this.state={
     }
-  }
-  componentDidMount(){
-    console.log("in ideation --------> ",this.props.eventId)
   }
 
   render() {
@@ -28,8 +19,6 @@ export default class Ideation extends React.Component {
     return (
       <div>
       <Tab panes={panes} />
-
-
       </div>
     )
   }
