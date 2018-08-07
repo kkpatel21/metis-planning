@@ -10,29 +10,40 @@ class AddEventModal extends React.Component {
       priority: "",
       startTime: "",
       endTime: "",
-      open: false
+      open: false,
+      uploadFile: null,
+      owner: ""
     };
   }
+  fileChangedHandler = (event) => {
+    console.log(event.target.files[0])
+    this.setState({uploadFile: event.target.files[0]})
+  }
   onCreate = () => {
-    console.log(this.state.startTime)
+    // console.log(req.user)
+    var data = new FormData()
+    data.append("uploadFile", this.state.uploadFile)
+    data.append("title", this.state.title)
+    data.append("date", this.state.date)
+    data.append("priority", this.state.priority)
+    data.append("startTime", this.state.startTime)
+    data.append("endTime", this.state.endTime)
+    for (var value of data.values()) {
+      console.log(value); 
+   }
     fetch("/api/newEvent", {
       method:"POST",
-      headers:{
-        "Content-Type" : "application/json",
-      },
-      body: JSON.stringify({
-        title: this.state.title,
-        priority: this.state.priority,
-        date: this.state.date,
-        startTime: this.state.startTime,
-        endTime: this.state.endTime
-      })
+      // headers:{
+      //   "Content-Type" : "multipart/form-data", // change the type 
+      // },
+      credentials:"same-origin",
+      body: data
     })
     .then((res) => {
       console.log(res)
       if(res.status === 200){
-        alert("Event made! "+this.state.title + this.state.date + this.state.priority);
-            this.setState({open:false})
+        this.props.updateCards()
+        this.setState({open:false})
       }
     })
     .catch(err => {
@@ -45,11 +56,9 @@ class AddEventModal extends React.Component {
     this.setState({ priority: value.value })
   }
   onCancel = () => {
-    console.log('we out here')
     this.setState({open:false})
   }
   onTrigger = () => {
-    console.log('we in here')
     this.setState({open:true})
   }
   render() {
@@ -69,7 +78,7 @@ class AddEventModal extends React.Component {
         <Modal.Content image>
           <Modal.Description>
             <Header />
-            <Form>
+            <Form >
               <Form.Field>
                 <label>Title</label>
                 <input
@@ -100,6 +109,14 @@ class AddEventModal extends React.Component {
                   placeholder="When is this event?"
                   type="time"
                   onChange={e => this.setState({ endTime: e.target.value })}
+                />
+              </Form.Field>
+              <Form.Field>
+                <label>Thumbnail</label>
+                <input
+                  placeholder="When is this event?"
+                  type="file"
+                  onChange={this.fileChangedHandler}
                 />
               </Form.Field>
               <Form.Field>

@@ -182,20 +182,35 @@
   white-space: nowrap;
   margin-left: 3%;
   margin-right: 3%;
-  margin-top: 5%
+  margin-top: 10%;
+  margin-bottom: 10%;
 }
 
 .card {
   display: inline-block;
-  border: 1px solid white;
+  /* border: 1px solid white; */
   margin-right: 10px;
   width: 250px;
   height: 350px;
   background: white;
+  overflow: hidden;
+  background-size: cover;
+  /* background-blend-mode: multiply; */
+  /* background-color: rgb(163, 162, 162); */
+}
+
+.card:hover {
+  background-color: #999;
+  /* background-size: 300px 400px; */
 }
 
 .calendar {
   margin-left: 3%;
   margin-right: 3%;
   /* margin-top: 5%; */
+}
+
+.ui.grid {
+  height: 91vh;
+  margin-right: 2%;
 }
