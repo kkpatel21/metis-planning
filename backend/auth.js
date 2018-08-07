@@ -197,15 +197,18 @@ module.exports = (passport) => {
   })
 
   router.post('/sendEmail', function(req, res) {
-    let msg = {
-      to: 'fbaemmanuel@gmail.com',
-      from: 'kkpatel@bu.edu',
-      subject: 'Word',
-      text: `Hows the best TA doing`,
-    };
-    sgMail.send(msg)
-    .then(() => {
-      res.send('Email Sent')
+    User.findById(req.user._id)
+    .then((user) => {
+      let msg = {
+        to: req.body.to,
+        from: user.email,
+        subject: 'Hey',
+        text: 'Worddd'
+      }
+      sgMail.send(msg)
+      .then(() => {
+        res.send('Email Sent')
+      })
     })
   })
 

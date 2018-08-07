@@ -25,14 +25,17 @@ export default class People extends React.Component {
     })
   }
 
-  handleEmail = () => {
+  handleEmail = (email) => {
 
     fetch('/api/sendEmail', {
       method: 'POST',
       headers: {
         'Content-Type' : 'application/json',
       },
-      creditials: 'same-origin',
+      credentials: 'same-origin',
+      body: JSON.stringify({
+        to: email,
+      })
     })
 
     console.log('Done')
@@ -64,7 +67,7 @@ export default class People extends React.Component {
                  <Table.Cell>{guest.email}</Table.Cell>
                  <Table.Cell>{guest.status}</Table.Cell>
                  <Table.Cell>{guest.notes}</Table.Cell>
-                 <Table.Cell><Icon name='pencil'/> &ensp;<Icon name='mail' onClick={() => this.handleEmail()} />&ensp;<Icon name='trash' /></Table.Cell>
+                 <Table.Cell><Icon name='pencil'/> &ensp;<Icon name='mail' onClick={() => this.handleEmail(guest.email)} />&ensp;<Icon name='trash' /></Table.Cell>
                </Table.Row>);
              })}
            </Table.Body>

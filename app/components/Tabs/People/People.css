@@ -1,0 +1,4 @@
+.peopleTable {
+  overflow: scroll;
+  max-width: 100%;
+}
