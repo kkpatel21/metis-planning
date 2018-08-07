@@ -122,31 +122,33 @@ module.exports = passport => {
 
   //add list to ideation(in progress)
   router.post("/addIdeation", function(req, res) {
-    console.log("id ----------->"+req.body.id)
-    Event.findById(req.body.id, (err, event) => {
-      if (event) {
-        event.ideation.push({note:req.body.typing, user:req.user._id});
-        console.log('in the backend', event)
-        event.markModified("ideation")
-        event.save((err, event) => {
-          if (err) {
-            console.log('is the err here?', err)
-            res.send(err);
-          } else {
-            res.json({
-              status: "success"
-            });
-          }
-        });
-      } else if (err) {
-        console.log('or here?')
-        res.json({
-          status: "error",
-          error: err
-        });
-        return;
-      }
-    });
+    User.findById(req.user._id)
+    .then((user) => {
+      Event.findById(req.body.id, (err, event) => {
+        if (event) {
+          event.ideation.push({note:req.body.typing, user: user.firstname});
+          event.markModified("ideation")
+          event.save((err, event) => {
+            if (err) {
+
+              res.send(err);
+            } else {
+              res.json({
+                status: "success",
+                ideation: event.ideation
+              });
+            }
+          });
+        } else if (err) {
+          res.json({
+            status: "error",
+            error: err
+          });
+          return;
+        }
+      });
+    })
+
   });
 
   //render ideation
@@ -160,6 +162,20 @@ module.exports = passport => {
     })
   })
 
-  //
+  //get user info
+  router.post("/getUserInfo", function(req,res){
+    User.findById(req.user._id, (err, user) => {
+      if(user){
+        res.json(user)
+      }else if(!user){
+        res.send("user not found")
+      }else{
+        res.json({
+          status: "error",
+          error: err
+        });
+      }
+    })
+  })
   return router;
 };

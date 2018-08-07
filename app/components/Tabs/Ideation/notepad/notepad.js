@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Tab, Input, Button } from "semantic-ui-react";
+import { Tab, Input, Button, List, Icon } from "semantic-ui-react";
 import "./Notepad.css";
 const $ = window.$;
 export default class Notepad extends React.Component {
@@ -7,11 +7,11 @@ export default class Notepad extends React.Component {
     super();
     this.state = {
       typing: "",
-      notes: []
+      notes: [],
+      userName: ""
     };
   }
   componentDidMount() {
-    console.log("EVENTID =======", this.props.eventId);
     $("#create").click(function() {
       $(this).before("<textarea></textarea>");
     });
@@ -19,8 +19,8 @@ export default class Notepad extends React.Component {
     fetch(`/api/getIdeation/${this.props.eventId}`)
       .then(res => res.json())
       .then(json => {
-        console.log("This is supposed to be an array of notes>>>>>>>", json);
-        this.setState({notes:json})
+        console.log("NOTES OBJECT ____________>>>", json);
+        this.setState({ notes: json });
       });
   }
   handleChange = e => {
@@ -40,10 +40,11 @@ export default class Notepad extends React.Component {
         typing: this.state.typing
       })
     })
-      .then(json => {
-        console.log(json);
+    .then(res => res.json())
+    .then(json => {
+        console.log("is this logging????????????", json);
         if (json.status === "success") {
-          alert("note added!");
+          this.setState({notes: json.ideation})
         }
       })
       .catch(err => {
@@ -63,12 +64,23 @@ export default class Notepad extends React.Component {
           <Button onClick={this.handleAdd} basic color="blue">
             Add
           </Button>
-          {/* <div id="create">+</div> */}          
+          <br />
+          {/* <div id="create">+</div> */}
         </div>
         <div>
-          {this.state.notes.map((note) => {
-              return <p>{note.note} by {note.user}</p>
-          })}
+          <List celled style={{ padding: 10 }}>
+            {this.state.notes.map(note => {
+              return (
+                <List.Item>
+                  <List.Icon name="bolt" />{" "}
+                  <List.Content> {note.note} </List.Content>
+                  <List.Content floated="right">
+                  by {note.user}
+                  </List.Content>
+                </List.Item>
+              );
+            })}
+          </List>
         </div>
       </div>
     );
