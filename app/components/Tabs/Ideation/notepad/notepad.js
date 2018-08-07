@@ -19,7 +19,6 @@ export default class Notepad extends React.Component {
     fetch(`/api/getIdeation/${this.props.eventId}`)
       .then(res => res.json())
       .then(json => {
-        console.log("NOTES OBJECT ____________>>>", json);
         this.setState({ notes: json });
       });
   }
@@ -29,27 +28,32 @@ export default class Notepad extends React.Component {
     });
   };
   handleAdd = () => {
-    fetch("/api/addIdeation", {
-      method: "POST",
-      credentials: "same-origin",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        id: this.props.eventId,
-        typing: this.state.typing
-      })
-    })
-    .then(res => res.json())
-    .then(json => {
-        console.log("is this logging????????????", json);
-        if (json.status === "success") {
-          this.setState({notes: json.ideation})
-        }
-      })
-      .catch(err => {
-        alert(err);
-      });
+      if(this.state.typing.length !== 0){
+        fetch("/api/addIdeation", {
+            method: "POST",
+            credentials: "same-origin",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              id: this.props.eventId,
+              typing: this.state.typing
+            })
+          })
+          .then(res => res.json())
+          .then(json => {
+              if (json.status === "success") {
+                this.setState({notes: json.ideation})
+              }
+            })
+            .catch(err => {
+              alert(err);
+            });
+      }
+      else{
+          alert("Please type something!")
+      }
+
   };
 
   render() {
@@ -60,10 +64,8 @@ export default class Notepad extends React.Component {
             onChange={this.handleChange}
             style={{ width: 500 }}
             placeholder="Write your ideas here!"
+            icon={<Icon name='check' inverted circular link onClick={this.handleAdd} />}
           />
-          <Button onClick={this.handleAdd} basic color="blue">
-            Add
-          </Button>
           <br />
           {/* <div id="create">+</div> */}
         </div>
