@@ -14,7 +14,7 @@ export default class CalendarView extends React.Component {
       currentMonth: new Date().getMonth()+1,
       month: new Date().getMonth(),
       currentYear: new Date().getFullYear(),
-      daysInMonthCount: new Date(new Date().getFullYear(), new Date().getMonth()+1, 0).getDate(),
+      daysInMonthCount: new Date(new Date().getFullYear(), 2, 0).getDate(),
       dayNames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
       monthNames: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
       calendarGrid: [],
@@ -56,12 +56,6 @@ export default class CalendarView extends React.Component {
       calendarDatesWk6: calendarDates.slice(35,42)
     })
   }
-
-
-
-
-
-
 
   // showEvent = () => {
   //   this.socket.emit('fetchEvents', (res) => {
@@ -176,7 +170,7 @@ export default class CalendarView extends React.Component {
           <Grid.Row>
             <Grid.Column width={1}></Grid.Column>
             <Grid.Column width={1}>
-              <Button icon onClick={this.prevMonth}>
+              <Button icon floated='left' onClick={this.prevMonth}>
                 <Icon name='angle left' />
               </Button>
             </Grid.Column>
