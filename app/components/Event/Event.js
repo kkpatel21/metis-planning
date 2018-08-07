@@ -21,7 +21,7 @@ export default class Event extends React.Component {
       const { activeItem } = this.state
       let tabRender;
       if (activeItem === 'People') {
-        tabRender = (<People  />)
+        tabRender = (<People eventId={this.props.eventId}/>)
       } else if (activeItem === 'Ideation'){
         tabRender = (<Ideation eventId={this.props.eventId} />)
       } else {

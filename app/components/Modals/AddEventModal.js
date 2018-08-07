@@ -30,7 +30,7 @@ class AddEventModal extends React.Component {
     data.append("endTime", this.state.endTime)
     for (var value of data.values()) {
       console.log(value);
-   }
+    }
     fetch("/api/newEvent", {
       method:"POST",
       credentials:"same-origin",
@@ -49,7 +49,6 @@ class AddEventModal extends React.Component {
 
   };
   onPriority = (e, value) => {
-      console.log(value)
     this.setState({ priority: value.value })
   }
   onCancel = () => {

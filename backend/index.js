@@ -11,7 +11,7 @@ module.exports = (io) => {
     console.log("connected")
 
     //Res works with Next, and the first parameter works with the second parameter.
-    socket.on('fetchEvents', (data, next) => {
+    socket.on('fetchEvents', (next) => {
       Event.find()
       .exec(function(err, events) {
         let filtered = []

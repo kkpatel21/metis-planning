@@ -124,32 +124,55 @@ module.exports = (passport) => {
 
   //add list to ideation(in progress)
   router.post("/addIdeation", function(req, res) {
-    console.log("id ----------->"+req.body.id)
-    Event.findById(req.body.id, (err, event) => {
-      if (event) {
-        event.ideation.push({note:req.body.typing, user:req.user._id});
-        console.log('in the backend', event)
-        event.markModified("ideation")
-        event.save((err, event) => {
-          if (err) {
-            console.log('is the err here?', err)
-            res.send(err);
-          } else {
-            res.json({
-              status: "success"
-            });
-          }
-        });
-      } else if (err) {
-        console.log('or here?')
-        res.json({
-          status: "error",
-          error: err
-        });
-        return;
-      }
-    });
+    User.findById(req.user._id)
+    .then((user) => {
+      Event.findById(req.body.id, (err, event) => {
+        if (event) {
+          event.ideation.push({note:req.body.typing, user: user.firstname});
+          event.markModified("ideation")
+          event.save((err, event) => {
+            if (err) {
+
+              res.send(err);
+            } else {
+              res.json({
+                status: "success",
+                ideation: event.ideation
+              });
+            }
+          });
+        } else if (err) {
+          res.json({
+            status: "error",
+            error: err
+          });
+          return;
+        }
+      });
+    })
   });
+
+  //add invitee to guest list
+  router.post('/addInvitee', function(req, res) {
+    Event.findById(req.body.id)
+    .then((event) => {
+      event.people.push(req.body.guest)
+      event.markModified('people')
+      event.save((err, event) => {
+        if(err) {
+          res.send(err);
+        } else {
+          res.json({
+            status: 'success',
+            people: event.people
+          });
+        }
+      });
+    })
+    .catch((err) => {
+      res.send(err)
+    })
+  })
 
   //render ideation
   router.get("/getIdeation/:id", function(req,res){
@@ -162,19 +185,46 @@ module.exports = (passport) => {
     })
   })
 
+  //render ideation
+  router.get("/getPeople/:id", function(req,res){
+    Event.findById(req.params.id, (err, event) => {
+      if(err){
+        res.json(err)
+      }else if (event){
+        res.json(event.people)
+      }
+    })
+  })
+
   router.post('/sendEmail', function(req, res) {
     let msg = {
-      to: ['yp1075@nyu.edu', 'perry.ya@nyu.edu'],
+      to: 'fbaemmanuel@gmail.com',
       from: 'kkpatel@bu.edu',
       subject: 'Word',
-      text: `Hows the Dream Team Doing`,
+      text: `Hows the best TA doing`,
     };
-    sgMail.sendMultiple(msg)
+    sgMail.send(msg)
     .then(() => {
       res.send('Email Sent')
     })
   })
 
+
+  //get user info
+  router.post("/getUserInfo", function(req,res){
+    User.findById(req.user._id, (err, user) => {
+      if(user){
+        res.json(user)
+      }else if(!user){
+        res.send("user not found")
+      }else{
+        res.json({
+          status: "error",
+          error: err
+        });
+      }
+    })
+  })
 
   return router;
 };

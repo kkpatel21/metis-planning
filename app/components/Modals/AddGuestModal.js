@@ -2,9 +2,9 @@ import React from "react";
 import { Button, Header, Image, Modal, Form, Menu, Dropdown, Icon } from "semantic-ui-react";
 
 const options = [
-  { key: 'n', text: 'Not Coming', value: 'no'},
-  { key: 'm', text: 'Pending', value: 'maybe'},
-  { key: 'y', text: 'Coming', value: 'yes'},
+  { key: 'n', text: 'Not Coming', value: 'NotComing'},
+  { key: 'm', text: 'Pending', value: 'Pending'},
+  { key: 'y', text: 'Coming', value: 'Coming'},
 ]
 
 class AddGuestModal extends React.Component {
@@ -13,7 +13,7 @@ class AddGuestModal extends React.Component {
         this.state = {
           name: "",
           email: "",
-          status: "pending",
+          status: "",
           notes: "",
         };
       }
@@ -23,11 +23,50 @@ class AddGuestModal extends React.Component {
       onCancel = () => {
         this.setState({open:false})
       }
+
+      onStatus = (e, value) => {
+        console.log('whah')
+        this.setState({ status: value.value})
+      }
+
+      onCreate = () => {
+        let newInvitee = {
+          'name': this.state.name,
+          'email': this.state.email,
+          'status': this.state.status,
+          'notes': this.state.notes
+        }
+
+        fetch(`/api/addInvitee/`, {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            id: this.props.eventId,
+            guest: newInvitee
+          })
+        })
+        .then(res => res.json())
+        .then(json => {
+          console.log('Will this ever work?', json)
+          if (json.status === 'success') {
+            console.log(this.props.sendDataBack)
+            this.props.sendDataBack(json.people)
+            this.onCancel()
+          }
+        })
+      }
+
       render() {
         const value = this.state.priority
         return (
           <Modal
-          trigger={<Icon inverted color='grey' name='mail' size="big" onClick={() => this.onTrigger()} />}
+          trigger={
+            <Button onClick={() => this.onTrigger()} floated='right' icon labelPosition='left' primary size='small'>
+              <Icon name='user' /> Add Guest
+            </Button>}
           onClose={this.onCancel}
           open={this.state.open}
           >
@@ -52,7 +91,18 @@ class AddGuestModal extends React.Component {
                       onChange={e => this.setState({ email: e.target.value })}
                     />
                   </Form.Field>
-                  <Form.Select fluid label='Status' options={options} placeholder='Status' />
+                  <Form.Field>
+                    <label>Status</label>
+                    <Menu compact>
+                      <Dropdown
+                        onChange={this.onStatus}
+                        placeholder="Status"
+                        selection
+                        options={options}
+                        value={value}
+                      />
+                    </Menu>
+                  </Form.Field>
                   <Form.Field>
                     <label>Additional Comments</label>
                     <input
@@ -62,7 +112,7 @@ class AddGuestModal extends React.Component {
                     />
                   </Form.Field>
                   <Button basic color='teal' type="submit" onClick={() => this.onCreate()}>
-                    Send
+                    Invite
                   </Button>
                   <Button basic color='orange' type="submit" onClick={() => this.onCancel()}>
                     Cancel
@@ -74,3 +124,5 @@ class AddGuestModal extends React.Component {
         )
       }
 }
+
+export default AddGuestModal;
