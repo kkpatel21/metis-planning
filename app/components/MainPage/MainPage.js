@@ -30,7 +30,6 @@ class MainPage extends React.Component {
     .then(json => {
       console.log("loggin out!")
       if (json.success === true){
-        alert("Successfully logging out!")
         this.setState({logged: false})
       }
     })

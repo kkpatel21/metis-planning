@@ -94,7 +94,7 @@ class UserDash extends React.Component {
       eventRender = (
         <div>
           <span className="greetings"> Welcome Krish </span>
-          <div className="viewSwitch">
+          <span className="viewSwitch">
             <Toggle
               defaultChecked={this.state.view}
               icons={{
@@ -103,7 +103,7 @@ class UserDash extends React.Component {
               }}
               onChange={this.viewChange}
             />
-          </div>
+          </span>
           {viewRender}
           <div className="addIcon">
             <AddEventModal updateCards={this.updateCards}/>
