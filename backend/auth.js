@@ -13,7 +13,7 @@ var storage = multer.diskStorage({
 })
 var upload = multer({ storage: storage })
 let router = express.Router()
-import sgMail from '@sendgrid/mail'
+import sgMail from '@sendgrid/mail';
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
 module.exports = (passport) => {

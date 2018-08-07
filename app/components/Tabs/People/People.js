@@ -57,7 +57,7 @@ export default class People extends React.Component {
                 Actions
                 <Divider />
                 {/*Map through all invitees of event*/}
-                <Button animated>
+                <Button size='small' animated>
                   <Button.Content hidden>Add New</Button.Content>
                   <Button.Content visible>
                     <Icon name='plus'/>

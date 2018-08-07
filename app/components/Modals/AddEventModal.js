@@ -29,13 +29,10 @@ class AddEventModal extends React.Component {
     data.append("startTime", this.state.startTime)
     data.append("endTime", this.state.endTime)
     for (var value of data.values()) {
-      console.log(value); 
+      console.log(value);
    }
     fetch("/api/newEvent", {
       method:"POST",
-      // headers:{
-      //   "Content-Type" : "multipart/form-data", // change the type 
-      // },
       credentials:"same-origin",
       body: data
     })
