@@ -124,15 +124,16 @@ module.exports = (passport) => {
 
   //add list to ideation(in progress)
   router.post("/addIdeation", function(req, res) {
+    console.log(req.body)
     User.findById(req.user._id)
     .then((user) => {
       Event.findById(req.body.id, (err, event) => {
+        console.log("THIS IS ID=============",req.body.id)
         if (event) {
-          event.ideation.push({note:req.body.typing, user: user.firstname});
+          event.ideation.push({topic:req.body.topic, note:[], user: user.firstname});
           event.markModified("ideation")
           event.save((err, event) => {
             if (err) {
-
               res.send(err);
             } else {
               res.json({
@@ -185,7 +186,7 @@ module.exports = (passport) => {
     })
   })
 
-  //render ideation
+  //render people
   router.get("/getPeople/:id", function(req,res){
     Event.findById(req.params.id, (err, event) => {
       if(err){

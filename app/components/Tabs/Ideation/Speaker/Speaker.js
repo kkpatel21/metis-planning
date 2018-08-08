@@ -1,9 +1,7 @@
 import React, { Component } from "react";
 import { Tab, Input, Button, List, Icon } from "semantic-ui-react";
-import "./Notepad.css";
-import Map from "./GoogleMap/GoogleMap"
 const $ = window.$;
-export default class Notepad extends React.Component {
+export default class Speaker extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -87,7 +85,6 @@ export default class Notepad extends React.Component {
             </List>
           </div>
         </div>
-        {/* <div><Map /></div> */}
       </div>
     );
   }
