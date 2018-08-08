@@ -21,7 +21,6 @@ export default class Invitees extends React.Component {
       headers: {
         'Content-Type' : 'application/json',
       },
-      credentials: 'same-origin',
       body: JSON.stringify({
         to: email,
         subject: subject,

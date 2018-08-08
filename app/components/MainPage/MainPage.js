@@ -13,7 +13,7 @@ import SignUp from "../SignUp/SignUp.js";
 import "./MainPage.css";
 import UserDash from "../UserDash/UserDash.js";
 import NavBar from "../NavBar/NavBar.js";
-// import Event from "../Event/Event.js";
+
 
 
 class MainPage extends React.Component {

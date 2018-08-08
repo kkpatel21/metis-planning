@@ -1,5 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser'
 import path from 'path';
 let app = express();
 import session from 'express-session';
@@ -32,14 +33,15 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 //Passport Implementation
+let ioMongoStore = new MongoStore({
+  mongooseConnection: require('mongoose').connection,
+  autoRemove: 'native'
+})
 app.use(session({
-  secret: 'yer',
-  store: new MongoStore({
-    mongooseConnection: require('mongoose').connection,
-    autoRemove: 'native' 
-  }),
+  secret: process.env.SECRET,
+  store: ioMongoStore,
   // cookie: {
-  //   maxAge: 60 * 60 * 24 * 14 
+  //   maxAge: 60 * 60 * 24 * 14
   // }
 }));
 
@@ -47,6 +49,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/api', auth(passport));
-index(io)
+index(io, ioMongoStore)
 
 server.listen(process.env.PORT || 8888)
