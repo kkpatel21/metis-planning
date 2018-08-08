@@ -40,24 +40,34 @@ class UserDash extends React.Component {
   }
 
   deleteDrop = (eventId) => {
-    fetch("/api/deleteEvent", {
-      method: 'POST',
-      headers: {
-        'Content-Type' : 'application/json',
-      },
-      body: JSON.stringify({
-        id: eventId
-      })
-    })
-    .then((res) => {
-      if (res.status === 200) {
-        this.updateCards()
-      }
-    })
-    .catch(err => {
-      alert("Error: " + err)
-    })
+    this.props.socket.emit('deleteEvent', {id: eventId}, (res) => {
+        if (res.err) {
+          return alert(res)
+        } else {
+          this.updateCards()
+        }
+    });
   }
+  //
+  //   if(!err)
+  //   fetch("/api/deleteEvent", {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type' : 'application/json',
+  //     },
+  //     body: JSON.stringify({
+  //       id: eventId
+  //     })
+  //   })
+  //   .then((res) => {
+  //     if (res.status === 200) {
+  //       this.updateCards()
+  //     }
+  //   })
+  //   .catch(err => {
+  //     alert("Error: " + err)
+  //   })
+  // }
 
   openEvent = (eventId) => {
     this.setState({
@@ -74,6 +84,7 @@ class UserDash extends React.Component {
       viewRender = (
         <div className="scrolling-events">
           <ScrollerView
+            socket={this.props.socket}
             updateCards={this.updateCards}
             cards={this.state.cards}
             sendData={this.sendData}

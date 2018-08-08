@@ -13,9 +13,7 @@ export default class Notepad extends React.Component {
     };
   }
   componentDidMount() {
-    $("#create").click(function() {
-      $(this).before("<textarea></textarea>");
-    });
+
 
     fetch(`/api/getIdeation/${this.props.eventId}`)
       .then(res => res.json())
