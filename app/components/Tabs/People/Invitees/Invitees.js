@@ -1,32 +1,21 @@
 import React, { Component } from 'react'
 import { List, Icon, Button, Grid, Divider, Message, Checkbox, Input, Table } from 'semantic-ui-react'
-import '../People.css'
+import './Invitees.css'
 import AddGuestModal from '../../../Modals/AddGuestModal'
+import UpdateGuestModal from '../../../Modals/UpdateGuestModal'
+import SendEmailModal from '../../../Modals/SendEmailModal'
 
 export default class Invitees extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
-      guestsList: []
+      multipleEmails: []
     }
   }
 
-  componentDidMount() {
-    fetch(`/api/getPeople/${this.props.eventId}`)
-    .then(res => res.json())
-    .then(json => {
-      this.setState({ guestsList: json });
-    });
-  }
 
-  sendDataBack = (guestList) => {
-    this.setState({
-      guestsList: guestList
-    })
-  }
-
-  handleEmail = (email) => {
-
+  handleEmail = (email, subject, message) => {
+    console.log('we here?')
     fetch('/api/sendEmail', {
       method: 'POST',
       headers: {
@@ -35,13 +24,32 @@ export default class Invitees extends React.Component {
       credentials: 'same-origin',
       body: JSON.stringify({
         to: email,
+        subject: subject,
+        message: message
       })
     })
+  }
 
-    console.log('Done')
+  multipleEmail = (guestEmail) => {
+    console.log(guestEmail)
+    if (guestEmail) {
+      let emails = this.state.multipleEmails.slice()
+      if (emails.indexOf(guestEmail) !== -1) {
+        let index = emails.indexOf(guestEmail)
+        emails.splice(index, 1)
+      } else {
+        emails.push(guestEmail)
+      }
+      this.setState({
+        multipleEmails: emails
+      })
+      console.log('before sending it back', emails)
+      this.props.sendEmailsBack(emails)
+    }
   }
 
   render() {
+    console.log(this.state.multipleEmails)
     return (
       <div className="peopleTable">
           <Table striped basic>
@@ -57,29 +65,25 @@ export default class Invitees extends React.Component {
            </Table.Header>
 
            <Table.Body className="tableList">
-             {this.state.guestsList.map(guest => {
+             {this.props.guestsList.map((guest, i) => {
                return (
                 <Table.Row>
                  <Table.Cell collapsing>
-                   <Checkbox/>
+                   <Checkbox onClick={() => this.multipleEmail(guest.email)}/>
                  </Table.Cell>
                  <Table.Cell>{guest.name}</Table.Cell>
                  <Table.Cell>{guest.email}</Table.Cell>
                  <Table.Cell>{guest.status}</Table.Cell>
                  <Table.Cell>{guest.notes}</Table.Cell>
-                 <Table.Cell><Icon name='pencil'/> &ensp;<Icon name='mail' onClick={() => this.handleEmail(guest.email)} />&ensp;<Icon name='trash' /></Table.Cell>
+                 <Table.Cell>
+                   <UpdateGuestModal saveUpdatedData={this.props.saveUpdatedData} guest={guest} index={i} eventId={this.props.eventId} sendDataBack={this.props.sendDataBack}/> &ensp;
+                   <SendEmailModal handleEmail={this.handleEmail} guest={guest}/> &ensp;
+                   <Icon name='trash' />
+                 </Table.Cell>
                </Table.Row>);
              })}
            </Table.Body>
 
-           <Table.Footer fullWidth>
-             <Table.Row>
-               <Table.HeaderCell />
-               <Table.HeaderCell colSpan='5'>
-                 <AddGuestModal eventId={this.props.eventId} sendDataBack={this.sendDataBack}/>
-               </Table.HeaderCell>
-             </Table.Row>
-           </Table.Footer>
          </Table>
        </div>
 

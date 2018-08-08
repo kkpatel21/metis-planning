@@ -1,5 +1,6 @@
 import React from "react";
 import { Button, Header, Image, Modal, Form, Menu, Dropdown, Icon } from "semantic-ui-react";
+import './AddGuestModal.css'
 
 const options = [
   { key: 'n', text: 'Not Coming', value: 'NotComing'},
@@ -15,6 +16,7 @@ class AddGuestModal extends React.Component {
           email: "",
           status: "",
           notes: "",
+          open: false,
         };
       }
       onTrigger = () => {
@@ -61,10 +63,11 @@ class AddGuestModal extends React.Component {
 
       render() {
         const value = this.state.priority
+
         return (
           <Modal
           trigger={
-            <Button onClick={() => this.onTrigger()} floated='right' icon labelPosition='left' primary size='small'>
+            <Button className="addGuest" onClick={() => this.onTrigger()} floated='right' icon labelPosition='left' primary size='small'>
               <Icon name='user' /> Add Guest
             </Button>}
           onClose={this.onCancel}
