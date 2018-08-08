@@ -65,7 +65,7 @@ class MainPage extends React.Component {
       renderLog = (
         <div>
           <NavBar toggleLogged={this.toggleLogged} />
-          <UserDash />
+          <UserDash socket={this.socket}/>
         </div>
       );
     }

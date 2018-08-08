@@ -30,7 +30,8 @@ export default class Budget extends React.Component {
     const value = this.state.approval
     const totalValue = this.state.totalApproval
     return (
-      <Progress percent={44} progress />
+      <div>
+        <Progress percent={44} progress />
         <Table singleLine>
           <Table.Header>
             <Table.Row>

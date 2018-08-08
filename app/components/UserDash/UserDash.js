@@ -84,6 +84,7 @@ class UserDash extends React.Component {
       viewRender = (
         <div className="scrolling-events">
           <ScrollerView
+            socket={this.props.socket}
             updateCards={this.updateCards}
             cards={this.state.cards}
             sendData={this.sendData}
