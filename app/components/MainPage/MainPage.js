@@ -1,24 +1,17 @@
 import React, { Component } from "react";
-import {
-  Grid,
-  Header,
-  Button,
-  Checkbox,
-  Form,
-  Divider,
-  Segment
-} from "semantic-ui-react";
+import { Grid, Header, Button, Checkbox, Form, Divider, Segment } from "semantic-ui-react";
 import Login from "../Login/Login.js";
 import SignUp from "../SignUp/SignUp.js";
 import "./MainPage.css";
 import UserDash from "../UserDash/UserDash.js";
 import NavBar from "../NavBar/NavBar.js";
-
+import io from 'socket.io-client';
 
 
 class MainPage extends React.Component {
   constructor(props) {
     super(props);
+    this.socket = io('http://localhost:8888')
     this.state = {
       logged: false
     };
