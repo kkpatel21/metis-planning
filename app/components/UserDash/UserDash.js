@@ -47,27 +47,8 @@ class UserDash extends React.Component {
           this.updateCards()
         }
     });
-  }
-  //
-  //   if(!err)
-  //   fetch("/api/deleteEvent", {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type' : 'application/json',
-  //     },
-  //     body: JSON.stringify({
-  //       id: eventId
-  //     })
-  //   })
-  //   .then((res) => {
-  //     if (res.status === 200) {
-  //       this.updateCards()
-  //     }
-  //   })
-  //   .catch(err => {
-  //     alert("Error: " + err)
-  //   })
-  // }
+  };
+
 
   openEvent = (eventId) => {
     this.setState({
