@@ -35,26 +35,39 @@ module.exports = (io, store) => {
       let email;
       User.findById(socket.session.passport.user)
       .then((user) => {
-        Event.find()
-        .exec(function(err, events) {
+        Event.find({}, (err,events) => {
           let filtered = []
           events.forEach((event) => {
-            if (event.collaborators.includes(user.email) || event.owner === user._id) {
+            console.log('each', event)
+            if (event.collaborators.length > 0) {
+              console.log(event.collaborators)
+              event.collaborators.forEach((collaborator) => {
+                if (collaborator.email === user.email) {
+                  filtered.push(event)
+                }
+              })
+            }
+            console.log(user._id)
+            if (event.owner === user.id) {
               filtered.push(event)
             }
           })
+          next({err, filtered})
+
         })
-      })
-      Event.find()
-      .exec(function(err, events) {
-        let filtered = []
-        if (events)
-        next({err, events})
+        // .then((err, events) => {
+        //   console.log(events)
+        //   console.log(user)
+        //   let filtered = []
+        //   events.forEach((event) => {
+        //     if (event.collaborators.includes(user.email) || event.owner === user._id) {
+        //
+        //       filtered.push(event)
+        //     }
+        //   })
+        // })
       })
     })
-
     //The Socket version of api/newEvent
-
   })
-
 }

@@ -19,9 +19,9 @@ class ScrollerView extends React.Component {
       if (res.err) {
         return alert(res)
       } else {
-        console.log(res.events)
+        console.log(res.filtered)
         this.setState({
-          events: res.events
+          events: res.filtered
         })
       }
     })
