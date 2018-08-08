@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Tab, Input, Button, List, Icon } from "semantic-ui-react";
 import "./Notepad.css";
-const $ = window.$;
 export default class Notepad extends React.Component {
   constructor() {
     super();
@@ -12,9 +11,7 @@ export default class Notepad extends React.Component {
     };
   }
   componentDidMount() {
-    $("#create").click(function() {
-      $(this).before("<textarea></textarea>");
-    });
+
 
     fetch(`/api/getIdeation/${this.props.eventId}`)
       .then(res => res.json())

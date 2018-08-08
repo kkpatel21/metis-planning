@@ -29,7 +29,9 @@ module.exports = (io, store) => {
   })
 
   io.on('connection', function(socket) {
-    console.log('connect session: ', socket.session.passport.user)
+    //This is to get the user.id
+    // console.log('connect session: ', socket.session.passport.user)
+
     //Res works with Next, and the first parameter works with the second parameter.
     socket.on('fetchEvents', (next) => {
       let email;
@@ -55,19 +57,16 @@ module.exports = (io, store) => {
           next({err, filtered})
 
         })
-        // .then((err, events) => {
-        //   console.log(events)
-        //   console.log(user)
-        //   let filtered = []
-        //   events.forEach((event) => {
-        //     if (event.collaborators.includes(user.email) || event.owner === user._id) {
-        //
-        //       filtered.push(event)
-        //     }
-        //   })
-        // })
       })
     })
-    //The Socket version of api/newEvent
+
+    socket.on('deleteEvent', (data, next) => {
+      Event.findByIdAndRemove(data.id, (err, event) => {
+        next({err, event})
+      });
+    })
+
+
+
   })
 }
