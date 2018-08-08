@@ -37,11 +37,10 @@ var EventSchema = new mongoose.Schema({
     type: Array,
     required: false
   },
-  colaborators:{
+  collaborators:{
     type: Array,
     required: false
   }
-
 },
 { usePushEach: true }
 );
