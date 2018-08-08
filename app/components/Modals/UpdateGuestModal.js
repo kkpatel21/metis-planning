@@ -7,7 +7,7 @@ const options = [
   { key: 'y', text: 'Coming', value: 'Coming'},
 ]
 
-class AddGuestModal extends React.Component {
+class UpdateGuestModal extends React.Component {
     constructor() {
         super();
         this.state = {
@@ -15,7 +15,17 @@ class AddGuestModal extends React.Component {
           email: "",
           status: "",
           notes: "",
+          open: false,
         };
+      }
+
+      componentDidMount () {
+        this.setState({
+          name: this.props.guest.name,
+          email: this.props.guest.email,
+          status: this.props.guest.status,
+          notes: this.props.guest.notes
+        })
       }
       onTrigger = () => {
         this.setState({open:true})
@@ -25,52 +35,43 @@ class AddGuestModal extends React.Component {
       }
 
       onStatus = (e, value) => {
-        console.log('whah')
         this.setState({ status: value.value})
       }
 
-      onCreate = () => {
-        let newInvitee = {
+      onSave = () => {
+        let updateInvitee = {
           'name': this.state.name,
           'email': this.state.email,
           'status': this.state.status,
           'notes': this.state.notes
         }
+        let guestList;
 
-        fetch(`/api/addInvitee/`, {
-          method: 'POST',
-          credentials: 'same-origin',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            id: this.props.eventId,
-            guest: newInvitee
-          })
-        })
+        fetch(`/api/getPeople/${this.props.eventId}`)
         .then(res => res.json())
         .then(json => {
-          console.log('Will this ever work?', json)
-          if (json.status === 'success') {
-            console.log(this.props.sendDataBack)
-            this.props.sendDataBack(json.people)
-            this.onCancel()
-          }
+          guestList = json.slice();
+          guestList[this.props.index] = updateInvitee
+          this.props.saveUpdatedData(guestList)
+          this.onCancel()
         })
+
+
+
+
       }
 
       render() {
-        const value = this.state.priority
+
         return (
           <Modal
           trigger={
-            <Button onClick={() => this.onTrigger()} floated='right' icon labelPosition='left' primary size='small'>
-              <Icon name='user' /> Add Guest
-            </Button>}
+            <Icon name='pencil' onClick={() => this.onTrigger()}/>
+          }
           onClose={this.onCancel}
           open={this.state.open}
           >
-            <Modal.Header>Invite Someone!</Modal.Header>
+            <Modal.Header>{this.state.name}</Modal.Header>
             <Modal.Content>
               <Modal.Description>
                 <Header />
@@ -80,6 +81,7 @@ class AddGuestModal extends React.Component {
                     <input
                       placeholder="Name"
                       type="text"
+                      value={this.state.name}
                       onChange={e => this.setState({ name: e.target.value })}
                     />
                   </Form.Field>
@@ -88,6 +90,7 @@ class AddGuestModal extends React.Component {
                     <input
                       placeholder="Email"
                       type="text"
+                      value={this.state.email}
                       onChange={e => this.setState({ email: e.target.value })}
                     />
                   </Form.Field>
@@ -99,7 +102,7 @@ class AddGuestModal extends React.Component {
                         placeholder="Status"
                         selection
                         options={options}
-                        value={value}
+                        value={this.state.status}
                       />
                     </Menu>
                   </Form.Field>
@@ -108,11 +111,12 @@ class AddGuestModal extends React.Component {
                     <input
                       placeholder="Comments..."
                       type="text"
+                      value={this.props.guest.notes}
                       onChange={e => this.setState({ notes: e.target.value })}
                     />
                   </Form.Field>
-                  <Button basic color='teal' type="submit" onClick={() => this.onCreate()}>
-                    Invite
+                  <Button basic color='teal' type="submit" onClick={() => this.onSave()}>
+                    Update
                   </Button>
                   <Button basic color='orange' type="submit" onClick={() => this.onCancel()}>
                     Cancel
@@ -125,4 +129,4 @@ class AddGuestModal extends React.Component {
       }
 }
 
-export default AddGuestModal;
+export default UpdateGuestModal;

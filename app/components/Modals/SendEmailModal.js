@@ -1,27 +1,39 @@
 import React from "react";
 import { Button, Header, Image, Modal, Form, Menu, Dropdown, Icon } from "semantic-ui-react";
 
-class AddEmailModal extends React.Component {
+class SendEmailModal extends React.Component {
     constructor() {
         super();
         this.state = {
           to: "",
           subject: "",
-          main: "",
+          text: "",
           open: false,
         };
       }
+
+      componentDidMount() {
+        console.log('hey')
+        this.setState({
+          to: this.props.guest.email
+        })
+      }
       onTrigger = () => {
-        this.setState({open:true})
+        this.setState({open:true, to: this.props.guest.email})
       }
       onCancel = () => {
         this.setState({open:false})
+      }
+
+      send = () => {
+        this.props.handleEmail(this.state.to, this.state.subject, this.state.text)
+        this.onCancel()
       }
       render() {
         const value = this.state.priority
         return (
           <Modal
-          trigger={<Icon inverted color='grey' name='mail' size="big" onClick={() => this.onTrigger()} />}
+          trigger={<Icon name='mail' onClick={() => this.onTrigger()} />}
           onClose={this.onCancel}
           open={this.state.open}
           >
@@ -33,32 +45,36 @@ class AddEmailModal extends React.Component {
                   <Form.Field>
                     <label>To: </label>
                     <input
-                      placeholder="Title"
+                      placeholder="joe.smith@gmail.com"
                       type="text"
+                      value={this.state.to}
                       onChange={e => this.setState({ to: e.target.value })}
                     />
                   </Form.Field>
                   <Form.Field>
-                    <label>Subject</label>
+                    <label>Subject: </label>
                     <input
-                      placeholder="When is this event?"
+                      placeholder="Subject"
                       type="text"
                       onChange={e => this.setState({ subject: e.target.value })}
                     />
                   </Form.Field>
                   <Form.Field>
-                    <input
-                      placeholder="When is this event?"
+                    <label>Message: </label>
+                    <textarea rows='5'
+                      placeholder="Hey ..."
                       type="text"
-                      onChange={e => this.setState({ main: e.target.value })}
-                    />
+                      onChange={e => this.setState({ text: e.target.value })}>
+                    </textarea>
                   </Form.Field>
-                  <Button basic color='teal' type="submit" onClick={() => this.onCreate()}>
-                    Send
-                  </Button>
-                  <Button basic color='orange' type="submit" onClick={() => this.onCancel()}>
-                    Cancel
-                  </Button>
+                  <Form.Field>
+                    <Button basic color='teal' type="submit" onClick={() => this.send()}>
+                      Send
+                    </Button>
+                    <Button basic color='orange' type="submit" onClick={() => this.onCancel()}>
+                      Cancel
+                    </Button>
+                  </Form.Field>
                 </Form>
               </Modal.Description>
             </Modal.Content>
@@ -66,3 +82,5 @@ class AddEmailModal extends React.Component {
         )
       }
 }
+
+export default SendEmailModal;

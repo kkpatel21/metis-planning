@@ -197,16 +197,52 @@ module.exports = (passport) => {
     })
   })
 
+  router.post('/savePeople/:id', function(req, res) {
+    Event.findById(req.params.id)
+    .then((event) => {
+      event.people = req.body.guests
+      event.markModified('people')
+      event.save((err, event) => {
+        if (err) {
+          res.send(err);
+        } else {
+          res.json({
+            status: 'success',
+            people: event.people
+          })
+        }
+      })
+    })
+  })
+
+  //sendEmails
   router.post('/sendEmail', function(req, res) {
     User.findById(req.user._id)
     .then((user) => {
       let msg = {
         to: req.body.to,
         from: user.email,
-        subject: 'Hey',
-        text: 'Worddd'
+        subject: req.body.subject,
+        text: req.body.message
       }
       sgMail.send(msg)
+      .then(() => {
+        res.send('Email Sent')
+      })
+    })
+  })
+
+  //sendMultipleEmails
+  router.post('/sendMultipleEmails', function(req, res) {
+    User.findById(req.user._id)
+    .then((user) => {
+      let msg = {
+        to: req.body.to,
+        from: user.email,
+        subject: req.body.subject,
+        text: req.body.message
+      }
+      sgMail.sendMultiple(msg)
       .then(() => {
         res.send('Email Sent')
       })
