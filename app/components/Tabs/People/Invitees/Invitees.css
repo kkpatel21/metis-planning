@@ -1,18 +1,5 @@
 .peopleTable {
   max-width: 100%;
-  max-height: 85vh;
+  max-height: 70vh;
   overflow-y: scroll;
-}
-
-/* .ui.table:not(.unstackable) tbody {
-  overflow-y: scroll;
-  max-width: 100%;
-  max-height: 65vh;
-} */
-
-.tableList {
-  overflow-y: scroll;
-  max-height: 40vh;
-  height: 40vh;
-  max-width: 100%;
 }
