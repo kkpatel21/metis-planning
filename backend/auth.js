@@ -36,6 +36,10 @@ module.exports = (passport) => {
     return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(userData.email);
   };
 
+  router.get('/getCurrentUser', function(req, res) {
+    console.log('hey')
+  })
+
   router.post("/signup", function(req, res) {
     if (!validateReq(req.body)) {
       return res.send("incomplete");
@@ -98,7 +102,8 @@ module.exports = (passport) => {
       date: req.body.date,
       uploadFile: req.file,
       owner: req.user._id, //credentials!!!!
-      ideation: []
+      ideation: [],
+      collaborators: [],
     }).save(function(err, event) {
       if (err) {
         res.send(err);
@@ -263,6 +268,25 @@ module.exports = (passport) => {
           error: err
         });
       }
+    })
+  })
+
+  //shareDoc
+  router.post('/addCollaborator', function(req, res) {
+    console.log('hey')
+    Event.findById(req.body.id, (err, event) => {
+      event.collaborators.push(req.body.collaborator)
+      event.markModified('collaborators')
+      event.save((err, event) => {
+        if (err) {
+          res.send(err)
+        } else {
+          res.json({
+            status: 'success',
+            collaborators: event.collaborators
+          })
+        }
+      })
     })
   })
 

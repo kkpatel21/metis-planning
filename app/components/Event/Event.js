@@ -25,7 +25,7 @@ export default class Event extends React.Component {
       } else if (activeItem === 'Ideation'){
         tabRender = (<Ideation eventId={this.props.eventId} />)
       } else {
-        tabRender = (<Overview />)
+        tabRender = (<Overview eventId={this.props.eventId}/>)
       }
       return (
         <Grid>
