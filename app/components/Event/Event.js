@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Grid, Menu, Segment } from 'semantic-ui-react'
 import People from '../Tabs/People/People'
 import Ideation from '../Tabs/Ideation/Ideation'
+import Budget from '../Tabs/Budget/Budget'
 import Overview from '../Tabs/Overview/Overview'
 
 export default class Event extends React.Component {
@@ -9,12 +10,7 @@ export default class Event extends React.Component {
         super();
         this.state={activeItem:"Dashboard"}
     }
-
-    componentDidMount() {
-      console.log('Can something print?')
-     console.log(this.props.eventId)
-    }
-
+    
     handleItemClick = (e, { name }) => this.setState({ activeItem: name })
 
     render() {
@@ -24,6 +20,8 @@ export default class Event extends React.Component {
         tabRender = (<People eventId={this.props.eventId}/>)
       } else if (activeItem === 'Ideation'){
         tabRender = (<Ideation eventId={this.props.eventId} />)
+      } else if (activeItem === 'Budget'){
+        tabRender = (<Budget eventId={this.props.eventId} />)
       } else {
         tabRender = (<Overview eventId={this.props.eventId}/>)
       }
