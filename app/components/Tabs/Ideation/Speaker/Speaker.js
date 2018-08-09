@@ -1,9 +1,7 @@
 import React, { Component } from "react";
 import { Tab, Input, Button, List, Icon } from "semantic-ui-react";
-import "./Notepad.css";
-import Map from "./GoogleMap/GoogleMap"
 const $ = window.$;
-export default class Notepad extends React.Component {
+export default class Speaker extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -13,7 +11,9 @@ export default class Notepad extends React.Component {
     };
   }
   componentDidMount() {
-
+    $("#create").click(function() {
+      $(this).before("<textarea></textarea>");
+    });
 
     fetch(`/api/getIdeation/${this.props.eventId}`)
       .then(res => res.json())
@@ -58,8 +58,33 @@ export default class Notepad extends React.Component {
   render() {
     return (
       <div>
-
-        {/* <div><Map /></div> */}
+        <div style={{width:300}}>
+          <div>
+            <Input
+              onChange={this.handleChange}
+              style={{ width: 250, borderWidth: 1, borderColor: "black" }}
+              placeholder="Write your ideas here!"
+              icon={<Icon name='check' inverted circular link onClick={this.handleAdd} />}
+            />
+            <br />
+            {/* <div id="create">+</div> */}
+          </div>
+          <div>
+            <List celled style={{ padding: 10 }}>
+              {this.state.notes.map(note => {
+                return (
+                  <List.Item>
+                    <List.Icon name="bolt" />{" "}
+                    <List.Content> {note.note} </List.Content>
+                    <List.Content floated="right">
+                    by {note.user}
+                    </List.Content>
+                  </List.Item>
+                );
+              })}
+            </List>
+          </div>
+        </div>
       </div>
     );
   }

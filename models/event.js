@@ -37,7 +37,7 @@ var EventSchema = new mongoose.Schema({
     type: Array,
     required: false
   },
-  collaborators: {
+  collaborators:{
     type: Array,
     required: false
   }
