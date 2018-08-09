@@ -27,7 +27,6 @@ class AddGuestModal extends React.Component {
       }
 
       onStatus = (e, value) => {
-        console.log('whah')
         this.setState({ status: value.value})
       }
 
@@ -39,26 +38,8 @@ class AddGuestModal extends React.Component {
           'notes': this.state.notes
         }
 
-        fetch(`/api/addInvitee/`, {
-          method: 'POST',
-          credentials: 'same-origin',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            id: this.props.eventId,
-            guest: newInvitee
-          })
-        })
-        .then(res => res.json())
-        .then(json => {
-          console.log('Will this ever work?', json)
-          if (json.status === 'success') {
-            console.log(this.props.sendDataBack)
-            this.props.sendDataBack(json.people)
-            this.onCancel()
-          }
-        })
+        this.props.socket.emit('addInvitee', {newInvitee: newInvitee, eventId: this.props.eventId})
+        this.onCancel()
       }
 
       render() {

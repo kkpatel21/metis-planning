@@ -13,7 +13,6 @@ class SendEmailModal extends React.Component {
       }
 
       componentDidMount() {
-        console.log('hey')
         this.setState({
           to: this.props.guest.email
         })
@@ -26,7 +25,7 @@ class SendEmailModal extends React.Component {
       }
 
       send = () => {
-        this.props.handleEmail(this.state.to, this.state.subject, this.state.text)
+        this.props.socket.emit('sendEmail', {to: this.state.to, subject: this.state.subject, message: this.state.text})
         this.onCancel()
       }
       render() {

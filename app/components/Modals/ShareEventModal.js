@@ -21,25 +21,8 @@ class ShareEventModal extends React.Component {
           'email': this.state.email,
         }
 
-        fetch(`/api/addCollaborator`, {
-          method: 'POST',
-          credentials: 'same-origin',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            id: this.props.eventId,
-            collaborator: newCollaborator
-          })
-        })
-        .then(res => res.json())
-        .then(json => {
-          console.log('Will this ever work?', json)
-          if (json.status === 'success') {
-            console.log(json.collaborators)
-
-          }
-        })
+        this.props.socket.emit('addCollaborator', {eventId: this.props.eventId, collaborator: newCollaborator})
+        this.onCancel()
       }
 
       render() {

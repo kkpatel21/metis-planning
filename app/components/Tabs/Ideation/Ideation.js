@@ -20,7 +20,7 @@ export default class Ideation extends React.Component {
 
   render() {
     const panes = [
-      { menuItem: 'Venue', render: () => <Tab.Pane><div><Notepad eventId={this.props.eventId}/></div></Tab.Pane> },
+      { menuItem: 'Venue', render: () => <Tab.Pane><div><Notepad socket={this.props.socket} eventId={this.props.eventId}/></div></Tab.Pane> },
       { menuItem: 'Caterer', render: () => <Tab.Pane>Caterer</Tab.Pane> },
       { menuItem: 'Speaker', render: () => <Tab.Pane>Speaker!</Tab.Pane> },
       { menuItem: "Activities", render: () => <Tab.Pane> Activities brainstorming </Tab.Pane> },
