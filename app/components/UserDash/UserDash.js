@@ -127,7 +127,7 @@ class UserDash extends React.Component {
       )
     } else {
       eventRender = (
-        <Event eventId={this.state.eventId}/>
+        <Event eventId={this.state.eventId} socket={this.props.socket}/>
       )
     }
 

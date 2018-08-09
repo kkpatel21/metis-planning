@@ -94,6 +94,7 @@ module.exports = (passport) => {
 
   //new event
   router.post("/newEvent", upload.single("uploadFile"), function(req, res) {
+    console.log("Adding New Event!!!!!!!!!!!!!", req.body)
     new Event({
       priority: req.body.priority,
       title: req.body.title,
@@ -105,13 +106,17 @@ module.exports = (passport) => {
       ideation: [],
       collaborators: [],
     }).save(function(err, event) {
+      console.log("THIS IS NEW EVENT",event)
       if (err) {
+        console.log("GETTING ERROR >>>>>>>>>>>>>>>>>", err)
         res.send(err);
         return;
+      }else if(event){
+        console.log("SHOULD BE SAVING")
+        res.json({
+          status: "success"
+        });
       }
-      res.json({
-        status: "success"
-      });
     });
   });
 

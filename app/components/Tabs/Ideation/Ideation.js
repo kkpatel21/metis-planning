@@ -13,57 +13,69 @@ export default class Ideation extends React.Component {
     };
   }
   componentDidMount() {
-    fetch(`/api/getIdeation/${this.props.eventId}`)
-      .then(res => res.json())
-      .then(json => {
-        console.log(json);
-        var topicArr = this.state.topic.concat(json);
-        this.setState({ topic: topicArr });
-      });
+    this.props.socket.emit("getIdeation", {id: this.props.eventId}, res => {
+      this.setState({topic: res.event.ideation})
+      console.log("this is event^^^^^^^^^^^^^^^", res.event.ideation)
+    })
   }
-  autoRender = ideationArr => {
-    console.log(ideationArr);
-    this.setState({ topic: ideationArr });
-  };
+  // autoRender = ideationArr => {
+  //   console.log(ideationArr);
+  //   this.setState({ topic: ideationArr });
+  // };
+
   handleChange = e => {
     this.setState({
       typing: e.target.value
     });
   };
-  handleAdd = () => {
+
+  //adding comment
+  handleAdd = topic => {
     if (this.state.typing.length !== 0) {
-      fetch("/api/addIdeation", {
-        method: "POST",
-        credentials: "same-origin",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
+      console.log('hey')
+      this.props.socket.emit(
+        "addComment",
+        {
           id: this.props.eventId,
-          typing: this.state.typing
-        })
-      })
-        .then(res => res.json())
-        .then(json => {
-          if (json.status === "success") {
-            this.setState({ notes: json.ideation });
+          typing: this.state.typing,
+          topic: topic
+        },
+        res => {
+          if (res.event) {
+            this.setState({topic: res.event.ideation})
+            alert("Comment added");
           }
-        })
-        .catch(err => {
-          alert(err);
-        });
+        }
+      );
     } else {
       alert("Please type something!");
     }
+  };
+  //deleting topic
+  onDelete = topic => {
+    console.log(topic);
+    this.props.socket.emit(
+      "deleteIdeation",
+      {
+        id: this.props.eventId,
+        topic: topic
+      },
+      res => {
+        if (res.event) {
+          alert("Deleted successfully");
+          this.componentDidMount();
+        }
+      }
+    );
   };
 
   render() {
     return (
       <div>
-        {/* <Tab panes={panes} /> */}
         <AddIdeationModal
+          socket={this.props.socket}
           eventId={this.props.eventId}
-          autoRender={this.autoRender}
+          // autoRender={this.autoRender}
         />
         <div>
           {this.state.topic.map(oneTopic => (
@@ -80,21 +92,27 @@ export default class Ideation extends React.Component {
                       inverted
                       circular
                       link
-                      onClick={this.handleAdd}
+                      onClick={() => this.handleAdd(oneTopic)}
                     />
                   }
                 />
+                <Button
+                  type="submit"
+                  onClick={() => this.onDelete(oneTopic.topic)}
+                >
+                  Delete
+                </Button>
                 <br />
               </div>
               <div>
                 <List divided relaxed style={{ padding: 10 }}>
-                  {this.state.notes.map(note => {
+                  {oneTopic.note.map(note => {
                     return (
                       <List.Item>
                         <List.Icon name="bolt" />{" "}
-                        <List.Content> {note.note} </List.Content>
+                        <List.Content> {note} </List.Content>
                         <List.Content floated="right">
-                          by {note.user}
+                          by {oneTopic.user}
                         </List.Content>
                       </List.Item>
                     );

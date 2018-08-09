@@ -25,8 +25,6 @@ class ScrollerView extends React.Component {
     })
   }
 
-
-
   componentDidMount() {
     this.getObjects();
   }
