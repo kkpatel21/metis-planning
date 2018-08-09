@@ -1,0 +1,7 @@
+.topicName {
+    font-family: "palatino";
+    text-align: left
+}
+::-webkit-scrollbar-track {
+    width: 1px
+}
