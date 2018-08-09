@@ -197,7 +197,6 @@ module.exports = (io, store) => {
     //Getting Ideation to render
     socket.on("getIdeation", (data, next) => {
       Event.findById(data.id, (err, event) => {
-        console.log("GETTING EVENT", event);
         next({ err, event });
       });
     });
@@ -221,13 +220,37 @@ module.exports = (io, store) => {
       Event.findById(data.id, (err, event) => {
         if (event) {
           event.ideation.map(ideationObj => {
-            if (ideationObj.topic === data.topic) {
-              ideationObj.note.concat(data.typing);
+            if (ideationObj.topic === data.topic.topic) {
+              return (ideationObj.note = ideationObj.note.concat(data.typing));
             }
           });
+          event.markModified("ideation");
           event.save((err, event) => {
             next({ err, event });
           });
+        } else if (err) {
+          next({ err });
+        }
+      });
+    });
+
+    //editing topic
+    socket.on("editIdeation", (data, next) => {
+      Event.findById(data.id, (err, event) => {
+        if (event) {
+          event.ideation.map(ideationObj => {
+            console.log("OLD TOPIC****************",data.topic)
+            console.log("NEW TOPIC&&&&&&&&&&&&&", data.newTopic)
+            if (ideationObj.topic === data.topic) {
+              ideationObj.topic = data.newTopic;
+            }
+          });
+          event.markModified("ideation");
+          event.save((err, event) => {
+            next({ err, event });
+          });
+        } else if (err) {
+          next({ err });
         }
       });
     });
