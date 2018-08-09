@@ -58,7 +58,8 @@ class UserDash extends React.Component {
           this.getObjects()
         }
     });
-  }
+  };
+
 
   openEvent = (eventId) => {
     this.props.socket.emit('joinRoom', {eventId: eventId}, (data) => {

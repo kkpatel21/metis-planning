@@ -66,7 +66,12 @@ module.exports = (io, store) => {
             }
           })
           next({err, filtered})
+        })
 
+        socket.on('deleteEvent', (data, next) => {
+          Event.findByIdAndRemove(data.id, (err, event) => {
+            next({err, event})
+          });
         })
       })
     })
