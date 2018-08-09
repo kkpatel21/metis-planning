@@ -123,6 +123,7 @@ module.exports = (io, store) => {
     //delete guests
     socket.on("deleteInvitee", data => {
       Event.findById(data.eventId, (err, event) => {
+        console.log(event)
         event.people.splice(data.index, 1);
         console.log(event.people);
         event.markModified("people");
