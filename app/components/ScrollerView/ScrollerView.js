@@ -8,37 +8,16 @@ class ScrollerView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      events: []
     };
   }
 
-  getObjects = () => {
-    this.props.socket.emit('fetchEvents', (res) => {
-      if (res.err) {
-        return alert(res)
-      } else {
-        console.log(res.filtered)
-        this.setState({
-          events: res.filtered
-        })
-      }
-    })
-  }
-
-
-
   componentDidMount() {
-    this.getObjects();
+    this.props.getObjects();
   }
-
 
   render() {
-    if (this.props.cards) {
-      this.getObjects()
-      this.props.updateCards()
-    }
     let eventsRender = [];
-    this.state.events.forEach(event => {
+    this.props.events.forEach(event => {
       eventsRender.push((
           <Draggable
             className="card"

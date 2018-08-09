@@ -8,6 +8,7 @@ import cookieParser from 'cookie-parser'
 
 module.exports = (io, store) => {
 
+  // This function gets us the user ID that has just logged in to the server
   io.use((socket, next) => {
     let cookies;
     if (socket.request.headers.cookie) {
@@ -28,50 +29,44 @@ module.exports = (io, store) => {
     }
   })
 
-  io.on('connection', function(socket) {
-    //This is to get the user.id
-    // console.log('connect session: ', socket.session.passport.user)
+  //All socket calls should be within here
 
-    //Res works with Next, and the first parameter works with the second parameter.
+  io.on('connection', function(socket) {
+    // This is to get the user.id: socket.session.passport.user
+
+    // Res works with Next, and the first parameter works with the second parameter.
     socket.on('fetchEvents', (next) => {
-      let email;
       User.findById(socket.session.passport.user)
       .then((user) => {
         Event.find({}, (err,events) => {
           let filtered = []
           events.forEach((event) => {
-            console.log('each', event)
             if (event.collaborators.length > 0) {
-              console.log(event.collaborators)
               event.collaborators.forEach((collaborator) => {
                 if (collaborator.email === user.email) {
                   filtered.push(event)
                 }
               })
             }
-            console.log(user._id)
             if (event.owner === user.id) {
               filtered.push(event)
             }
           })
           next({err, filtered})
-        })
 
-        socket.on('deleteEvent', (data, next) => {
-          Event.findByIdAndRemove(data.id, (err, event) => {
-            next({err, event})
-          });
         })
       })
     })
 
     socket.on('deleteEvent', (data, next) => {
       Event.findByIdAndRemove(data.id, (err, event) => {
+        io.emit('fetchEvents')
         next({err, event})
       });
     })
 
 
-
+    //Saving new Topic to Ideation
+    // socket.one("addIdeation")
   })
 }

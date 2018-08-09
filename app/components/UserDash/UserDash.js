@@ -13,13 +13,19 @@ class UserDash extends React.Component {
     super(props);
     this.state = {
       view: true,
-      cards: false,
       idBeingDeleted: "",
       openEvent: false,
       eventId: "",
+      events: []
     };
   }
 
+  componentDidMount() {
+    console.log('hey')
+    this.props.socket.on('fetchEvents', (data) =>  {
+      this.getObjects();
+    })
+  }
 
   viewChange = () => {
     this.setState({
@@ -27,9 +33,16 @@ class UserDash extends React.Component {
     })
   }
 
-  updateCards = () => {
-    this.setState({
-      cards: !this.state.cards
+  getObjects = () => {
+    this.props.socket.emit('fetchEvents', (data) => {
+      if (data.err) {
+        return alert(data)
+      } else {
+        console.log(data.filtered)
+        this.setState({
+          events: data.filtered
+        })
+      }
     })
   }
 
@@ -40,15 +53,14 @@ class UserDash extends React.Component {
   }
 
   deleteDrop = (eventId) => {
-    this.props.socket.emit('deleteEvent', {id: eventId}, (res) => {
-        if (res.err) {
-          return alert(res)
+    this.props.socket.emit('deleteEvent', {id: eventId}, (data) => {
+        if (data.err) {
+          console.log('Uh Oh, DeleteDrop Is Fucking Up')
         } else {
-          this.updateCards()
+          this.getObjects()
         }
     });
-  };
-
+  }
 
   openEvent = (eventId) => {
     this.setState({
@@ -65,9 +77,9 @@ class UserDash extends React.Component {
       viewRender = (
         <div className="scrolling-events">
           <ScrollerView
+            events={this.state.events}
+            getObjects={this.getObjects}
             socket={this.props.socket}
-            updateCards={this.updateCards}
-            cards={this.state.cards}
             sendData={this.sendData}
             deleteId={this.state.idBeingDeleted}
             openEvent={this.openEvent}
