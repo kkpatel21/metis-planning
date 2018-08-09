@@ -39,7 +39,7 @@ class AddEventModal extends React.Component {
     .then((res) => {
       console.log(res)
       if(res.status === 200){
-        this.props.updateCards()
+        this.props.getObjects()
         this.setState({open:false})
       }
     })

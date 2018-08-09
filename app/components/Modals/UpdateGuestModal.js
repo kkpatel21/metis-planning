@@ -45,19 +45,9 @@ class UpdateGuestModal extends React.Component {
           'status': this.state.status,
           'notes': this.state.notes
         }
-        let guestList;
 
-        fetch(`/api/getPeople/${this.props.eventId}`)
-        .then(res => res.json())
-        .then(json => {
-          guestList = json.slice();
-          guestList[this.props.index] = updateInvitee
-          this.props.saveUpdatedData(guestList)
-          this.onCancel()
-        })
-
-
-
+        this.props.socket.emit('savePeople', {eventId: this.props.eventId, updateInvitee: updateInvitee, index: this.props.index})
+        this.onCancel()
 
       }
 

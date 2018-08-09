@@ -10,20 +10,20 @@ export default class Event extends React.Component {
         super();
         this.state={activeItem:"Dashboard"}
     }
-    
+
     handleItemClick = (e, { name }) => this.setState({ activeItem: name })
 
     render() {
       const { activeItem } = this.state
       let tabRender;
       if (activeItem === 'People') {
-        tabRender = (<People eventId={this.props.eventId}/>)
+        tabRender = (<People socket={this.props.socket} eventId={this.props.eventId}/>)
       } else if (activeItem === 'Ideation'){
-        tabRender = (<Ideation eventId={this.props.eventId} />)
+        tabRender = (<Ideation socket={this.props.socket} eventId={this.props.eventId} />)
       } else if (activeItem === 'Budget'){
-        tabRender = (<Budget eventId={this.props.eventId} />)
+        tabRender = (<Budget socket={this.props.socket} eventId={this.props.eventId} />)
       } else {
-        tabRender = (<Overview eventId={this.props.eventId}/>)
+        tabRender = (<Overview socket={this.props.socket} eventId={this.props.eventId}/>)
       }
       return (
         <Grid>

@@ -115,17 +115,7 @@ module.exports = (passport) => {
     });
   });
 
-  //delete event
-  router.post("/deleteEvent", function(req, res) {
-    Event.findByIdAndRemove(req.body.id, (err, event) => {
-      if (err) {
-        res.send(err);
-        return;
-      } else {
-        res.sendStatus(200);
-      }
-    });
-  });
+
 
   //add list to ideation(in progress)
   router.post("/addIdeation", function(req, res) {
@@ -157,28 +147,6 @@ module.exports = (passport) => {
     })
   });
 
-  //add invitee to guest list
-  router.post('/addInvitee', function(req, res) {
-    Event.findById(req.body.id)
-    .then((event) => {
-      event.people.push(req.body.guest)
-      event.markModified('people')
-      event.save((err, event) => {
-        if(err) {
-          res.send(err);
-        } else {
-          res.json({
-            status: 'success',
-            people: event.people
-          });
-        }
-      });
-    })
-    .catch((err) => {
-      res.send(err)
-    })
-  })
-
   //render ideation
   router.get("/getIdeation/:id", function(req,res){
     Event.findById(req.params.id, (err, event) => {
@@ -187,69 +155,6 @@ module.exports = (passport) => {
       }else if (event){
         res.json(event.ideation)
       }
-    })
-  })
-
-  //render ideation
-  router.get("/getPeople/:id", function(req,res){
-    Event.findById(req.params.id, (err, event) => {
-      if(err){
-        res.json(err)
-      }else if (event){
-        res.json(event.people)
-      }
-    })
-  })
-
-  router.post('/savePeople/:id', function(req, res) {
-    Event.findById(req.params.id)
-    .then((event) => {
-      event.people = req.body.guests
-      event.markModified('people')
-      event.save((err, event) => {
-        if (err) {
-          res.send(err);
-        } else {
-          res.json({
-            status: 'success',
-            people: event.people
-          })
-        }
-      })
-    })
-  })
-
-  //sendEmails
-  router.post('/sendEmail', function(req, res) {
-    User.findById(req.user._id)
-    .then((user) => {
-      let msg = {
-        to: req.body.to,
-        from: user.email,
-        subject: req.body.subject,
-        text: req.body.message
-      }
-      sgMail.send(msg)
-      .then(() => {
-        res.send('Email Sent')
-      })
-    })
-  })
-
-  //sendMultipleEmails
-  router.post('/sendMultipleEmails', function(req, res) {
-    User.findById(req.user._id)
-    .then((user) => {
-      let msg = {
-        to: req.body.to,
-        from: user.email,
-        subject: req.body.subject,
-        text: req.body.message
-      }
-      sgMail.sendMultiple(msg)
-      .then(() => {
-        res.send('Email Sent')
-      })
     })
   })
 
@@ -267,25 +172,6 @@ module.exports = (passport) => {
           error: err
         });
       }
-    })
-  })
-
-  //shareDoc
-  router.post('/addCollaborator', function(req, res) {
-    console.log('hey')
-    Event.findById(req.body.id, (err, event) => {
-      event.collaborators.push(req.body.collaborator)
-      event.markModified('collaborators')
-      event.save((err, event) => {
-        if (err) {
-          res.send(err)
-        } else {
-          res.json({
-            status: 'success',
-            collaborators: event.collaborators
-          })
-        }
-      })
     })
   })
 

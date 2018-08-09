@@ -5,9 +5,22 @@ import path from 'path';
 import mongoose from 'mongoose';
 import cookie from 'cookie'
 import cookieParser from 'cookie-parser'
+import multer from "multer";
+var storage = multer.diskStorage({
+  destination: path.resolve(__dirname, "../build/images"),
+  filename: function(req, file, cb) {
+    console.log(file);
+    cb(null, Date.now() + "_" + file.originalname);
+  }
+})
+var upload = multer({ storage: storage })
+import sgMail from '@sendgrid/mail';
+sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+
 
 module.exports = (io, store) => {
 
+  // This function gets us the user ID that has just logged in to the server
   io.use((socket, next) => {
     let cookies;
     if (socket.request.headers.cookie) {
@@ -28,28 +41,26 @@ module.exports = (io, store) => {
     }
   })
 
-  io.on('connection', function(socket) {
-    //This is to get the user.id
-    // console.log('connect session: ', socket.session.passport.user)
+  //All socket calls should be within here
 
-    //Res works with Next, and the first parameter works with the second parameter.
+  io.on('connection', function(socket) {
+    // This is to get the user.id: socket.session.passport.user
+
+    // Res works with Next, and the first parameter works with the second parameter.
     socket.on('fetchEvents', (next) => {
-      let email;
+      console.log('Will This Rehit?')
       User.findById(socket.session.passport.user)
       .then((user) => {
         Event.find({}, (err,events) => {
           let filtered = []
           events.forEach((event) => {
-            console.log('each', event)
             if (event.collaborators.length > 0) {
-              console.log(event.collaborators)
               event.collaborators.forEach((collaborator) => {
                 if (collaborator.email === user.email) {
                   filtered.push(event)
                 }
               })
             }
-            console.log(user._id)
             if (event.owner === user.id) {
               filtered.push(event)
             }
@@ -60,13 +71,108 @@ module.exports = (io, store) => {
       })
     })
 
+    //deletes events
     socket.on('deleteEvent', (data, next) => {
       Event.findByIdAndRemove(data.id, (err, event) => {
+        console.log('hey')
+        //makes everyone on the server to re-render
+        io.emit('fetchEvents')
         next({err, event})
       });
     })
 
+    //open event and join event channel
+    socket.on('joinRoom', (data, next) => {
+      socket.join(data.eventId);
+      next({success: 'Joined'})
+    })
+
+    //get people
+    socket.on('getPeople', (data) => {
+      Event.findById(data.eventId, (err, event) => {
+        io.to(data.eventId).emit('sendPeople', {guestList: event.people})
+      })
+    })
+
+    //update guestList
+    socket.on('savePeople', (data) => {
+      Event.findById(data.eventId, (err, event) => {
+        let guestList = event.people.slice()
+        guestList[data.index] = data.updateInvitee
+        event.people = guestList.slice()
+        event.markModified('people')
+        event.save((err, eve) => {
+          io.to(data.eventId).emit('updatedPeople', {guestList: guestList})
+        })
+      })
+    })
+
+    //add guests
+    socket.on('addInvitee', (data) => {
+      Event.findById(data.eventId, (err, event) => {
+        event.people.push(data.newInvitee)
+        event.markModified('people')
+        event.save((err, eve) => {
+          io.to(data.eventId).emit('updatedPeople', {guestList: eve.people})
+        })
+      })
+    })
+
+    //delete guests
+    socket.on('deleteInvitee', (data) => {
+      Event.findById(data.eventId, (err, event) => {
+        event.people.splice(data.index, 1)
+        console.log(event.people)
+        event.markModified('people')
+        event.save((err, eve) => {
+          io.to(data.eventId).emit('updatedPeople', {guestList: eve.people})
+        })
+      })
+    })
+
+    //sendOneEmail
+    socket.on('sendEmail', (data) => {
+
+      User.findById(socket.session.passport.user, (err, user) => {
+        let msg = {
+          to: data.to,
+          from: user.email,
+          subject: data.subject,
+          text: data.message
+        }
+        sgMail.send(msg)
+        .then(() => {next({success: 'Email Sent'})})
+      })
+    })
+
+    socket.on('sendMultipleEmail', (data) => {
+
+      User.findById(socket.session.passport.user, (err, user) => {
+        let msg = {
+          to: data.to,
+          from: user.email,
+          subject: data.subject,
+          text: data.message
+        }
+        sgMail.sendMultiple(msg)
+        .then(() => {next({success: 'Email Sent'})})
+      })
+    })
+
+    socket.on('addCollaborator', (data) => {
+      Event.findById(data.eventId, (err, event) => {
+        event.collaborators.push(data.collaborator)
+        event.markModified('collaborators')
+        event.save((err, event) => {
+          console.log('Event Saved')
+        })
+      })
+    })
 
 
+
+
+    //Saving new Topic to Ideation
+    // socket.one("addIdeation")
   })
 }

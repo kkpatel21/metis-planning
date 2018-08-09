@@ -13,24 +13,7 @@ export default class Invitees extends React.Component {
     }
   }
 
-
-  handleEmail = (email, subject, message) => {
-    console.log('we here?')
-    fetch('/api/sendEmail', {
-      method: 'POST',
-      headers: {
-        'Content-Type' : 'application/json',
-      },
-      body: JSON.stringify({
-        to: email,
-        subject: subject,
-        message: message
-      })
-    })
-  }
-
   multipleEmail = (guestEmail) => {
-    console.log(guestEmail)
     if (guestEmail) {
       let emails = this.state.multipleEmails.slice()
       if (emails.indexOf(guestEmail) !== -1) {
@@ -42,13 +25,15 @@ export default class Invitees extends React.Component {
       this.setState({
         multipleEmails: emails
       })
-      console.log('before sending it back', emails)
       this.props.sendEmailsBack(emails)
     }
   }
 
+  delete = (index) => {
+    this.props.socket.emit('deleteInvitee', {guestList: this.props.guestsList, eventId: this.props.eventId})
+  }
+
   render() {
-    console.log(this.state.multipleEmails)
     return (
       <div className="peopleTable">
           <Table striped basic>
@@ -75,9 +60,9 @@ export default class Invitees extends React.Component {
                  <Table.Cell>{guest.status}</Table.Cell>
                  <Table.Cell>{guest.notes}</Table.Cell>
                  <Table.Cell>
-                   <UpdateGuestModal saveUpdatedData={this.props.saveUpdatedData} guest={guest} index={i} eventId={this.props.eventId} sendDataBack={this.props.sendDataBack}/> &ensp;
-                   <SendEmailModal handleEmail={this.handleEmail} guest={guest}/> &ensp;
-                   <Icon name='trash' />
+                   <UpdateGuestModal socket={this.props.socket} guest={guest} index={i} eventId={this.props.eventId}/> &ensp;
+                   <SendEmailModal socket={this.props.socket} guest={guest}/> &ensp;
+                   <Icon name='trash' onClick={() => this.delete(i)}/>
                  </Table.Cell>
                </Table.Row>);
              })}

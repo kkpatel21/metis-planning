@@ -21,7 +21,7 @@ class SendMultipleModal extends React.Component {
       }
 
       send = () => {
-        this.props.handleMultipleEmail(this.state.to, this.state.subject, this.state.text)
+        this.props.socket.emit('sendMultipleEmail', {to: this.state.to, subject: this.state.subject, message: this.state.text})
         this.onCancel()
       }
       render() {
