@@ -13,13 +13,18 @@ class UserDash extends React.Component {
     super(props);
     this.state = {
       view: true,
-      cards: false,
       idBeingDeleted: "",
       openEvent: false,
       eventId: "",
+      events: []
     };
   }
 
+  componentDidMount() {
+    this.props.socket.on('fetchEvents', (data) =>  {
+      this.getObjects();
+    })
+  }
 
   viewChange = () => {
     this.setState({
@@ -27,9 +32,15 @@ class UserDash extends React.Component {
     })
   }
 
-  updateCards = () => {
-    this.setState({
-      cards: !this.state.cards
+  getObjects = () => {
+    this.props.socket.emit('fetchEvents', (data) => {
+      if (data.err) {
+        return alert(data)
+      } else {
+        this.setState({
+          events: data.filtered
+        })
+      }
     })
   }
 
@@ -40,39 +51,24 @@ class UserDash extends React.Component {
   }
 
   deleteDrop = (eventId) => {
-    this.props.socket.emit('deleteEvent', {id: eventId}, (res) => {
-        if (res.err) {
-          return alert(res)
+    this.props.socket.emit('deleteEvent', {id: eventId}, (data) => {
+        if (data.err) {
+          console.log('Uh Oh, DeleteDrop Is Fucking Up')
         } else {
-          this.updateCards()
+          this.getObjects()
         }
     });
-  }
-  //
-  //   if(!err)
-  //   fetch("/api/deleteEvent", {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type' : 'application/json',
-  //     },
-  //     body: JSON.stringify({
-  //       id: eventId
-  //     })
-  //   })
-  //   .then((res) => {
-  //     if (res.status === 200) {
-  //       this.updateCards()
-  //     }
-  //   })
-  //   .catch(err => {
-  //     alert("Error: " + err)
-  //   })
-  // }
+  };
+
 
   openEvent = (eventId) => {
-    this.setState({
-      openEvent: true,
-      eventId: eventId
+    this.props.socket.emit('joinRoom', {eventId: eventId}, (data) => {
+      if (data) {
+        this.setState({
+          openEvent: true,
+          eventId: eventId
+        })
+      }
     })
   }
 
@@ -84,9 +80,9 @@ class UserDash extends React.Component {
       viewRender = (
         <div className="scrolling-events">
           <ScrollerView
+            events={this.state.events}
+            getObjects={this.getObjects}
             socket={this.props.socket}
-            updateCards={this.updateCards}
-            cards={this.state.cards}
             sendData={this.sendData}
             deleteId={this.state.idBeingDeleted}
             openEvent={this.openEvent}
@@ -117,7 +113,7 @@ class UserDash extends React.Component {
           </span>
           {viewRender}
           <div className="addIcon">
-            <AddEventModal updateCards={this.updateCards}/>
+            <AddEventModal getObjects={this.getObjects}/>
           </div>
 
           <Droppable type={['event']} className="trashIcon" onDrop={() => this.deleteDrop(this.state.idBeingDeleted)}>

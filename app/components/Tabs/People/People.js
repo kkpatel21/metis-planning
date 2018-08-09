@@ -14,68 +14,27 @@ export default class People extends React.Component {
   }
 
   componentDidMount() {
-    fetch(`/api/getPeople/${this.props.eventId}`)
-    .then(res => res.json())
-    .then(json => {
-      this.setState({ guestsList: json})
+    this.props.socket.emit('getPeople', {eventId: this.props.eventId})
+    this.props.socket.on('sendPeople', (data) => {
+      this.setState({guestsList: data.guestList})
     })
-  }
-
-  saveUpdatedData = (guestList) => {
-    fetch(`/api/savePeople/${this.props.eventId}`, {
-      method: 'POST',
-      credentials: 'same-origin',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        guests: guestList
-      })
-    })
-    .then(res => res.json())
-    .then(json => {
-      this.setState({guestsList: json.people})
-    })
-
-  }
-
-  sendDataBack = (guestList) => {
-    this.setState({
-      guestsList: guestList
+    this.props.socket.on('updatedPeople', (data) => {
+      this.setState({guestsList: data.guestList})
     })
   }
 
   sendEmailsBack = (emailList) => {
-    this.setState({
-      emailList: emailList
-    })
-  }
-
-  handleMultipleEmail = (email, subject, message) => {
-    fetch('/api/sendMultipleEmails', {
-      method: 'POST',
-      headers: {
-        'Content-Type' : 'application/json',
-      },
-      credentials: 'same-origin',
-      body: JSON.stringify({
-        to: email,
-        subject: subject,
-        message: message
-      })
-    })
+    this.setState({emailList: emailList})
   }
 
   render() {
-    console.log(this.state.guestsList)
-    console.log(this.state.emailList)
     let panes = [
       { menuItem: 'Invitees', render: () =>
       <Tab.Pane>
         <div>
-          <Invitees eventId={this.props.eventId} saveUpdatedData={this.saveUpdatedData} sendEmailsBack={this.sendEmailsBack} sendDataBack={this.sendDataBack} guestsList={this.state.guestsList}/>
-          <AddGuestModal eventId={this.props.eventId} sendDataBack={this.sendDataBack} />
-          <SendMultipleModal eventId={this.props.eventId} emailList={this.state.emailList} handleMultipleEmail={this.handleMultipleEmail}/>
+          <Invitees socket={this.props.socket} eventId={this.props.eventId} sendEmailsBack={this.sendEmailsBack} sendDataBack={this.sendDataBack} guestsList={this.state.guestsList}/>
+          <AddGuestModal socket={this.props.socket} eventId={this.props.eventId} sendDataBack={this.sendDataBack} />
+          <SendMultipleModal socket={this.props.socket} eventId={this.props.eventId} emailList={this.state.emailList} />
         </div>
       </Tab.Pane> },
       { menuItem: 'Special Guests', render: () =>
