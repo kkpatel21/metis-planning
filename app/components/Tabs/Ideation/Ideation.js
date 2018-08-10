@@ -11,7 +11,8 @@ export default class Ideation extends React.Component {
     super();
     this.state = {
       topic: [],
-      typing: ""
+      typing: "",
+      newTopic: ""
     };
   }
 
@@ -77,6 +78,24 @@ export default class Ideation extends React.Component {
     })
   }
 
+  onDone = (oldtopic, newTopic, cancel) => {
+    this.props.socket.emit("editIdeation", {
+      id: this.props.eventId,
+      topic: oldtopic,
+      newTopic: newTopic
+    }, (res) => {
+      if(res.event){
+        console.log(res.event)
+        alert("topic saved!");
+        cancel();
+        this.componentDidMount();
+      }
+      if(res.err){
+        alert("There was an error: ", res.err)
+      }
+    });
+  };
+
   render() {
     return (
       <div>
@@ -104,7 +123,7 @@ export default class Ideation extends React.Component {
                 >
                   <Icon name="delete" />
                 </Button>
-                <EditIdeationModal socket={this.props.socket} eventId={this.props.eventId} />
+                <EditIdeationModal oneTopic={oneTopic} socket={this.props.socket} eventId={this.props.eventId} onDone={(a,b,c)=>this.onDone(a,b,c)}/>
                 <div>
                   <h1
                     floated="left"
@@ -116,6 +135,7 @@ export default class Ideation extends React.Component {
                 </div>
                 <Divider />
                 <Input
+                  value={this.state.typing}
                   style={{ width: "100%" }}
                   onChange={this.handleChange}
                   // style={{ width: 250, borderWidth: 1, borderColor: "black" }}
@@ -141,7 +161,9 @@ export default class Ideation extends React.Component {
                         <List.Content> {note} </List.Content>
                         <List.Content floated="right">
                           by {oneTopic.user}
+                          <Icon floated="right" name='trash' onClick={() => this.delete()}/>
                         </List.Content>
+                        
                         <Divider />
                       </List.Item>
                     );
