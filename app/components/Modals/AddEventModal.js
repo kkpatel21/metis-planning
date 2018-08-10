@@ -16,7 +16,6 @@ class AddEventModal extends React.Component {
     };
   }
   fileChangedHandler = (event) => {
-    console.log(event.target.files[0])
     this.setState({uploadFile: event.target.files[0]})
   }
   onCreate = () => {
