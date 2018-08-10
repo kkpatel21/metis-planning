@@ -44,6 +44,10 @@ var EventSchema = new mongoose.Schema({
   collaborators:{
     type: Array,
     required: false
+  },
+  fundraising:{
+    type: Array,
+    required: false
   }
 },
 { usePushEach: true }

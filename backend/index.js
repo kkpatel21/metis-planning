@@ -96,6 +96,14 @@ module.exports = (io, store) => {
       });
     });
 
+    //get fundraising Tabs
+    socket.on('getTabs', data => {
+      Event.findById(data.eventId, (err, event) => {
+        console.log(event.fundraising)
+        io.to(data.eventId).emit('sendTabs', { tabs: event.fundraising })
+      })
+    })
+
     //update guestList
     socket.on("savePeople", data => {
       Event.findById(data.eventId, (err, event) => {
@@ -140,6 +148,17 @@ module.exports = (io, store) => {
         event.markModified('caterers');
         event.save((err, eve) => {
           io.to(data.eventId).emit('updatedCaterer', { catererList: eve.caterers})
+        })
+      })
+    })
+
+    //add tab
+    socket.on('addTab', data => {
+      Event.findById(data.eventId, (err, event) => {
+        event.fundraising.push({title: data.title, data: []})
+        event.markModified('fundraising');
+        event.save((err, eve) => {
+          io.to(data.eventId).emit('addTab', { newTab: {title:data.title, data: []} })
         })
       })
     })
