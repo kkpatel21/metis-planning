@@ -10,18 +10,20 @@ import {
   Icon
 } from "semantic-ui-react";
 
-class AddIdeationModal extends React.Component {
+class EditIdeationModal extends React.Component {
   constructor() {
     super();
     this.state = {
       topic: "",
-      open: false
+      open: false,
+      newTopic: ""
     };
   }
-  onCreate = () => {
-    this.props.socket.emit("addIdeation", {
+  onDone = (topic) => {
+    this.props.socket.emit("editIdeation", {
       id: this.props.eventId,
-      topic: this.state.topic
+      topic: this.state.topic,
+      newTopic: this.state.newTopic
     }, (res) => {
       if(res.event){
         console.log(res.event)
@@ -43,12 +45,12 @@ class AddIdeationModal extends React.Component {
     return (
       <Modal
         trigger={
-          <Button onClick={() => this.onTrigger()} floated='right' >Add a new topic</Button>
+          <Button circular icon floated='right' ><Icon onClick={() => this.onTrigger()} name="pencil" /></Button>
         }
         onClose={this.onCancel}
         open={this.state.open}
       >
-        <Modal.Header>Create a new topic</Modal.Header>
+        <Modal.Header>Edit topic</Modal.Header>
         <Modal.Content>
           <Modal.Description>
             <Header />
@@ -58,11 +60,11 @@ class AddIdeationModal extends React.Component {
                 <input
                   placeholder="New Topic"
                   type="text"
-                  onChange={e => this.setState({ topic: e.target.value })}
+                  onChange={e => this.setState({ newTopic: e.target.value })}
                 />
               </Form.Field>
-              <Button type="submit" onClick={() => this.onCreate()}>
-                Create
+              <Button type="submit" onClick={() => this.onDone()}>
+                Done
               </Button>
               <Button type="submit" onClick={() => this.onCancel()}>
                 Cancel
@@ -75,4 +77,4 @@ class AddIdeationModal extends React.Component {
   }
 }
 
-export default AddIdeationModal;
+export default EditIdeationModal;
