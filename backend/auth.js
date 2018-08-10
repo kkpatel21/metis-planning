@@ -107,6 +107,7 @@ module.exports = (passport) => {
       collaborators: [],
       caterers: [],
       people: [],
+      fundraising: []
     }).save(function(err, event) {
       console.log("THIS IS NEW EVENT",event)
       if (err) {
