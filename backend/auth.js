@@ -105,6 +105,8 @@ module.exports = (passport) => {
       owner: req.user._id, //credentials!!!!
       ideation: [],
       collaborators: [],
+      caterers: [],
+      people: [],
     }).save(function(err, event) {
       console.log("THIS IS NEW EVENT",event)
       if (err) {

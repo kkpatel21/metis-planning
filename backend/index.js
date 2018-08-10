@@ -92,7 +92,7 @@ module.exports = (io, store) => {
     //get people
     socket.on("getPeople", data => {
       Event.findById(data.eventId, (err, event) => {
-        io.to(data.eventId).emit("sendPeople", { guestList: event.people });
+        io.to(data.eventId).emit("sendPeople", { guestList: event.people, catererList: event.caterers });
       });
     });
 
@@ -109,6 +109,19 @@ module.exports = (io, store) => {
       });
     });
 
+    //update catererList
+    socket.on('saveCaterer', data => {
+      Event.findById(data.eventId, (err, event) => {
+        let catererList = event.caterers.slice();
+        catererList[data.index] = data.updateCaterer;
+        event.caterers = catererList.slice();
+        event.markModified('caterers');
+        event.save((err, eve) => {
+          io.to(data.eventId).emit('updatedCaterer', { catererList: catererList})
+        })
+      })
+    })
+
     //add guests
     socket.on("addInvitee", data => {
       Event.findById(data.eventId, (err, event) => {
@@ -120,18 +133,38 @@ module.exports = (io, store) => {
       });
     });
 
+    //add caterers
+    socket.on('addCaterer', data => {
+      Event.findById(data.eventId, (err, event) => {
+        event.caterers.push(data.newCaterer)
+        event.markModified('caterers');
+        event.save((err, eve) => {
+          io.to(data.eventId).emit('updatedCaterer', { catererList: eve.caterers})
+        })
+      })
+    })
+
     //delete guests
     socket.on("deleteInvitee", data => {
       Event.findById(data.eventId, (err, event) => {
-        console.log(event)
         event.people.splice(data.index, 1);
-        console.log(event.people);
         event.markModified("people");
         event.save((err, eve) => {
           io.to(data.eventId).emit("updatedPeople", { guestList: eve.people });
         });
       });
     });
+
+    //delete Caterer
+    socket.on('deleteCaterer', data => {
+      Event.findById(data.eventId, (err, event) => {
+        event.caterers.splice(data.index, 1);
+        event.markModified('caterers');
+        event.save((err, eve) => {
+          io.to(data.eventId).emit('updatedCaterer', {catererList: eve.caterers})
+        })
+      })
+    })
 
     //sendOneEmail
     socket.on("sendEmail", data => {
