@@ -41,8 +41,6 @@ export default class Ideation extends React.Component {
         },
         res => {
           if (res.event) {
-            console.log("THIS IS A WHOLE EVENT -------->", res.event);
-            console.log("IDEATION -------->", res.event.ideation);
             this.setState({ topic: res.event.ideation, typing: "" });
             alert("Comment added");
           }
@@ -69,7 +67,6 @@ export default class Ideation extends React.Component {
   };
 
   onEdit = (topic) => {
-    console.log("topic being edited is ---------->", topic)
     this.props.socket.emit("editIdeation", {
       id:this.props.eventId,
       topic:topic
@@ -85,7 +82,6 @@ export default class Ideation extends React.Component {
       newTopic: newTopic
     }, (res) => {
       if(res.event){
-        console.log(res.event)
         alert("topic saved!");
         cancel();
         this.componentDidMount();
@@ -106,7 +102,7 @@ export default class Ideation extends React.Component {
               style={{
                 display: "inline-block",
                 width: "calc(35% - 30px)",
-                height: "200px",
+                height: "400px",
                 padding: "10px",
                 margin: "5px",
                 overflow: "auto",
@@ -178,7 +174,7 @@ export default class Ideation extends React.Component {
         <AddIdeationModal
           socket={this.props.socket}
           eventId={this.props.eventId}
-          // autoRender={this.autoRender}
+          autoRender={this.componentDidMount()}
         />
       </div>
     );
