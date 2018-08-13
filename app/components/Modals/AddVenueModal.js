@@ -96,6 +96,8 @@ class AddVenueModal extends React.Component {
                   onChange={e => this.setState({ name: e.target.value })}
                 />
               </Form.Field>
+              <Form.Field>
+              <label>Address</label>
               <PlacesAutocomplete
                 value={this.state.address}
                 onChange={this.handleChange}
@@ -139,6 +141,7 @@ class AddVenueModal extends React.Component {
                   </div>
                 )}
               </PlacesAutocomplete>
+              </Form.Field>
               {/* <Form.Field>
                 <label>Address</label>
                 <input

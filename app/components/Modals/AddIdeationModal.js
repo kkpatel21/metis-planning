@@ -62,7 +62,11 @@ class AddIdeationModal extends React.Component {
                   onChange={e => this.setState({ topic: e.target.value })}
                 />
               </Form.Field>
-              <Button type="submit" onClick={() => this.onCreate()}>
+              <Button 
+              type="submit" 
+              onClick={() => this.onCreate()}
+              onKeyPress={()=> this.onCreate()}
+              >
                 Create
               </Button>
               <Button type="submit" onClick={() => this.onCancel()}>

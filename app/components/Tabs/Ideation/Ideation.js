@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Input, Button, List, Icon, Divider, Grid } from "semantic-ui-react";
+import { Input, Button, List, Icon, Divider, Header} from "semantic-ui-react";
 import Notepad from "./Notepad/Notepad";
 import Speaker from "./Speaker/Speaker";
 import AddIdeationModal from "../../Modals/AddIdeationModal";
@@ -42,7 +42,6 @@ export default class Ideation extends React.Component {
         res => {
           if (res.event) {
             this.setState({ topic: res.event.ideation, typing: "" });
-            alert("Comment added");
           }
         }
       );
@@ -50,13 +49,35 @@ export default class Ideation extends React.Component {
       alert("Please type something!");
     }
   };
+  handleKeyPress = (event,topic) => {
+    if(event.key === 'Enter') {
+      if (this.state.typing.length !== 0) {
+        this.props.socket.emit(
+          "addComment",
+          {
+            id: this.props.eventId,
+            typing: this.state.typing,
+            topic: topic
+          },
+          res => {
+            if (res.event) {
+              this.setState({ topic: res.event.ideation, typing: "" });
+            }
+          }
+        );
+      } else {
+        alert("Please type something!");
+      }
+    }
+  }
   //deleting topic
-  onDelete = topic => {
+  onDelete = (topic, topicI) => {
     this.props.socket.emit(
       "deleteIdeation",
       {
         id: this.props.eventId,
-        topic: topic
+        topic: topic,
+        topicI: topicI
       },
       res => {
         if (res.event) {
@@ -65,6 +86,19 @@ export default class Ideation extends React.Component {
       }
     );
   };
+  //deleting comment
+  delete = (topicI,commentI) => {
+    this.props.socket.emit("deleteComment", {
+      id: this.props.eventId,
+      topicI:topicI,
+      commentI: commentI
+    }, res => {
+      if(res.event) {
+        console.log(res.event)
+        this.componentDidMount();
+      }
+    })
+  }
 
   onEdit = (topic) => {
     this.props.socket.emit("editIdeation", {
@@ -96,7 +130,7 @@ export default class Ideation extends React.Component {
     return (
       <div>
         <div>
-          {this.state.topic.map(oneTopic => (
+          {this.state.topic.map((oneTopic, topicI) => (
             <div
               className="divScroll"
               style={{
@@ -111,31 +145,32 @@ export default class Ideation extends React.Component {
             >
               <div>
                 <Button
+                basic color='transparent' content='Grey'
+                  size='mini'
                   icon
-                  circular
                   floated="right"
                   type="submit"
-                  onClick={() => this.onDelete(oneTopic.topic)}
+                  onClick={() => this.onDelete(oneTopic.topic, topicI)}
                 >
-                  <Icon name="delete" />
+                  <Icon name="delete"  />
                 </Button>
                 <EditIdeationModal oneTopic={oneTopic} socket={this.props.socket} eventId={this.props.eventId} onDone={(a,b,c)=>this.onDone(a,b,c)}/>
                 <div>
-                  <h1
-                    floated="left"
-                    className="topicName"
-                    style={{ color: "black" }}
-                  >
-                    {oneTopic.topic}
-                  </h1>
-                </div>
+                <Header 
+                floated="left"
+                className="topicName"
+                style={{ color: "black" }}
+                as='h2'>{oneTopic.topic}</Header>
+                </div><br />
+                {/* <div>
                 <Divider />
+                </div> */}
                 <Input
                   value={this.state.typing}
                   style={{ width: "100%" }}
                   onChange={this.handleChange}
-                  // style={{ width: 250, borderWidth: 1, borderColor: "black" }}
                   placeholder="Write your ideas here!"
+                  onKeyPress={(e) => this.handleKeyPress(e, oneTopic)}
                   icon={
                     <Icon
                       name="edit"
@@ -150,14 +185,14 @@ export default class Ideation extends React.Component {
               </div>
               <div>
                 <List style={{ paddingTop: 10 }}>
-                  {oneTopic.note.map(note => {
+                  {oneTopic.note.map((note, commentI) => {
                     return (
                       <List.Item>
                         <List.Icon name="bolt" />{" "}
-                        <List.Content> {note} </List.Content>
+                        <List.Content> {note.comment} </List.Content>
                         <List.Content floated="right">
-                          by {oneTopic.user}
-                          <Icon floated="right" name='trash' onClick={() => this.delete()}/>
+                          by {note.user}
+                          <Icon floated="right" name='trash' onClick={() => this.delete(topicI,commentI)}/>
                         </List.Content>
                         
                         <Divider />
