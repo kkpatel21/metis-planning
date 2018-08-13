@@ -35,10 +35,9 @@ export default class Fundraising extends React.Component {
     })
     this.props.socket.on('addTab', data => {
       let updateTabs = this.state.allTabs.slice()
-      console.log('before', updateTabs)
       let add = updateTabs.pop()
       updateTabs.push({
-        menuItem: {key: data.newTab.title, content: data.newTab.title},
+        menuItem: {key: data.newTab.title, content: <Header as='h4'><Header.Content>{data.newTab.title} &emsp;<Icon color='grey' name='cancel' onClick={() => this.deleteTab(updateTabs.length-2)}/></Header.Content></Header>},
         render: () => <Tab.Pane> This Works! </Tab.Pane>
       })
       updateTabs.push(add)

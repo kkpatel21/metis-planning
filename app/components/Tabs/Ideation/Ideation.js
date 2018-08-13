@@ -42,7 +42,6 @@ export default class Ideation extends React.Component {
         res => {
           if (res.event) {
             this.setState({ topic: res.event.ideation, typing: "" });
-            alert("Comment added");
           }
         }
       );
@@ -82,7 +81,6 @@ export default class Ideation extends React.Component {
       newTopic: newTopic
     }, (res) => {
       if(res.event){
-        alert("topic saved!");
         cancel();
         this.componentDidMount();
       }
@@ -159,7 +157,7 @@ export default class Ideation extends React.Component {
                           by {oneTopic.user}
                           <Icon floated="right" name='trash' onClick={() => this.delete()}/>
                         </List.Content>
-                        
+
                         <Divider />
                       </List.Item>
                     );
