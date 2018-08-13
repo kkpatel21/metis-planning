@@ -15,6 +15,9 @@ export default class People extends React.Component {
       filteredGuestsList: [],
       specialsList: [],
       filteredSpecialsList: [],
+      staffList: [],
+      filteredStaffList: [],
+
     }
   }
 
@@ -57,6 +60,8 @@ export default class People extends React.Component {
     await this.setState({filteredSpecialsList: filteredList})
   }
 
+
+
   sendEmailsBack = (emailList) => {
     this.setState({emailList: emailList})
   }
@@ -80,6 +85,7 @@ export default class People extends React.Component {
       </Tab.Pane>},
       { menuItem: 'Team', render: () =>
       <Tab.Pane>
+
         Dream Team!
       </Tab.Pane>}
     ]

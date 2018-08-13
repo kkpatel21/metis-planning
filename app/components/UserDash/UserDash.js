@@ -24,6 +24,11 @@ class UserDash extends React.Component {
     this.props.socket.on('fetchEvents', (data) =>  {
       this.getObjects();
     })
+    this.props.socket.on('goingHome', () => {
+      this.setState({
+        openEvent: false
+      })
+    })
   }
 
   viewChange = () => {

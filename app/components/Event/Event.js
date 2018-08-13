@@ -4,8 +4,9 @@ import People from "../Tabs/People/People";
 import Ideation from "../Tabs/Ideation/Ideation";
 import Budget from "../Tabs/Budget/Budget";
 import Overview from "../Tabs/Overview/Overview";
+import Fundraising from "../Tabs/Fundraising/Fundraising";
 import Tickets from "../Tabs/Tickets/Tickets";
-import Logistics from "../Tabs/Logistics/Logistics"
+import Logistics from "../Tabs/Logistics/Logistics";
 
 export default class Event extends React.Component {
   constructor() {
@@ -37,6 +38,10 @@ export default class Event extends React.Component {
     } else if (activeItem === "Logistics") {
       tabRender = (
         <Logistics socket={this.props.socket} eventId={this.props.eventId} />
+      );
+    } else if (activeItem === "Fundraising") {
+      tabRender = (
+        <Fundraising socket={this.props.socket} eventId={this.props.eventId} />
       );
     } else {
       tabRender = (
@@ -75,6 +80,11 @@ export default class Event extends React.Component {
             <Menu.Item
               name="Tickets"
               active={activeItem === "Tickets"}
+              onClick={this.handleItemClick}
+            />
+            <Menu.Item
+              name="Fundraising"
+              active={activeItem === "Fundraising"}
               onClick={this.handleItemClick}
             />
           </Menu>
