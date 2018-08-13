@@ -321,10 +321,22 @@ module.exports = (io, store) => {
     socket.on("addVenue", (data, next) => {
       console.log(data)
     })
+
     //goHome
     socket.on('goHome', (next) => {
       io.emit('goingHome')
     })
-  });
 
+  //add line item to budget page
+  socket.on('addLineItem', (data, next) => {
+    Event.findById(data.eventId, (err, event) => {
+      console.log(data.totalApproval)
+      event.budget.budgetItems.push(data.budgetItems)
+      event.markModified("budget");
+      event.save((err, event) => {
+        io.to(data.eventId).emit('updatedBudget', { budgetItem: event.budget.budgetItems });
+      });
+    })
+  })
+});
 }
