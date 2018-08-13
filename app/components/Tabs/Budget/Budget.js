@@ -16,10 +16,15 @@ export default class Budget extends React.Component {
     this.state = {
       lineItem: '',
       amount: '',
+      totalBudget: '',
       approval:'',
       totalApproval:''
     }
   }
+
+  // componentDidMount() {
+  //   this.props.socket.emit('getBudget')
+  // }
 
   addLineItem = (e) => {
     this.setState({lineItem: e.target.value})
@@ -27,7 +32,17 @@ export default class Budget extends React.Component {
 
   handleKeyPress = (event) => {
     if(event.key === 'Enter') {
-      budgetList.push({lineItem: this.state.lineItem, amount: this.state.amount, approval: this.state.approval}),
+      if(this.state.amount === '') {
+        budgetList.push({lineItem: this.state.lineItem, amount: 0, approval: this.state.approval})
+      } else {
+        budgetList.push({lineItem: this.state.lineItem, amount: this.state.amount, approval: this.state.approval})
+      }
+      let budgetItem = {
+        lineItem: this.state.lineItem,
+        amount: this.state.amount,
+        approval: this.state.approval
+      }
+      this.props.socket.emit('addLineItem', {eventId: this.props.eventId, budgetItems: budgetItem2, totalApproval: this.state.totalApproval})
       this.setState({
         lineItem: '',
         amount: '',
@@ -44,10 +59,16 @@ export default class Budget extends React.Component {
     budgetList.forEach((item) => {
       allocated+=parseInt(item.amount)
     })
+    let percent = parseInt(allocated/totalBudget*100)
 
     return (
       <div>
-        <Progress percent={parseInt(allocated/totalBudget*100)} progress />
+        {percent > 100 ?
+          <Progress percent={percent} progress error />
+          :
+          <Progress percent={percent} progress inverted color='blue'/>
+        }
+        <h1>Event Budget</h1>
         <Table singleLine>
           <Table.Header>
             <Table.Row>
@@ -74,7 +95,6 @@ export default class Budget extends React.Component {
                     onChange={this.addLineItem}
                     value={this.state.lineItem}
                   />
-                  {budgetList.map((item) => <div>{item.lineItem}</div>)}
                 </span>
               </Table.Cell>
               <Table.Cell>
@@ -90,14 +110,6 @@ export default class Budget extends React.Component {
                       <Label basic>$</Label>
                       <input />
                     </Input>
-                    {budgetList.map((item) => {
-                      console.log(item.amount)
-                      if(item.amount === '') {
-                        <div>$0</div>
-                      } else {
-                        <div>${item.amount}</div>
-                      }
-                    })}
                   </span>
                 </Table.Cell>
                 <Table.Cell>
@@ -112,17 +124,30 @@ export default class Budget extends React.Component {
                         value={value}
                       />
                     </Menu>
-                    {budgetList.map((item) => <div>{item.approval}</div>)}
                   </span>
                 </Table.Cell>
               </Table.Row>
 
+              {budgetList.map((item) =>
+                <Table.Row>
+                  <Table.Cell>
+                    {item.lineItem}
+                  </Table.Cell>
+                  <Table.Cell>
+                    ${item.amount}
+                  </Table.Cell>
+                  <Table.Cell>
+                    {item.approval}
+                  </Table.Cell>
+                </Table.Row>
+              )}
+
               <Table.Row>
                 <Table.Cell>
-                  <span>Allocated</span>
+                  <span className='summation'>Allocated</span>
                 </Table.Cell>
                 <Table.Cell>
-                  <span>${allocated}</span>
+                  <span className='summation'>${allocated}</span>
                 </Table.Cell>
                 <Table.Cell>
                   <span></span>
@@ -131,10 +156,10 @@ export default class Budget extends React.Component {
 
               <Table.Row>
                 <Table.Cell>
-                  <div>Total</div>
+                  <div className='summation'>Total</div>
                 </Table.Cell>
                 <Table.Cell>
-                  <div>${totalBudget}</div>
+                  <div className='summation'>${totalBudget}</div>
                 </Table.Cell>
                 <Table.Cell>
                   <div>
