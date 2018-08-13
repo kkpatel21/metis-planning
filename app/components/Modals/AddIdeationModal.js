@@ -24,8 +24,9 @@ class AddIdeationModal extends React.Component {
       topic: this.state.topic
     }, (res) => {
       if(res.event){
-        console.log(res.event)
         alert("topic saved!");
+        this.setState({open:false})
+        this.props.autoRender()
       }
       if(res.err){
         alert("There was an error: ", res.err)
