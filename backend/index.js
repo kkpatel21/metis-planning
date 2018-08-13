@@ -46,7 +46,6 @@ module.exports = (io, store) => {
 
     // Res works with Next, and the first parameter works with the second parameter.
     socket.on("fetchEvents", next => {
-      console.log("Will This Rehit?");
       User.findById(socket.session.passport.user).then(user => {
         Event.find({}, (err, events) => {
           let filtered = [];
@@ -76,7 +75,6 @@ module.exports = (io, store) => {
     //deletes events
     socket.on("deleteEvent", (data, next) => {
       Event.findByIdAndRemove(data.id, (err, event) => {
-        console.log("hey");
         //makes everyone on the server to re-render
         io.emit("fetchEvents");
         next({ err, event });
@@ -99,7 +97,6 @@ module.exports = (io, store) => {
     //get fundraising Tabs
     socket.on('getTabs', data => {
       Event.findById(data.eventId, (err, event) => {
-        console.log(event.fundraising)
         io.to(data.eventId).emit('sendTabs', { tabs: event.fundraising })
       })
     })
@@ -328,16 +325,33 @@ module.exports = (io, store) => {
       io.emit('goingHome')
     })
 
-  //add line item to budget page
-  socket.on('addLineItem', (data, next) => {
-    Event.findById(data.eventId, (err, event) => {
-      console.log(data.totalApproval)
-      event.budget.budgetItems.push(data.budgetItems)
-      event.markModified("budget");
-      event.save((err, event) => {
-        io.to(data.eventId).emit('updatedBudget', { budgetItem: event.budget.budgetItems });
-      });
+    //load db budget information
+    socket.on('getBudget', (data, next) => {
+      Event.findById(data.eventId, (err, event) => {
+        next({ err, event })
+      })
     })
-  })
-});
+
+    //add line item to budget page
+    socket.on('addLineItem', (data, next) => {
+      Event.findById(data.eventId, (err, event) => {
+        event.budget.budgetItems.push(data.budgetItems)
+        event.markModified("budget");
+        event.save((err, event) => {
+          io.to(data.eventId).emit('updatedBudget', { budgetItem: event.budget.budgetItems });
+        });
+      })
+    })
+
+    //save total budget approval status
+    socket.on('totalApproval', (data, next) => {
+      Event.findById(data.eventId, (err, event) => {
+        event.budget.totalApproval = data.totalApproval
+        event.markModified('budget');
+        event.save((err, event) => {
+          console.log('event saved')
+        })
+      })
+    })
+  });
 }
