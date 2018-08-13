@@ -92,16 +92,26 @@ module.exports = (io, store) => {
     //get people
     socket.on("getPeople", data => {
       Event.findById(data.eventId, (err, event) => {
-        io.to(data.eventId).emit("sendPeople", { guestList: event.people, catererList: event.caterers });
+        io.to(data.eventId).emit("sendPeople", {
+          guestList: event.people,
+          catererList: event.caterers
+        });
       });
     });
 
     //get fundraising Tabs
-    socket.on('getTabs', data => {
+    socket.on("getTabs", data => {
       Event.findById(data.eventId, (err, event) => {
+<<<<<<< HEAD
         io.to(data.eventId).emit('sendTabs', { tabs: event.fundraising })
       })
     })
+=======
+        console.log(event.fundraising);
+        io.to(data.eventId).emit("sendTabs", { tabs: event.fundraising });
+      });
+    });
+>>>>>>> 0fe64c0e3bcd09336aa8f2d1f250a4e465b851f2
 
     //update guestList
     socket.on("savePeople", data => {
@@ -117,17 +127,19 @@ module.exports = (io, store) => {
     });
 
     //update catererList
-    socket.on('saveCaterer', data => {
+    socket.on("saveCaterer", data => {
       Event.findById(data.eventId, (err, event) => {
         let catererList = event.caterers.slice();
         catererList[data.index] = data.updateCaterer;
         event.caterers = catererList.slice();
-        event.markModified('caterers');
+        event.markModified("caterers");
         event.save((err, eve) => {
-          io.to(data.eventId).emit('updatedCaterer', { catererList: catererList})
-        })
-      })
-    })
+          io.to(data.eventId).emit("updatedCaterer", {
+            catererList: catererList
+          });
+        });
+      });
+    });
 
     //add guests
     socket.on("addInvitee", data => {
@@ -141,18 +153,20 @@ module.exports = (io, store) => {
     });
 
     //add caterers
-    socket.on('addCaterer', data => {
+    socket.on("addCaterer", data => {
       Event.findById(data.eventId, (err, event) => {
-        event.caterers.push(data.newCaterer)
-        event.markModified('caterers');
+        event.caterers.push(data.newCaterer);
+        event.markModified("caterers");
         event.save((err, eve) => {
-          io.to(data.eventId).emit('updatedCaterer', { catererList: eve.caterers})
-        })
-      })
-    })
+          io.to(data.eventId).emit("updatedCaterer", {
+            catererList: eve.caterers
+          });
+        });
+      });
+    });
 
     //add tab
-    socket.on('addTab', data => {
+    socket.on("addTab", data => {
       Event.findById(data.eventId, (err, event) => {
         event.fundraising.push({title: data.title, data: [], goal: data.goal})
         event.markModified('fundraising');
@@ -163,17 +177,17 @@ module.exports = (io, store) => {
     })
 
     //delete Tabs
-    socket.on('deleteTab', data => {
+    socket.on("deleteTab", data => {
       Event.findById(data.eventId, (err, event) => {
-        let fundraisers = event.fundraising.slice()
-        fundraisers.splice(data.index, 1)
-        event.fundraising = fundraisers.slice()
-        event.markModified('fundraising');
+        let fundraisers = event.fundraising.slice();
+        fundraisers.splice(data.index, 1);
+        event.fundraising = fundraisers.slice();
+        event.markModified("fundraising");
         event.save((err, eve) => {
-          io.to(data.eventId).emit('sendTabs', {tabs: event.fundraising})
-        })
-      })
-    })
+          io.to(data.eventId).emit("sendTabs", { tabs: event.fundraising });
+        });
+      });
+    });
 
     //delete guests
     socket.on("deleteInvitee", data => {
@@ -187,15 +201,17 @@ module.exports = (io, store) => {
     });
 
     //delete Caterer
-    socket.on('deleteCaterer', data => {
+    socket.on("deleteCaterer", data => {
       Event.findById(data.eventId, (err, event) => {
         event.caterers.splice(data.index, 1);
-        event.markModified('caterers');
+        event.markModified("caterers");
         event.save((err, eve) => {
-          io.to(data.eventId).emit('updatedCaterer', {catererList: eve.caterers})
-        })
-      })
-    })
+          io.to(data.eventId).emit("updatedCaterer", {
+            catererList: eve.caterers
+          });
+        });
+      });
+    });
 
     //sendOneEmail
     socket.on("sendEmail", data => {
@@ -244,8 +260,7 @@ module.exports = (io, store) => {
           if (event) {
             event.ideation.push({
               topic: data.topic,
-              note: [],
-              user: user.firstname
+              note: []
             });
             event.markModified("ideation");
             event.save((err, event) => {
@@ -265,7 +280,34 @@ module.exports = (io, store) => {
       });
     });
 
-    //Deleting Ideation
+    //Adding Comments to Ideation
+    socket.on("addComment", (data, next) => {
+      User.findById(userId)
+        .then(user => {
+          Event.findById(data.id, (err, event) => {
+            if (event) {
+              event.ideation.map(ideationObj => {
+                if (ideationObj.topic === data.topic.topic) {
+                  return (ideationObj.note = ideationObj.note.concat({
+                    comment: data.typing,
+                    user: user.firstname
+                  }));
+                }
+              });
+              event.markModified("ideation");
+              event.save((err, event) => {
+                next({ err, event });
+              });
+            } else if (err) {
+              next({ err });
+            }
+          });
+        })
+        .catch(err => {
+          next({ err });
+        });
+    });
+    //Deleting topic
     socket.on("deleteIdeation", (data, next) => {
       Event.findById(data.id, (err, event) => {
         if (event) {
@@ -279,21 +321,17 @@ module.exports = (io, store) => {
       });
     });
 
-    //Adding Comments to Ideation
-    socket.on("addComment", (data, next) => {
+    //deleting comment
+    socket.on("deleteComment", (data, next) => {
       Event.findById(data.id, (err, event) => {
-        if (event) {
-          event.ideation.map(ideationObj => {
-            if (ideationObj.topic === data.topic.topic) {
-              return (ideationObj.note = ideationObj.note.concat(data.typing));
-            }
-          });
+        if(event){
+          var copy = event.ideation[data.topicI].note.slice()
+          copy.splice(data.commentI, 1)
+          event.ideation[data.topicI].note = copy
           event.markModified("ideation");
           event.save((err, event) => {
             next({ err, event });
           });
-        } else if (err) {
-          next({ err });
         }
       });
     });
@@ -319,13 +357,13 @@ module.exports = (io, store) => {
 
     //addVenue
     socket.on("addVenue", (data, next) => {
-      console.log(data)
-    })
+      console.log(data);
+    });
 
     //goHome
-    socket.on('goHome', (next) => {
-      io.emit('goingHome')
-    })
+    socket.on("goHome", next => {
+      io.emit("goingHome");
+    });
 
   //add line item to budget page
   socket.on('addLineItem', (data, next) => {
