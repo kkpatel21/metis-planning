@@ -163,6 +163,19 @@ module.exports = (io, store) => {
       })
     })
 
+    //delete Tabs
+    socket.on('deleteTab', data => {
+      Event.findById(data.eventId, (err, event) => {
+        let fundraisers = event.fundraising.slice()
+        fundraisers.splice(data.index, 1)
+        event.fundraising = fundraisers.slice()
+        event.markModified('fundraising');
+        event.save((err, eve) => {
+          io.to(data.eventId).emit('sendTabs', {tabs: event.fundraising})
+        })
+      })
+    })
+
     //delete guests
     socket.on("deleteInvitee", data => {
       Event.findById(data.eventId, (err, event) => {

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import { List, Label, Tab } from 'semantic-ui-react'
+import { List, Label, Tab, Icon, Header } from 'semantic-ui-react'
 import AddNewTab from '../../Modals/AddNewTab'
+import './Fundraising.css'
 
 export default class Fundraising extends React.Component {
   constructor(props) {
@@ -8,18 +9,22 @@ export default class Fundraising extends React.Component {
     this.state = {
       addTab: [
         { menuItem: {key: 'addTab', content:<AddNewTab eventId={this.props.eventId} socket={this.props.socket}/>},
-        }
+          render: () => <div>Add A New Table</div>}
       ],
       allTabs: []
     }
   }
 
+  deleteTab = (index) => {
+    this.props.socket.emit('deleteTab', {eventId: this.props.eventId, index: index})
+  }
+
   componentDidMount() {
     this.props.socket.emit('getTabs', {eventId: this.props.eventId})
     this.props.socket.on('sendTabs', data => {
-      let newTabs = data.tabs.map((tab) => {
+      let newTabs = data.tabs.map((tab, i) => {
         return {
-          menuItem: {key: tab.title, content:tab.title},
+          menuItem: {key: i, content:<Header as='h4'><Header.Content>{tab.title} &emsp;<Icon color='grey' name='cancel' onClick={() => this.deleteTab(i)}/></Header.Content></Header>},
           render: () => <Tab.Pane> Add Another Table </Tab.Pane>
         }
       })

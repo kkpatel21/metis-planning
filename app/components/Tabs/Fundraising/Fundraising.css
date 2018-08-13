@@ -1,0 +1,4 @@
+.ui.attached.tabular.menu {
+  overflow: scroll;
+  overflow-y: hidden;
+}
