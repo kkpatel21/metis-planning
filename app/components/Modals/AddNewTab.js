@@ -26,7 +26,7 @@ class AddNewTab extends React.Component {
   render() {
     return (
       <Modal
-      trigger={<Icon inverted color='grey' name='add' onClick={() => this.onTrigger()} />}
+      trigger={<Icon name='add' onClick={() => this.onTrigger()} />}
       onClose={this.onCancel}
       open={this.state.open}
       >

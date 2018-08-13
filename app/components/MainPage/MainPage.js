@@ -30,6 +30,7 @@ class MainPage extends React.Component {
       alert("Error! "+ err)
     })
   };
+
   loggedIn = () => {
     this.setState({ logged : true })
   }
@@ -64,8 +65,8 @@ class MainPage extends React.Component {
     } else {
       renderLog = (
         <div>
-          <NavBar toggleLogged={this.toggleLogged} />
-          <UserDash socket={this.socket}/>
+          <NavBar toggleLogged={this.toggleLogged} socket={this.socket} />
+          <UserDash socket={this.socket} />
         </div>
       );
     }
