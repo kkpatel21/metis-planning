@@ -99,7 +99,6 @@ module.exports = (io, store) => {
     //get fundraising Tabs
     socket.on('getTabs', data => {
       Event.findById(data.eventId, (err, event) => {
-        console.log(event.fundraising)
         io.to(data.eventId).emit('sendTabs', { tabs: event.fundraising })
       })
     })
