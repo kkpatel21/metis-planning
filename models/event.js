@@ -40,6 +40,16 @@ var EventSchema = new mongoose.Schema({
   collaborators:{
     type: Array,
     required: false
+  },
+  budget:{
+    budgetItems: {
+      type: Array,
+      required: false
+    },
+    totalApproval:{
+      type: String,
+      required: false
+    }
   }
 },
 { usePushEach: true }
