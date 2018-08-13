@@ -19,21 +19,21 @@ class EditIdeationModal extends React.Component {
       newTopic: ""
     };
   }
-//   onDone = (topic) => {
-//     this.props.socket.emit("editIdeation", {
-//       id: this.props.eventId,
-//       topic: this.state.topic,
-//       newTopic: this.state.newTopic
-//     }, (res) => {
-//       if(res.event){
-//         console.log(res.event)
-//         alert("topic saved!");
-//       }
-//       if(res.err){
-//         alert("There was an error: ", res.err)
-//       }
-//     });
-//   };
+  //   onDone = (topic) => {
+  //     this.props.socket.emit("editIdeation", {
+  //       id: this.props.eventId,
+  //       topic: this.state.topic,
+  //       newTopic: this.state.newTopic
+  //     }, (res) => {
+  //       if(res.event){
+  //         console.log(res.event)
+  //         alert("topic saved!");
+  //       }
+  //       if(res.err){
+  //         alert("There was an error: ", res.err)
+  //       }
+  //     });
+  //   };
 
   onCancel = () => {
     this.setState({ open: false });
@@ -45,7 +45,9 @@ class EditIdeationModal extends React.Component {
     return (
       <Modal
         trigger={
-          <Button circular icon floated='right' ><Icon onClick={() => this.onTrigger()} name="pencil" /></Button>
+          <Button basic color='transparent' content='Grey' size="mini" icon floated="right">
+            <Icon onClick={() => this.onTrigger()} name="pencil" />
+          </Button>
         }
         onClose={this.onCancel}
         open={this.state.open}
@@ -63,7 +65,16 @@ class EditIdeationModal extends React.Component {
                   onChange={e => this.setState({ newTopic: e.target.value })}
                 />
               </Form.Field>
-                <Button type="submit" onClick={()=>this.props.onDone(this.props.oneTopic.topic, this.state.newTopic, this.onCancel.bind(this))}>
+              <Button
+                type="submit"
+                onClick={() =>
+                  this.props.onDone(
+                    this.props.oneTopic.topic,
+                    this.state.newTopic,
+                    this.onCancel.bind(this)
+                  )
+                }
+              >
                 Done
               </Button>
               <Button type="submit" onClick={() => this.onCancel()}>
