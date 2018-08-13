@@ -16,7 +16,8 @@ class UserDash extends React.Component {
       idBeingDeleted: "",
       openEvent: false,
       eventId: "",
-      events: []
+      events: [],
+      user: ''
     };
   }
 
@@ -43,7 +44,8 @@ class UserDash extends React.Component {
         return alert(data)
       } else {
         this.setState({
-          events: data.filtered
+          events: data.filtered,
+          user: data.name
         })
       }
     })
@@ -80,7 +82,7 @@ class UserDash extends React.Component {
 
     //This is to switch views from Calendar to Scroller
     let viewRender
-    if (!this.state.view) {
+    if (this.state.view) {
       viewRender = (
         <div className="scrolling-events">
           <ScrollerView
@@ -104,13 +106,13 @@ class UserDash extends React.Component {
     if (!this.state.openEvent) {
       eventRender = (
         <div>
-          <span className="greetings"> Welcome Krish </span>
+          <span className="greetings"> Welcome {this.state.user} </span>
           <span className="viewSwitch">
             <Toggle
               defaultChecked={this.state.view}
               icons={{
-                checked: <span> Calendar </span>,
-                unchecked: <span> Card </span>
+                checked: <span> Card </span>,
+                unchecked: <span> Calendar </span>
               }}
               onChange={this.viewChange}
             />

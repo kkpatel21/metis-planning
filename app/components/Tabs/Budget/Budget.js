@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, Menu, Dropdown, Input, Label, Progress } from 'semantic-ui-react';
+import { Table, Menu, Dropdown, Input, Label, Progress, Header } from 'semantic-ui-react';
 import './Budget.css';
 
 const options = [
@@ -22,9 +22,14 @@ export default class Budget extends React.Component {
     }
   }
 
-  // componentDidMount() {
-  //   this.props.socket.emit('getBudget')
-  // }
+  componentDidMount() {
+    this.props.socket.emit('getBudget', {eventId: this.props.eventId}, res => {
+      budgetList = res.event.budget.budgetItems
+      this.setState({
+        totalApproval: res.event.budget.totalApproval
+      })
+    })
+  }
 
   addLineItem = (e) => {
     this.setState({lineItem: e.target.value})
@@ -42,13 +47,20 @@ export default class Budget extends React.Component {
         amount: this.state.amount,
         approval: this.state.approval
       }
-      this.props.socket.emit('addLineItem', {eventId: this.props.eventId, budgetItems: budgetItem2, totalApproval: this.state.totalApproval})
+      this.props.socket.emit('addLineItem', {eventId: this.props.eventId, budgetItems: budgetItem})
       this.setState({
         lineItem: '',
         amount: '',
         approval: ''
       })
     }
+  }
+
+  totalApprovalChange = (event, value) => {
+    this.props.socket.emit('totalApproval', {eventId: this.props.eventId, totalApproval: value.value})
+    this.setState({
+      totalApproval: value.value
+    })
   }
 
   render() {
@@ -68,7 +80,7 @@ export default class Budget extends React.Component {
           :
           <Progress percent={percent} progress inverted color='blue'/>
         }
-        <h1>Event Budget</h1>
+        <Header as='h1'>Event Budget</Header>
         <Table singleLine>
           <Table.Header>
             <Table.Row>
@@ -165,7 +177,7 @@ export default class Budget extends React.Component {
                   <div>
                     <Menu compact>
                       <Dropdown
-                        onChange={(e,value) => {this.setState({totalApproval: value.value})}}
+                        onChange={(e, value) => this.totalApprovalChange(e, value)}
                         placeholder='Approved?'
                         selection
                         options={options}
