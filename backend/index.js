@@ -61,7 +61,8 @@ module.exports = (io, store) => {
               filtered.push(event);
             }
           });
-          next({ err, filtered });
+          let name = user.firstname
+          next({ err, filtered, name });
         });
 
         socket.on("deleteEvent", (data, next) => {
@@ -104,6 +105,7 @@ module.exports = (io, store) => {
       })
       io.to(data.eventId).emit("sendTabs", { tabs: event.fundraising });
     });
+
 
     //update guestList
     socket.on("savePeople", data => {
