@@ -19,7 +19,7 @@ export default class Logistics extends React.Component {
   render() {
     return (
       <div>
-          <AddVenueModal />
+          <AddVenueModal eventId={this.props.eventId} socket={this.props.socket}/>
       </div>
     );
   }

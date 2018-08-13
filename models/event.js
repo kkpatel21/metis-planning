@@ -58,6 +58,10 @@ var EventSchema = new mongoose.Schema({
       type: String,
       required: false
     }
+  },
+  logistics:{
+    type:Array,
+    required: false
   }
 },
 { usePushEach: true }
