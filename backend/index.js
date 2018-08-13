@@ -46,7 +46,6 @@ module.exports = (io, store) => {
 
     // Res works with Next, and the first parameter works with the second parameter.
     socket.on("fetchEvents", next => {
-      console.log("Will This Rehit?");
       User.findById(socket.session.passport.user).then(user => {
         Event.find({}, (err, events) => {
           let filtered = [];
@@ -76,7 +75,6 @@ module.exports = (io, store) => {
     //deletes events
     socket.on("deleteEvent", (data, next) => {
       Event.findByIdAndRemove(data.id, (err, event) => {
-        console.log("hey");
         //makes everyone on the server to re-render
         io.emit("fetchEvents");
         next({ err, event });
@@ -102,16 +100,10 @@ module.exports = (io, store) => {
     //get fundraising Tabs
     socket.on("getTabs", data => {
       Event.findById(data.eventId, (err, event) => {
-<<<<<<< HEAD
         io.to(data.eventId).emit('sendTabs', { tabs: event.fundraising })
       })
-    })
-=======
-        console.log(event.fundraising);
-        io.to(data.eventId).emit("sendTabs", { tabs: event.fundraising });
-      });
+      io.to(data.eventId).emit("sendTabs", { tabs: event.fundraising });
     });
->>>>>>> 0fe64c0e3bcd09336aa8f2d1f250a4e465b851f2
 
     //update guestList
     socket.on("savePeople", data => {
@@ -283,29 +275,29 @@ module.exports = (io, store) => {
     //Adding Comments to Ideation
     socket.on("addComment", (data, next) => {
       User.findById(userId)
-        .then(user => {
-          Event.findById(data.id, (err, event) => {
-            if (event) {
-              event.ideation.map(ideationObj => {
-                if (ideationObj.topic === data.topic.topic) {
-                  return (ideationObj.note = ideationObj.note.concat({
-                    comment: data.typing,
-                    user: user.firstname
-                  }));
-                }
-              });
-              event.markModified("ideation");
-              event.save((err, event) => {
-                next({ err, event });
-              });
-            } else if (err) {
-              next({ err });
-            }
-          });
-        })
-        .catch(err => {
-          next({ err });
+      .then(user => {
+        Event.findById(data.id, (err, event) => {
+          if (event) {
+            event.ideation.map(ideationObj => {
+              if (ideationObj.topic === data.topic.topic) {
+                return (ideationObj.note = ideationObj.note.concat({
+                  comment: data.typing,
+                  user: user.firstname
+                }));
+              }
+            });
+            event.markModified("ideation");
+            event.save((err, event) => {
+              next({ err, event });
+            });
+          } else if (err) {
+            next({ err });
+          }
         });
+      })
+      .catch(err => {
+        next({ err });
+      });
     });
     //Deleting topic
     socket.on("deleteIdeation", (data, next) => {
@@ -365,55 +357,73 @@ module.exports = (io, store) => {
       io.emit("goingHome");
     });
 
-  //add line item to budget page
-  socket.on('addLineItem', (data, next) => {
-    Event.findById(data.eventId, (err, event) => {
-      event.budget.budgetItems.push(data.budgetItems)
-      event.markModified("budget");
-      event.save((err, event) => {
-        io.to(data.eventId).emit('updatedBudget', { budgetItem: event.budget.budgetItems });
-      });
+    //load db budget information
+    socket.on('getBudget', (data, next) => {
+      Event.findById(data.eventId, (err, event) => {
+        next({ err, event })
+      })
     })
-  })
 
-  //add Fundraising List
-  socket.on('addToFund', (data, next) => {
-    Event.findById(data.eventId, (err, event) => {
-      event.fundraising[data.index].data.push(data.addingItem)
-      event.markModified('fundraising');
-      event.save((err, event) => {
+    //add line item to budget page
+    socket.on('addLineItem', (data, next) => {
+      Event.findById(data.eventId, (err, event) => {
+        event.budget.budgetItems.push(data.budgetItems)
+        event.markModified("budget");
+        event.save((err, event) => {
+          io.to(data.eventId).emit('updatedBudget', { budgetItem: event.budget.budgetItems });
+        });
+      })
+    })
+
+    //save total budget approval status
+    socket.on('totalApproval', (data, next) => {
+      Event.findById(data.eventId, (err, event) => {
+        event.budget.totalApproval = data.totalApproval
+        event.markModified('budget');
+        event.save((err, event) => {
+          console.log('event saved')
+        })
+      })
+    })
+
+    //add Fundraising List
+    socket.on('addToFund', (data, next) => {
+      Event.findById(data.eventId, (err, event) => {
+        event.fundraising[data.index].data.push(data.addingItem)
+        event.markModified('fundraising');
+        event.save((err, event) => {
+          io.to(data.eventId).emit('updatedFundraiser', {updatedList: event.fundraising[data.index]})
+        })
+      })
+    })
+
+    //delete Fundraising
+    socket.on('deleteFund', (data, next) => {
+      Event.findById(data.eventId, (err, event) => {
+        event.fundraising[data.index].data.splice(data.i, 1)
+        event.markModified('fundraising');
+        event.save((err, event) => {
+          io.to(data.eventId).emit('updatedFundraiser', {updatedList: event.fundraising[data.index]})
+        })
+      })
+    })
+
+    //save fundraising
+    socket.on('saveFund', (data, next) => {
+      Event.findById(data.eventId, (err, event) => {
+        event.fundraising[data.index].data[data.i] = data.updateFund
+        event.markModified('fundraising');
+        event.save((err, event) => {
+          io.to(data.eventId).emit('updatedFundraiser', {updatedList: event.fundraising[data.index]})
+        })
+      })
+    })
+
+    //get Fundraising
+    socket.on('getFundraiser', (data, next) => {
+      Event.findById(data.eventId, (err, event) => {
         io.to(data.eventId).emit('updatedFundraiser', {updatedList: event.fundraising[data.index]})
       })
     })
-  })
-
-  //delete Fundraising
-  socket.on('deleteFund', (data, next) => {
-    Event.findById(data.eventId, (err, event) => {
-      event.fundraising[data.index].data.splice(data.i, 1)
-      event.markModified('fundraising');
-      event.save((err, event) => {
-        io.to(data.eventId).emit('updatedFundraiser', {updatedList: event.fundraising[data.index]})
-      })
-    })
-  })
-
-  //save fundraising
-  socket.on('saveFund', (data, next) => {
-    Event.findById(data.eventId, (err, event) => {
-      event.fundraising[data.index].data[data.i] = data.updateFund
-      event.markModified('fundraising');
-      event.save((err, event) => {
-        io.to(data.eventId).emit('updatedFundraiser', {updatedList: event.fundraising[data.index]})
-      })
-    })
-  })
-
-  //get Fundraising
-  socket.on('getFundraiser', (data, next) => {
-    Event.findById(data.eventId, (err, event) => {
-      io.to(data.eventId).emit('updatedFundraiser', {updatedList: event.fundraising[data.index]})
-    })
-  })
-});
+  });
 }
