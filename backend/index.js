@@ -62,7 +62,8 @@ module.exports = (io, store) => {
               filtered.push(event);
             }
           });
-          next({ err, filtered });
+          let name = user.firstname
+          next({ err, filtered, name });
         });
 
         socket.on("deleteEvent", (data, next) => {
@@ -102,16 +103,9 @@ module.exports = (io, store) => {
     //get fundraising Tabs
     socket.on("getTabs", data => {
       Event.findById(data.eventId, (err, event) => {
-<<<<<<< HEAD
         io.to(data.eventId).emit('sendTabs', { tabs: event.fundraising })
       })
     })
-=======
-        console.log(event.fundraising);
-        io.to(data.eventId).emit("sendTabs", { tabs: event.fundraising });
-      });
-    });
->>>>>>> 0fe64c0e3bcd09336aa8f2d1f250a4e465b851f2
 
     //update guestList
     socket.on("savePeople", data => {
