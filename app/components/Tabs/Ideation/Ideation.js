@@ -136,6 +136,7 @@ export default class Ideation extends React.Component {
                   onChange={this.handleChange}
                   // style={{ width: 250, borderWidth: 1, borderColor: "black" }}
                   placeholder="Write your ideas here!"
+                  onKeyPress={() => this.handleAdd(oneTopic)}
                   icon={
                     <Icon
                       name="edit"
