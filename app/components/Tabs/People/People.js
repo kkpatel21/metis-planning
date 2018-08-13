@@ -34,6 +34,13 @@ export default class People extends React.Component {
     })
   }
 
+  componentWillUnmount() {
+    this.props.socket.removeListener('sendPeople')
+    this.props.socket.removeListener('updatedPeople')
+    this.props.socket.removeListener('updatedCaterer')
+    this.props.socket.removeListener('getPeople')
+  }
+
   filteredList = async (val) => {
     let filteredList = []
     this.state.guestsList.map((guest) => {
