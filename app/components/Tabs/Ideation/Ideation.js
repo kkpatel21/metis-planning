@@ -94,7 +94,6 @@ export default class Ideation extends React.Component {
       commentI: commentI
     }, res => {
       if(res.event) {
-        console.log(res.event)
         this.componentDidMount();
       }
     })

@@ -352,6 +352,23 @@ module.exports = (io, store) => {
     //addVenue
     socket.on("addVenue", (data, next) => {
       console.log(data);
+      Event.findById(data.id, (err,event) => {
+        if (event) {
+          event.logistics.push({
+            uploadFile: data.uploadFile,
+            status: data.status,
+            contact: data.contact,
+            address: data.address,
+            name: data.name
+          });
+          event.markModified("logistics");
+          event.save((err, event) => {
+            next({ err, event });
+          });
+        } else if (err) {
+          next({ err });
+        }
+      })
     });
 
     //goHome

@@ -36,17 +36,16 @@ class AddVenueModal extends React.Component {
   };
   onDone = () => {
     var data = new FormData();
-    data.append("uploadFile", this.state.uploadFile);
     data.append("name", this.state.name);
-    data.append("date", this.state.date);
-    data.append("priority", this.state.priority);
-    data.append("startTime", this.state.startTime);
-    data.append("endTime", this.state.endTime);
+    data.append("status", this.state.status);
+    data.append("contact", this.state.contact);
+    data.append("address", this.state.address);
+    data.append("uploadFile", this.state.uploadFile);
     data.append("id", this.props.eventId);
     for (var value of data.values()) {
       console.log(value);
     }
-    this.props.socket("addVenue", data, res => {
+    this.props.socket.emit("addVenue", data, res => {
       console.log(res);
       this.setState({ open: false });
     });
@@ -65,8 +64,10 @@ class AddVenueModal extends React.Component {
   };
   handleSelect = address => {
     geocodeByAddress(address)
-      .then(results => getLatLng(results[0]))
-      .then(latLng => console.log('Success', latLng))
+      .then(results => {
+          console.log("what dis-------->",results[0])
+          this.setState({address: results[0].formatted_address})
+        })
       .catch(error => console.error('Error', error));
   };
   render() {
