@@ -6,13 +6,15 @@ class AddNewTab extends React.Component {
     super();
     this.state = {
       title: "",
+      goal: 0,
     };
   }
 
   onCreate = () => {
     this.props.socket.emit('addTab', {
       title: this.state.title,
-      eventId: this.props.eventId
+      eventId: this.props.eventId,
+      goal: this.state.goal
     })
     this.onCancel()
   }
@@ -41,6 +43,14 @@ class AddNewTab extends React.Component {
                   placeholder="Title"
                   type="text"
                   onChange={e => this.setState({ title: e.target.value })}
+                />
+              </Form.Field>
+              <Form.Field>
+                <label>Goal</label>
+                <input
+                  placeholder="Goal i.e...10, 20, 30"
+                  type="number"
+                  onChange={e => this.setState({ goal: e.target.value })}
                 />
               </Form.Field>
 

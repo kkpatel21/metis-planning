@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { List, Label, Tab, Icon, Header } from 'semantic-ui-react'
 import AddNewTab from '../../Modals/AddNewTab'
 import './Fundraising.css'
+import FundingStats from './FundingStats.js'
 
 export default class Fundraising extends React.Component {
   constructor(props) {
@@ -25,7 +26,7 @@ export default class Fundraising extends React.Component {
       let newTabs = data.tabs.map((tab, i) => {
         return {
           menuItem: {key: i, content:<Header as='h4'><Header.Content>{tab.title} &emsp;<Icon color='grey' name='cancel' onClick={() => this.deleteTab(i)}/></Header.Content></Header>},
-          render: () => <Tab.Pane> Add Another Table </Tab.Pane>
+          render: () => <Tab.Pane> <FundingStats goal={tab.goal} key={i} title={tab.title} socket={this.props.socket} eventId={this.props.eventId} index={i}/> </Tab.Pane>
         }
       })
       newTabs = newTabs.concat(this.state.addTab)
@@ -38,13 +39,18 @@ export default class Fundraising extends React.Component {
       let add = updateTabs.pop()
       updateTabs.push({
         menuItem: {key: data.newTab.title, content: <Header as='h4'><Header.Content>{data.newTab.title} &emsp;<Icon color='grey' name='cancel' onClick={() => this.deleteTab(updateTabs.length-2)}/></Header.Content></Header>},
-        render: () => <Tab.Pane> This Works! </Tab.Pane>
+        render: () => <Tab.Pane> <FundingStats goal={data.newTab.goal} key={updateTabs.length-2} title={data.newTab.title} socket={this.props.socket} eventId={this.props.eventId} index={updateTabs.length-2}/> </Tab.Pane>
       })
       updateTabs.push(add)
       this.setState({
         allTabs: updateTabs
       })
     })
+  }
+
+  componentWillUnmount() {
+    this.props.socket.removeListener('sendTabs')
+    this.props.socket.removeListener('addTab')
   }
 
   render() {

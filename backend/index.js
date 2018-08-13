@@ -154,10 +154,10 @@ module.exports = (io, store) => {
     //add tab
     socket.on('addTab', data => {
       Event.findById(data.eventId, (err, event) => {
-        event.fundraising.push({title: data.title, data: []})
+        event.fundraising.push({title: data.title, data: [], goal: data.goal})
         event.markModified('fundraising');
         event.save((err, eve) => {
-          io.to(data.eventId).emit('addTab', { newTab: {title:data.title, data: []} })
+          io.to(data.eventId).emit('addTab', { newTab: {title:data.title, data: [], goal: data.goal} })
         })
       })
     })
@@ -330,12 +330,51 @@ module.exports = (io, store) => {
   //add line item to budget page
   socket.on('addLineItem', (data, next) => {
     Event.findById(data.eventId, (err, event) => {
-      console.log(data.totalApproval)
       event.budget.budgetItems.push(data.budgetItems)
       event.markModified("budget");
       event.save((err, event) => {
         io.to(data.eventId).emit('updatedBudget', { budgetItem: event.budget.budgetItems });
       });
+    })
+  })
+
+  //add Fundraising List
+  socket.on('addToFund', (data, next) => {
+    Event.findById(data.eventId, (err, event) => {
+      event.fundraising[data.index].data.push(data.addingItem)
+      event.markModified('fundraising');
+      event.save((err, event) => {
+        io.to(data.eventId).emit('updatedFundraiser', {updatedList: event.fundraising[data.index]})
+      })
+    })
+  })
+
+  //delete Fundraising
+  socket.on('deleteFund', (data, next) => {
+    Event.findById(data.eventId, (err, event) => {
+      event.fundraising[data.index].data.splice(data.i, 1)
+      event.markModified('fundraising');
+      event.save((err, event) => {
+        io.to(data.eventId).emit('updatedFundraiser', {updatedList: event.fundraising[data.index]})
+      })
+    })
+  })
+
+  //save fundraising
+  socket.on('saveFund', (data, next) => {
+    Event.findById(data.eventId, (err, event) => {
+      event.fundraising[data.index].data[data.i] = data.updateFund
+      event.markModified('fundraising');
+      event.save((err, event) => {
+        io.to(data.eventId).emit('updatedFundraiser', {updatedList: event.fundraising[data.index]})
+      })
+    })
+  })
+
+  //get Fundraising
+  socket.on('getFundraiser', (data, next) => {
+    Event.findById(data.eventId, (err, event) => {
+      io.to(data.eventId).emit('updatedFundraiser', {updatedList: event.fundraising[data.index]})
     })
   })
 });
