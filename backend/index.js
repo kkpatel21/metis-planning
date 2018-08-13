@@ -272,8 +272,6 @@ module.exports = (io, store) => {
       Event.findById(data.id, (err, event) => {
         if (event) {
           event.ideation.map(ideationObj => {
-            console.log("OLD TOPIC****************",data.topic)
-            console.log("NEW TOPIC&&&&&&&&&&&&&", data.newTopic)
             if (ideationObj.topic === data.topic) {
               ideationObj.topic = data.newTopic;
             }
@@ -287,5 +285,10 @@ module.exports = (io, store) => {
         }
       });
     });
+
+    //addVenue
+    socket.on("addVenue", (data, next) => {
+      console.log(data)
+    })
   });
 };
