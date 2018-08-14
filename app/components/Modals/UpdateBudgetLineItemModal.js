@@ -1,21 +1,27 @@
 import React from "react";
 import { Button, Header, Image, Modal, Form, Menu, Dropdown, Icon } from "semantic-ui-react";
 
-class UpdateGuestModal extends React.Component {
+const options = [
+  { key: 'y', text: 'Yes', value: 'Yes'},
+  { key: 'p', text: 'Pending', value: 'Pending'},
+  { key: 'n', text: 'No', value: 'No'},
+]
+
+export default class UpdateBudgetLineItemModal extends React.Component {
   constructor() {
     super();
     this.state = {
       lineItem: '',
-      notes: '',
       amount: '',
+      approval: '',
     };
   }
 
   componentDidMount () {
     this.setState({
-      lineItem: this.props.line.lineItem,
-      notes: this.props.line.notes,
-      amount: this.props.line.amount,
+      lineItem: this.props.lineItem.lineItem,
+      amount: this.props.lineItem.amount,
+      approval: this.props.lineItem.approval
     })
   }
   onTrigger = () => {
@@ -26,18 +32,17 @@ class UpdateGuestModal extends React.Component {
   }
 
   onSave = () => {
-    let updateFund = {
-      'lineItem': this.state.lineItem,
-      'notes': this.state.notes,
-      'amount': this.state.amount
+    let budgetItem = {
+      lineItem: this.state.lineItem,
+      amount: this.state.amount,
+      approval: this.state.approval
     }
-    this.props.socket.emit('saveFund', {eventId: this.props.eventId, updateFund: updateFund, index: this.props.index, i: this.props.i})
+    this.props.socket.emit('updateLineItem', {eventId: this.props.eventId, updateLineItem: budgetItem, i: this.props.i})
     this.onCancel()
-
   }
 
   render() {
-
+    const value = this.state.approval
     return (
       <Modal
         trigger={
@@ -52,21 +57,12 @@ class UpdateGuestModal extends React.Component {
               <Header />
               <Form >
                 <Form.Field>
-                  <label>Name </label>
+                  <label>Line Item</label>
                   <input
-                    placeholder="Name"
+                    placeholder="Line Item"
                     type="text"
                     value={this.state.lineItem}
                     onChange={e => this.setState({ lineItem: e.target.value })}
-                  />
-                </Form.Field>
-                <Form.Field>
-                  <label>Notes</label>
-                  <input
-                    placeholder="Notes"
-                    type="text"
-                    value={this.state.notes}
-                    onChange={e => this.setState({ notes: e.target.value })}
                   />
                 </Form.Field>
                 <Form.Field>
@@ -77,6 +73,17 @@ class UpdateGuestModal extends React.Component {
                     value={this.state.amount}
                     onChange={e => this.setState({ amount: e.target.value })}
                   />
+                </Form.Field>
+                <Form.Field>
+                  <Menu compact>
+                    <Dropdown
+                      onChange={(e,value) => this.setState({ approval: value.value })}
+                      placeholder='Approved?'
+                      selection
+                      options={options}
+                      value={value}
+                    />
+                  </Menu>
                 </Form.Field>
                 <Button basic color='teal' type="submit" onClick={() => this.onSave()}>
                   Update
@@ -91,5 +98,3 @@ class UpdateGuestModal extends React.Component {
       )
     }
   }
-
-  export default UpdateGuestModal;

@@ -54,10 +54,18 @@ var EventSchema = new mongoose.Schema({
       type: Array,
       required: false
     },
+    total: {
+      type: Number,
+      required: false
+    },
     totalApproval:{
       type: String,
       required: false
     }
+  },
+  logistics:{
+    type:Array,
+    required: false
   }
 },
 { usePushEach: true }

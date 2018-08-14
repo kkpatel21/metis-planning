@@ -5,3 +5,8 @@ h1 {
 .summation {
   font-weight: bold;
 }
+
+.editTotalIcon {
+  display: inline-block;
+  text-align: right;
+}

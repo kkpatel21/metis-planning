@@ -52,7 +52,7 @@ class GiveFeedbackModal extends React.Component {
               <Modal.Description>
                 <Header />
                 <Form>
-                  <Form.TextArea label='Your Feedback' value={this.state.feedback} onChange={e => this.setState({ feedback: e.target.value})} placeholder="What do you like about our site? What don't you like?" />
+                  <Form.TextArea label='Your Feedback' value={this.state.feedback} onChange={e => this.setState({ feedback: e.target.value})} placeholder="What do you like about our site? What don't you like? i.e (Design, Functionality, etc)" />
                   <Form.Checkbox label='Would you be okay with us reaching out to you for more feedback?' onClick={() => this.toggle()} />
                   <Form.Field>
                     <Button basic color='teal' type="submit" onClick={() => this.submit()}>
