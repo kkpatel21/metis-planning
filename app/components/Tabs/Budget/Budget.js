@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, Menu, Dropdown, Input, Label, Progress, Header, Icon } from 'semantic-ui-react';
+import { Table, Menu, Dropdown, Input, Label, Progress, Header, Icon, Button } from 'semantic-ui-react';
 import './Budget.css';
 import UpdateBudgetLineItemModal from '../../Modals/UpdateBudgetLineItemModal.js'
 
@@ -16,7 +16,7 @@ export default class Budget extends React.Component {
     super()
     this.state = {
       lineItem: '',
-      amount: '',
+      amount: "",
       totalBudget: 0,
       editTotalBudget: false,
       approval:'',
@@ -39,16 +39,27 @@ export default class Budget extends React.Component {
     })
   }
 
-  addLineItem = (e) => {
-    this.setState({lineItem: e.target.value})
+  onClick = async () => {
+    if(this.state.amount === "") {
+      await this.setState({amount: 0})
+    }
+    let budgetItem = {
+      lineItem: this.state.lineItem,
+      amount: this.state.amount,
+      approval: this.state.approval
+    }
+    this.props.socket.emit('addLineItem', {eventId: this.props.eventId, budgetItems: budgetItem})
+    this.setState({
+      lineItem: '',
+      amount: '',
+      approval: ''
+    })
   }
 
-  handleKeyPress = (event) => {
+  handleKeyPress = async (event) => {
     if(event.key === 'Enter') {
-      if(this.state.amount === '') {
-        budgetList.push({lineItem: this.state.lineItem, amount: 0, approval: this.state.approval})
-      } else {
-        budgetList.push({lineItem: this.state.lineItem, amount: this.state.amount, approval: this.state.approval})
+      if(this.state.amount === "") {
+        await this.setState({amount: 0})
       }
       let budgetItem = {
         lineItem: this.state.lineItem,
@@ -93,6 +104,7 @@ export default class Budget extends React.Component {
     const totalValue = this.state.totalApproval
     let allocated = 0
     budgetList.forEach((item) => {
+      console.log(item.amount)
       allocated+=parseInt(item.amount)
     })
     let percent = parseInt(allocated/this.state.totalBudget*100)
@@ -131,7 +143,7 @@ export default class Budget extends React.Component {
                     placeholder='New Line Item'
                     type='text'
                     onKeyPress={this.handleKeyPress}
-                    onChange={this.addLineItem}
+                    onChange={(e) => this.setState({lineItem: e.target.value})}
                     value={this.state.lineItem}
                   />
                 </span>
@@ -164,6 +176,11 @@ export default class Budget extends React.Component {
                       />
                     </Menu>
                   </span>
+                </Table.Cell>
+                <Table.Cell>
+                  <Button icon onClick={this.onClick}>
+                    <Icon name='add square' />
+                  </Button>
                 </Table.Cell>
               </Table.Row>
 

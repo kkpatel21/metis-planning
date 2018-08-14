@@ -24,6 +24,7 @@ export default class UpdateBudgetLineItemModal extends React.Component {
       approval: this.props.lineItem.approval
     })
   }
+  
   onTrigger = () => {
     this.setState({open:true})
   }
