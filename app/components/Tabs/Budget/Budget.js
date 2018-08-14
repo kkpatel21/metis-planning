@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Table, Menu, Dropdown, Input, Label, Progress, Header } from 'semantic-ui-react';
+import { Table, Menu, Dropdown, Input, Label, Progress, Header, Icon } from 'semantic-ui-react';
 import './Budget.css';
+import UpdateBudgetLineItemModal from '../../Modals/UpdateBudgetLineItemModal.js'
 
 const options = [
   { key: 'y', text: 'Yes', value: 'Yes'},
@@ -16,17 +17,24 @@ export default class Budget extends React.Component {
     this.state = {
       lineItem: '',
       amount: '',
-      totalBudget: '',
+      totalBudget: 0,
+      editTotalBudget: false,
       approval:'',
       totalApproval:''
     }
   }
 
   componentDidMount() {
-    this.props.socket.emit('getBudget', {eventId: this.props.eventId}, res => {
-      budgetList = res.event.budget.budgetItems
+    this.props.socket.emit('getBudget', {eventId: this.props.eventId})
+    this.props.socket.on('updatedBudget', (data) => {
+      if(data.budget.total !== 0) {
+        this.setState({editTotalBudget: true})
+      }
+      //this lags
+      budgetList = data.budget.budgetItems
       this.setState({
-        totalApproval: res.event.budget.totalApproval
+        totalBudget: data.budget.total,
+        totalApproval: data.budget.totalApproval
       })
     })
   }
@@ -56,22 +64,38 @@ export default class Budget extends React.Component {
     }
   }
 
+  deleteLineItem = (index) => {
+    this.props.socket.emit('deleteLineItem', {eventId: this.props.eventId, index: index})
+  }
+
+  handleNewTotal = (event) => {
+    if(event.key === 'Enter') {
+      this.setState({editTotalBudget: !this.state.editTotalBudget})
+      this.props.socket.emit('updateTotalBudget', {eventId: this.props.eventId, totalBudget: this.state.totalBudget})
+    }
+  }
+
+  onTrigger = () => {
+    this.setState({editTotalBudget: !this.state.editTotalBudget})
+  }
+
   totalApprovalChange = (event, value) => {
     this.props.socket.emit('totalApproval', {eventId: this.props.eventId, totalApproval: value.value})
-    this.setState({
-      totalApproval: value.value
+    this.props.socket.on('updatedBudget', (data) => {
+      this.setState({
+        totalApproval: data.budget.totalApproval
+      })
     })
   }
 
   render() {
     const value = this.state.approval
     const totalValue = this.state.totalApproval
-    let totalBudget = 5000
     let allocated = 0
     budgetList.forEach((item) => {
       allocated+=parseInt(item.amount)
     })
-    let percent = parseInt(allocated/totalBudget*100)
+    let percent = parseInt(allocated/this.state.totalBudget*100)
 
     return (
       <div>
@@ -92,6 +116,9 @@ export default class Budget extends React.Component {
               </Table.HeaderCell>
               <Table.HeaderCell>
                 Approval
+              </Table.HeaderCell>
+              <Table.HeaderCell>
+
               </Table.HeaderCell>
             </Table.Row>
           </Table.Header>
@@ -140,7 +167,7 @@ export default class Budget extends React.Component {
                 </Table.Cell>
               </Table.Row>
 
-              {budgetList.map((item) =>
+              {budgetList.map((item, index) =>
                 <Table.Row>
                   <Table.Cell>
                     {item.lineItem}
@@ -150,6 +177,12 @@ export default class Budget extends React.Component {
                   </Table.Cell>
                   <Table.Cell>
                     {item.approval}
+                  </Table.Cell>
+                  <Table.Cell>
+                    <span>
+                      <UpdateBudgetLineItemModal socket={this.props.socket} lineItem={item} i={index} eventId={this.props.eventId}/>
+                      <Icon name='trash' onClick={() => this.deleteLineItem(index)}/>
+                    </span>
                   </Table.Cell>
                 </Table.Row>
               )}
@@ -171,7 +204,28 @@ export default class Budget extends React.Component {
                   <div className='summation'>Total</div>
                 </Table.Cell>
                 <Table.Cell>
-                  <div className='summation'>${totalBudget}</div>
+                  {this.state.editTotalBudget === false ?
+                    <span>
+                      <Input
+                        labelPosition='right'
+                        type='number'
+                        placeholder='Total Amount'
+                        onKeyPress={this.handleNewTotal}
+                        onChange={e => this.setState({totalBudget: e.target.value})}
+                        value={this.state.totalBudget}
+                        >
+                          <Label basic>$</Label>
+                          <input />
+                        </Input>
+                      </span>
+                    :
+                    <div className='summation'>
+                      ${this.state.totalBudget}
+                      <div className='editTotalIcon'>
+                        <Icon name='pencil' onClick={() => this.onTrigger()}/>
+                      </div>
+                    </div>
+                  }
                 </Table.Cell>
                 <Table.Cell>
                   <div>

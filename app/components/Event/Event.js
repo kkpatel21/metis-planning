@@ -19,13 +19,13 @@ export default class Event extends React.Component {
   render() {
     const { activeItem } = this.state;
     let tabRender;
-    if (activeItem === "People") {
+    if (activeItem === "Ideation") {
+      tabRender = (
+        <Ideation socket={this.props.socket} eventId={this.props.eventId} />
+      );
+    } else if (activeItem === "People") {
       tabRender = (
         <People socket={this.props.socket} eventId={this.props.eventId} />
-      );
-    } else if (activeItem === "Ideation") {
-      tabRender = (
-        <Ideation eventId={this.props.eventId} socket={this.props.socket} />
       );
     } else if (activeItem === "Budget") {
       tabRender = (
@@ -54,13 +54,13 @@ export default class Event extends React.Component {
               onClick={this.handleItemClick}
             />
             <Menu.Item
-              name="People"
-              active={activeItem === "People"}
+              name="Ideation"
+              active={activeItem === "Ideation"}
               onClick={this.handleItemClick}
             />
             <Menu.Item
-              name="Ideation"
-              active={activeItem === "Ideation"}
+              name="People"
+              active={activeItem === "People"}
               onClick={this.handleItemClick}
             />
             <Menu.Item
