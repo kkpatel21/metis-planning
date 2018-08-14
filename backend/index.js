@@ -103,7 +103,6 @@ module.exports = (io, store) => {
       Event.findById(data.eventId, (err, event) => {
         io.to(data.eventId).emit('sendTabs', { tabs: event.fundraising })
       })
-      io.to(data.eventId).emit("sendTabs", { tabs: event.fundraising });
     });
 
 
