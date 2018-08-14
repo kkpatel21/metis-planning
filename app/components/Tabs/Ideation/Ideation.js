@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Input, Button, List, Icon, Divider, Header} from "semantic-ui-react";
-import Notepad from "./Notepad/Notepad";
 import Speaker from "./Speaker/Speaker";
 import AddIdeationModal from "../../Modals/AddIdeationModal";
 import "./Ideation.css";
@@ -154,7 +153,7 @@ export default class Ideation extends React.Component {
                 </Button>
                 <EditIdeationModal oneTopic={oneTopic} socket={this.props.socket} eventId={this.props.eventId} onDone={(a,b,c)=>this.onDone(a,b,c)}/>
                 <div>
-                <Header 
+                <Header
                 floated="left"
                 className="topicName"
                 style={{ color: "black" }}

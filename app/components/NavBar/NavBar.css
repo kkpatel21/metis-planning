@@ -2,3 +2,17 @@
   margin-left: -12.5%;
   margin-right: -12.5%;
 }
+
+.ui.menu:not(.vertical) .left.item, .ui.menu:not(.vertical) .left.menu {
+
+  margin: 0 auto;
+}
+
+
+.ui.menu:not(.vertical) .right.item, .ui.menu:not(.vertical) .right.menu {
+  margin-left: 0 !important;
+}
+
+.ui.menu .item:before {
+  width: 0px;
+}

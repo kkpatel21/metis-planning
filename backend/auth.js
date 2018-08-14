@@ -1,6 +1,8 @@
 import express from "express";
 import User from "../models/user";
 import Event from "../models/event";
+
+import Feedback from '../models/feedback';
 import path from "path";
 import mongoose from "mongoose";
 import multer from "multer";
@@ -94,7 +96,6 @@ module.exports = (passport) => {
 
   //new event
   router.post("/newEvent", upload.single("uploadFile"), function(req, res) {
-    console.log("Adding New Event!!!!!!!!!!!!!", req.body)
     new Event({
       priority: req.body.priority,
       title: req.body.title,
@@ -109,13 +110,10 @@ module.exports = (passport) => {
       people: [],
       fundraising: []
     }).save(function(err, event) {
-      console.log("THIS IS NEW EVENT",event)
       if (err) {
-        console.log("GETTING ERROR >>>>>>>>>>>>>>>>>", err)
         res.send(err);
         return;
       }else if(event){
-        console.log("SHOULD BE SAVING")
         res.json({
           status: "success"
         });
@@ -123,15 +121,27 @@ module.exports = (passport) => {
     });
   });
 
-
+  router.post('/newFeedback', function(req, res) {
+    new Feedback({
+      feedback: req.body.feedback,
+      reach: req.body.reach
+    }).save(function(err, feedback) {
+      if (err) {
+        res.send(err);
+      } else if (feedback) {
+        res.json({
+          status: 200
+        })
+      }
+    })
+  })
 
   //add list to ideation(in progress)
   router.post("/addIdeation", function(req, res) {
-    console.log(req.body)
+
     User.findById(req.user._id)
     .then((user) => {
       Event.findById(req.body.id, (err, event) => {
-        console.log("THIS IS ID=============",req.body.id)
         if (event) {
           event.ideation.push({topic:req.body.topic, note:[], user: user.firstname});
           event.markModified("ideation")
