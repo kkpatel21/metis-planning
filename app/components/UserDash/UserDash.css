@@ -1,7 +1,7 @@
 .dashboard {
   margin-left: -12.5%;
-  margin-right: -12.5%;
-  margin-top: 2%;
+  margin-right: -15%;
+  margin-top: 2.5em;
 }
 
 .greetings {
@@ -24,11 +24,6 @@
   right: 3%;
 }
 
-.viewSwitch {
-  position: fixed;
-  right: 3%;
-
-}
 
 
 .react-toggle {
@@ -39,7 +34,7 @@
   background-color: transparent;
   border: 0;
   padding: 0;
-
+  left: 90%;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
@@ -180,29 +175,9 @@
   overflow-x: scroll;
   overflow-y: hidden;
   white-space: nowrap;
-  margin-left: 3%;
-  margin-right: 3%;
-  margin-top: 10%;
-  margin-bottom: 10%;
+  margin: 18vh 0.5vw
 }
 
-.card {
-  display: inline-block;
-  /* border: 1px solid white; */
-  margin-right: 10px;
-  width: 250px;
-  height: 350px;
-  background: white;
-  overflow: hidden;
-  background-size: cover;
-  /* background-blend-mode: multiply; */
-  /* background-color: rgb(163, 162, 162); */
-}
-
-.card:hover {
-  background-color: #999;
-  /* background-size: 300px 400px; */
-}
 
 .calendar {
   margin-left: 3%;
