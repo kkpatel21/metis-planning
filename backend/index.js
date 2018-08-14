@@ -439,5 +439,6 @@ module.exports = (io, store) => {
       io.to(data.eventId).emit('updatedFundraiser', {updatedList: event.fundraising[data.index]})
     })
   })
+
 });
 }
