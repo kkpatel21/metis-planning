@@ -47,7 +47,7 @@ export default class Event extends React.Component {
     return (
       <Grid>
         <Grid.Column width={2}>
-          <Menu fluid vertical pointing tabular>
+          <Menu vertical pointing>
             <Menu.Item
               name="Dashboard"
               active={activeItem === "Dashboard"}
