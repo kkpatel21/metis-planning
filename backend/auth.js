@@ -136,8 +136,6 @@ module.exports = (passport) => {
     })
   })
 
-
-
   //add list to ideation(in progress)
   router.post("/addIdeation", function(req, res) {
 

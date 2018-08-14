@@ -3,11 +3,12 @@ import { Menu, Input, Dropdown, Form} from 'semantic-ui-react'
 import './NavBar.css';
 import GiveFeedbackModal from '../Modals/GiveFeedbackModal'
 
-class UserDash extends React.Component {
+class NavBar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeItem: 'goHome'
+      activeItem: 'goHome',
+      name: ''
     };
   }
 
@@ -17,11 +18,22 @@ class UserDash extends React.Component {
     this.props.socket.emit('goHome')
   }
 
+  componentDidMount() {
+    this.props.socket.emit('getName')
+    this.props.socket.on('getName', (data) => {
+      this.setState({name: 'Welcome' + data.name})
+    })
+  }
+
   render() {
     return (
       <div className="navBar">
         <Menu>
-          <Menu.Item name='go home' active={this.state.activeItem === 'goHome'} onClick={this.goHome} />
+          <Menu.Item name='Home' active={this.state.activeItem === 'goHome'} onClick={this.goHome} />
+          <Menu.Item name='About Us' active={this.state.activeItem === 'aboutUs'} />
+          <Menu.Menu position='left'>
+            <Menu.Item name={this.state.name} />
+          </Menu.Menu>
           <Menu.Menu position='right'>
             <GiveFeedbackModal />
             <Menu.Item name='logout' active={this.state.activeItem === 'logout'} onClick={this.props.toggleLogged} />
@@ -33,4 +45,4 @@ class UserDash extends React.Component {
 };
 
 
-export default UserDash;
+export default NavBar;

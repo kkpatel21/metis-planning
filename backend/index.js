@@ -61,17 +61,19 @@ module.exports = (io, store) => {
               filtered.push(event);
             }
           });
-          let name = user.firstname
-          next({ err, filtered, name });
-        });
-
-        socket.on("deleteEvent", (data, next) => {
-          Event.findByIdAndRemove(data.id, (err, event) => {
-            next({ err, event });
-          });
+          next({ err, filtered});
         });
       });
     });
+
+    socket.on('getName', next => {
+      console.log('hm')
+      User.findById(socket.session.passport.user).then(user => {
+        let name = user.firstname
+        io.emit('getName', {name: name});
+        next({err, name})
+      })
+    })
 
     //deletes events
     socket.on("deleteEvent", (data, next) => {
