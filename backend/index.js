@@ -93,7 +93,8 @@ module.exports = (io, store) => {
       Event.findById(data.eventId, (err, event) => {
         io.to(data.eventId).emit("sendPeople", {
           guestList: event.people,
-          catererList: event.caterers
+          catererList: event.caterers,
+          collaboratorList: event.collaborators
         });
       });
     });
@@ -135,6 +136,21 @@ module.exports = (io, store) => {
       });
     });
 
+    //update collaborator
+    socket.on('saveCollab', data => {
+      Event.findById(data.eventId, (err, event) => {
+        let collabList = event.collaborators.slice();
+        collabList[data.index] = data.updateCollaborator;
+        event.collaborators = collabList.slice();
+        event.markModified('collaborators')
+        event.save((err, eve) => {
+          io.to(data.eventId).emit('updatedTeam', {
+            team: eve.collaborators
+          })
+        })
+      })
+    })
+
     //add guests
     socket.on("addInvitee", data => {
       Event.findById(data.eventId, (err, event) => {
@@ -169,6 +185,17 @@ module.exports = (io, store) => {
         })
       })
     })
+
+    socket.on("addCollaborator", data => {
+      Event.findById(data.eventId, (err, event) => {
+        event.collaborators.push(data.collaborator);
+        event.markModified("collaborators");
+        event.save((err, eve) => {
+          io.to(data.eventId).emit('updatedTeam', {
+            team: eve.collaborators})
+        });
+      });
+    });
 
     //delete Tabs
     socket.on("deleteTab", data => {
@@ -207,6 +234,19 @@ module.exports = (io, store) => {
       });
     });
 
+    //delete Collaborator
+    socket.on('deleteCollaborator', (data, next) => {
+      Event.findById(data.eventId, (err, event) => {
+        event.collaborators.splice(data.index, 1);
+        event.markModified('collaborators');
+        event.save((err, eve) => {
+          io.to(data.eventId).emit('updatedTeam', {
+            team: eve.collaborators
+          })
+        })
+      })
+    })
+
     //sendOneEmail
     socket.on("sendEmail", data => {
       User.findById(socket.session.passport.user, (err, user) => {
@@ -232,16 +272,6 @@ module.exports = (io, store) => {
         };
         sgMail.sendMultiple(msg).then(() => {
           next({ success: "Email Sent" });
-        });
-      });
-    });
-
-    socket.on("addCollaborator", data => {
-      Event.findById(data.eventId, (err, event) => {
-        event.collaborators.push(data.collaborator);
-        event.markModified("collaborators");
-        event.save((err, event) => {
-          console.log("Event Saved");
         });
       });
     });
@@ -329,6 +359,8 @@ module.exports = (io, store) => {
         }
       });
     });
+
+
 
     //editing topic
     socket.on("editIdeation", (data, next) => {

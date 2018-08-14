@@ -1,18 +1,29 @@
 import React from "react";
 import { Button, Header, Image, Modal, Form, Menu, Dropdown, Icon } from "semantic-ui-react";
-import './ShareEventModal.css'
 
-class ShareEventModal extends React.Component {
+
+
+class UpdateCollaboratorModal extends React.Component {
     constructor() {
         super();
         this.state = {
+          name: "",
           email: "",
-          name: '',
-          phone: '',
-          notes: '',
+          phone: "",
+          notes: "",
           role: '',
           open: false,
         };
+      }
+
+      componentDidMount () {
+        this.setState({
+          name: this.props.guest.name,
+          email: this.props.guest.email,
+          phone: this.props.guest.phone,
+          notes: this.props.guest.notes,
+          role: this.props.guest.role
+        })
       }
       onTrigger = () => {
         this.setState({open:true})
@@ -21,39 +32,45 @@ class ShareEventModal extends React.Component {
         this.setState({open:false})
       }
 
-      onShare = () => {
-        let newCollaborator = {
-          'email': this.state.email,
+      onStatus = (e, value) => {
+        this.setState({ status: value.value})
+      }
+
+      onSave = () => {
+        let updateCollaborator = {
           'name': this.state.name,
+          'email': this.state.email,
           'phone': this.state.phone,
           'notes': this.state.notes,
           'role': this.state.role
         }
 
-        this.props.socket.emit('addCollaborator', {eventId: this.props.eventId, collaborator: newCollaborator})
+        this.props.socket.emit('saveCollab', {eventId: this.props.eventId, updateCollaborator: updateCollaborator, index: this.props.index})
         this.onCancel()
+
       }
 
       render() {
+
         return (
           <Modal
           trigger={
-            <Button className="shareEvent" onClick={() => this.onTrigger()} floated='right' icon labelPosition='left' primary size='small'>
-              <Icon name='user' /> Share Event
-            </Button>}
+            <Icon name='pencil' onClick={() => this.onTrigger()}/>
+          }
           onClose={this.onCancel}
           open={this.state.open}
           >
-            <Modal.Header>Plan With Someone!</Modal.Header>
+            <Modal.Header>{this.state.name}</Modal.Header>
             <Modal.Content>
               <Modal.Description>
                 <Header />
                 <Form >
                   <Form.Field>
-                    <label>Name</label>
+                    <label>Name </label>
                     <input
                       placeholder="Name"
                       type="text"
+                      value={this.state.name}
                       onChange={e => this.setState({ name: e.target.value })}
                     />
                   </Form.Field>
@@ -62,6 +79,7 @@ class ShareEventModal extends React.Component {
                     <input
                       placeholder="Phone"
                       type="text"
+                      value={this.state.phone}
                       onChange={e => this.setState({ phone: e.target.value })}
                     />
                   </Form.Field>
@@ -70,6 +88,7 @@ class ShareEventModal extends React.Component {
                     <input
                       placeholder="Email"
                       type="text"
+                      value={this.state.email}
                       onChange={e => this.setState({ email: e.target.value })}
                     />
                   </Form.Field>
@@ -78,20 +97,21 @@ class ShareEventModal extends React.Component {
                     <input
                       placeholder="Role"
                       type="text"
+                      value={this.state.role}
                       onChange={e => this.setState({ role: e.target.value })}
                     />
                   </Form.Field>
                   <Form.Field>
-                    <label>Notes</label>
+                    <label>Additional Comments</label>
                     <input
-                      placeholder="Notes"
+                      placeholder="Comments..."
                       type="text"
+                      value={this.state.notes}
                       onChange={e => this.setState({ notes: e.target.value })}
                     />
                   </Form.Field>
-
-                  <Button basic color='teal' type="submit" onClick={() => this.onShare()}>
-                    Share
+                  <Button basic color='teal' type="submit" onClick={() => this.onSave()}>
+                    Update
                   </Button>
                   <Button basic color='orange' type="submit" onClick={() => this.onCancel()}>
                     Cancel
@@ -104,4 +124,4 @@ class ShareEventModal extends React.Component {
       }
 }
 
-export default ShareEventModal;
+export default UpdateCollaboratorModal;

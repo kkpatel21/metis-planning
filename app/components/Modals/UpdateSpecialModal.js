@@ -7,7 +7,7 @@ const options = [
   { key: 'y', text: 'Can', value: 'Able'},
 ]
 
-class UpdateGuestModal extends React.Component {
+class UpdateSpecialModal extends React.Component {
     constructor() {
         super();
         this.state = {
@@ -131,4 +131,4 @@ class UpdateGuestModal extends React.Component {
       }
 }
 
-export default UpdateGuestModal;
+export default UpdateSpecialModal;

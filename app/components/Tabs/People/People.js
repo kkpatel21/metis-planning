@@ -4,7 +4,9 @@ import Invitees from './Invitees/Invitees'
 import AddGuestModal from '../../Modals/AddGuestModal'
 import SendMultipleModal from '../../Modals/SendMultipleModal'
 import Specials from './Specials/Specials'
+import Collaborator from './Collaborator/Collaborator'
 import AddSpecialModal from '../../Modals/AddSpecialModal'
+import ShareEventModal from '../../Modals/ShareEventModal'
 
 export default class People extends React.Component {
   constructor(props) {
@@ -15,8 +17,8 @@ export default class People extends React.Component {
       filteredGuestsList: [],
       specialsList: [],
       filteredSpecialsList: [],
-      staffList: [],
-      filteredStaffList: [],
+      collaboratorList: [],
+      filteredCollaboratorList: [],
 
     }
   }
@@ -24,13 +26,16 @@ export default class People extends React.Component {
   componentDidMount() {
     this.props.socket.emit('getPeople', {eventId: this.props.eventId})
     this.props.socket.on('sendPeople', (data) => {
-      this.setState({guestsList: data.guestList, filteredGuestsList: data.guestList, specialsList: data.catererList, filteredSpecialsList: data.catererList})
+      this.setState({guestsList: data.guestList, filteredGuestsList: data.guestList, specialsList: data.catererList, filteredSpecialsList: data.catererList, collaboratorList: data.collaboratorList, filteredCollaboratorList: data.collaboratorList})
     })
     this.props.socket.on('updatedPeople', (data) => {
       this.setState({guestsList: data.guestList, filteredGuestsList: data.guestList})
     })
     this.props.socket.on('updatedCaterer', (data) => {
       this.setState({specialsList: data.catererList, filteredSpecialsList: data.catererList})
+    })
+    this.props.socket.on('updatedTeam', (data) => {
+      this.setState({collaboratorList: data.team, filteredCollaboratorList: data.team})
     })
   }
 
@@ -39,6 +44,7 @@ export default class People extends React.Component {
     this.props.socket.removeListener('updatedPeople')
     this.props.socket.removeListener('updatedCaterer')
     this.props.socket.removeListener('getPeople')
+    this.props.socket.removeListener('updatedTeam')
   }
 
   filteredList = async (val) => {
@@ -67,6 +73,19 @@ export default class People extends React.Component {
     await this.setState({filteredSpecialsList: filteredList})
   }
 
+  filteredTeam = async (val) => {
+    let filteredList = []
+    this.state.collaboratorList.map((collab) => {
+      if (collab.name.includes(val) || collab.phone.includes(val) || collab.email.includes(val) || collab.notes.includes(val) || collab.role.includes(val)) {
+        filteredList.push(collab)
+      }
+    })
+    if (val === '') {
+      filteredList = this.state.collaboratorList
+    }
+    await this.setState({filteredCollaboratorList: filteredList})
+  }
+
 
 
   sendEmailsBack = (emailList) => {
@@ -92,8 +111,10 @@ export default class People extends React.Component {
       </Tab.Pane>},
       { menuItem: 'Team', render: () =>
       <Tab.Pane>
-
-        Dream Team!
+        <div>
+          <Collaborator socket={this.props.socket} filteredList={this.filteredTeam} eventId={this.props.eventId} collaboratorList={this.state.filteredCollaboratorList}/>
+          <ShareEventModal socket={this.props.socket} eventId={this.props.eventId}/>
+        </div>
       </Tab.Pane>}
     ]
     return (
