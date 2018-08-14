@@ -30,22 +30,6 @@ class AddEventModal extends React.Component {
     this.setState({ uploadFile: event.target.files[0] });
   };
   onCreate = () => {
-    fetch("/api/newEvent", {
-      method: "POST",
-      credentials: "same-origin",
-      body: data
-    })
-      .then(res => {
-        console.log(res);
-        if (res.status === 200) {
-          this.props.getObjects();
-          this.setState({ open: false });
-        }
-      })
-      .catch(err => {
-        alert("Error: " + err);
-      });
-
     // console.log(req.user)
     var data = new FormData();
     data.append("uploadFile", this.state.uploadFile);
@@ -54,9 +38,6 @@ class AddEventModal extends React.Component {
     data.append("priority", this.state.priority);
     data.append("startTime", this.state.startTime);
     data.append("endTime", this.state.endTime);
-    for (var value of data.values()) {
-      console.log(value);
-    }
     fetch("/api/newEvent", {
       method: "POST",
       credentials: "same-origin",
