@@ -9,7 +9,7 @@ import multer from "multer";
 var storage = multer.diskStorage({
   destination: path.resolve(__dirname, "../build/images"),
   filename: function(req, file, cb) {
-    console.log(file);
+    // console.log(file);
     cb(null, Date.now() + "_" + file.originalname);
   }
 });
@@ -104,9 +104,7 @@ module.exports = (io, store) => {
       Event.findById(data.eventId, (err, event) => {
         io.to(data.eventId).emit('sendTabs', { tabs: event.fundraising })
       })
-      io.to(data.eventId).emit("sendTabs", { tabs: event.fundraising });
     });
-
 
     //update guestList
     socket.on("savePeople", data => {
@@ -383,7 +381,6 @@ module.exports = (io, store) => {
 
     //addVenue
     socket.on("addVenue", (data, next) => {
-      console.log(data);
       Event.findById(data.id, (err,event) => {
         if (event) {
           event.logistics.push({
@@ -411,8 +408,8 @@ module.exports = (io, store) => {
     //load db budget information
     socket.on('getBudget', (data, next) => {
       Event.findById(data.eventId, (err, event) => {
-        next({ err, event })
-      })
+        io.to(data.eventId).emit('updatedBudget', {budget: event.budget});
+       })
     })
 
     //add line item to budget page
@@ -421,8 +418,20 @@ module.exports = (io, store) => {
         event.budget.budgetItems.push(data.budgetItems)
         event.markModified("budget");
         event.save((err, event) => {
-          io.to(data.eventId).emit('updatedBudget', { budgetItem: event.budget.budgetItems });
+          io.to(data.eventId).emit('updatedBudget', {budget: event.budget});
         });
+      })
+    })
+
+    //update total budget
+    socket.on('updateTotalBudget', (data, next) => {
+      console.log('hey', data.totalBudget)
+      Event.findById(data.eventId, (err, event) => {
+        event.budget.total = data.totalBudget
+        event.markModified('budget');
+        event.save((err, event) => {
+          io.to(data.eventId).emit('updatedBudget', {budget: event.budget})
+        })
       })
     })
 
@@ -432,7 +441,29 @@ module.exports = (io, store) => {
         event.budget.totalApproval = data.totalApproval
         event.markModified('budget');
         event.save((err, event) => {
-          console.log('event saved')
+          io.to(data.eventId).emit('updatedBudget', {budget: event.budget})
+        })
+      })
+    })
+
+    //update budget list Item
+    socket.on('updateLineItem', (data, next) => {
+      Event.findById(data.eventId, (err, event) => {
+        event.budget.budgetItems[data.i] = data.updateLineItem
+        event.markModified('budget');
+        event.save((err, event) => {
+          io.to(data.eventId).emit('updatedBudget', {budget: event.budget});
+        })
+      })
+    })
+
+    //delete budget list Item
+    socket.on('deleteLineItem', (data, next) => {
+      Event.findById(data.eventId, (err, event) => {
+        event.budget.budgetItems.splice(data.index, 1)
+        event.markModified('budget');
+        event.save((err, event) => {
+          io.to(data.eventId).emit('updatedBudget', {budget: event.budget});
         })
       })
     })
