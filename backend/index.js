@@ -360,8 +360,6 @@ module.exports = (io, store) => {
       });
     });
 
-
-
     //editing topic
     socket.on("editIdeation", (data, next) => {
       Event.findById(data.id, (err, event) => {
