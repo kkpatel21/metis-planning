@@ -92,10 +92,17 @@ module.exports = (io, store) => {
       })
     })
     socket.on('getName', next => {
-      console.log('hm')
       User.findById(socket.session.passport.user).then(user => {
         let name = user.firstname
         io.emit('getName', {name: name});
+        next({err, name})
+      })
+    })
+
+    socket.on('getNameBack', next => {
+      User.findById(socket.session.passport.user).then(user => {
+        let name = user.firstname
+        io.emit('getNameBack', {name: name});
         next({err, name})
       })
     })
@@ -375,6 +382,20 @@ module.exports = (io, store) => {
         });
     });
 
+    //save comment
+    socket.on('saveComment', (data, next) => {
+      Event.findById(data.id, (err, event) => {
+        if (event) {
+          event.ideation[data.topicI].note[data.commentI].comment = data.comment
+          event.markModified('ideation')
+          event.save((err, event) => {
+            console.log(event)
+            next({ err, event})
+          })
+        }
+      })
+    })
+
     //Deleting topic
     socket.on("deleteIdeation", (data, next) => {
       Event.findById(data.id, (err, event) => {
@@ -549,7 +570,7 @@ module.exports = (io, store) => {
         }
       });
     });
-    
+
     //deleteVenue
     socket.on("deleteVenue", (data, next) => {
       Event.findById(data.id, (err, event) => {

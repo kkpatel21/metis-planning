@@ -29,7 +29,7 @@ export default class Specials extends React.Component {
                <Table.HeaderCell>Email</Table.HeaderCell>
                <Table.HeaderCell>Status</Table.HeaderCell>
                <Table.HeaderCell>Quick Notes</Table.HeaderCell>
-               <Table.HeaderCell><Input icon='search' size='mini' focus placeholder='Search Caterers...' onChange={(e) => this.props.filteredList(e.target.value)}/></Table.HeaderCell>
+               <Table.HeaderCell><Input icon='search' size='mini' focus placeholder='Search Specials...' onChange={(e) => this.props.filteredList(e.target.value)}/></Table.HeaderCell>
              </Table.Row>
            </Table.Header>
 
