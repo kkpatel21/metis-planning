@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { List, Icon, Button, Grid, Divider, Message, Checkbox, Input, Table } from 'semantic-ui-react'
+import { List, Icon, Button, Grid, Divider, Message, Checkbox, Input, Table, Header } from 'semantic-ui-react'
 import UpdateSpecialModal from '../../../Modals/UpdateSpecialModal'
 import SendEmailModal from '../../../Modals/SendEmailModal'
 
@@ -19,6 +19,8 @@ export default class Specials extends React.Component {
   render() {
     return (
       <div className="specialTable">
+              <Header as='h2'>Special Guests</Header>
+        <Divider />
           <Table striped basic>
             <Table.Header>
              <Table.Row>

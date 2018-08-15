@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {Tab } from 'semantic-ui-react'
+import {Tab, Divider, Header } from 'semantic-ui-react'
 import Invitees from './Invitees/Invitees'
 import AddGuestModal from '../../Modals/AddGuestModal'
 import SendMultipleModal from '../../Modals/SendMultipleModal'
@@ -119,6 +119,8 @@ export default class People extends React.Component {
     ]
     return (
       <div>
+                <Header as='h1'>People</Header>
+        <Divider />
         <Tab panes={panes} />
       </div>
 

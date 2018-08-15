@@ -10,13 +10,13 @@ var storage = multer.diskStorage({
     console.log(file);
     cb(null, Date.now() + "_" + file.originalname);
   }
-})
-var upload = multer({ storage: storage })
-let router = express.Router()
-import sgMail from '@sendgrid/mail';
-sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+});
+var upload = multer({ storage: storage });
+let router = express.Router();
+import sgMail from "@sendgrid/mail";
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-module.exports = (passport) => {
+module.exports = passport => {
   //registration
   var validateReq = function(userData) {
     return (
@@ -36,9 +36,9 @@ module.exports = (passport) => {
     return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(userData.email);
   };
 
-  router.get('/getCurrentUser', function(req, res) {
-    console.log('hey')
-  })
+  router.get("/getCurrentUser", function(req, res) {
+    console.log("hey");
+  });
 
   router.post("/signup", function(req, res) {
     if (!validateReq(req.body)) {
@@ -94,7 +94,7 @@ module.exports = (passport) => {
 
   //new event
   router.post("/newEvent", upload.single("uploadFile"), function(req, res) {
-    console.log("Adding New Event!!!!!!!!!!!!!", req.body)
+    console.log("Adding New Event!!!!!!!!!!!!!", req.body);
     new Event({
       priority: req.body.priority,
       title: req.body.title,
@@ -104,18 +104,19 @@ module.exports = (passport) => {
       uploadFile: req.file,
       owner: req.user._id, //credentials!!!!
       ideation: [],
+      logistics: [],
       collaborators: [],
       caterers: [],
       people: [],
       fundraising: []
     }).save(function(err, event) {
-      console.log("THIS IS NEW EVENT",event)
+      console.log("THIS IS NEW EVENT", event);
       if (err) {
-        console.log("GETTING ERROR >>>>>>>>>>>>>>>>>", err)
+        console.log("GETTING ERROR >>>>>>>>>>>>>>>>>", err);
         res.send(err);
         return;
-      }else if(event){
-        console.log("SHOULD BE SAVING")
+      } else if (event) {
+        console.log("SHOULD BE SAVING");
         res.json({
           status: "success"
         });
@@ -123,18 +124,45 @@ module.exports = (passport) => {
     });
   });
 
+  //add venues
+  router.post("/addVenue", upload.single("uploadFile"), (req, res) => {
+    Event.findById(req.body.id, (err, event) => {
+      if (event) {
+        event.logistics.push({
+          name: req.body.name,
+          status: req.body.status,
+          contact: req.body.contact,
+          address: req.body.address,
+          uploadFile: req.file,
+          lat: req.body.lat,
+          long: req.body.long
+        });
+        event.markModified("logistics");
+        event.save((err,event) => {
+          if(err) {
+            req.json({status: "error", error: err})
+          } else {
+            res.json({ status: "success"})
+          }
+        })
 
+      }
+    });
+  });
 
-  //add list to ideation(in progress)
+  //add list to ideation(in progress) --> SOCKETS
   router.post("/addIdeation", function(req, res) {
-    console.log(req.body)
-    User.findById(req.user._id)
-    .then((user) => {
+    console.log(req.body);
+    User.findById(req.user._id).then(user => {
       Event.findById(req.body.id, (err, event) => {
-        console.log("THIS IS ID=============",req.body.id)
+        console.log("THIS IS ID=============", req.body.id);
         if (event) {
-          event.ideation.push({topic:req.body.topic, note:[], user: user.firstname});
-          event.markModified("ideation")
+          event.ideation.push({
+            topic: req.body.topic,
+            note: [],
+            user: user.firstname
+          });
+          event.markModified("ideation");
           event.save((err, event) => {
             if (err) {
               res.send(err);
@@ -153,36 +181,35 @@ module.exports = (passport) => {
           return;
         }
       });
-    })
+    });
   });
 
-  //render ideation
-  router.get("/getIdeation/:id", function(req,res){
+  //render ideation --> SOCKETS
+  router.get("/getIdeation/:id", function(req, res) {
     Event.findById(req.params.id, (err, event) => {
-      if(err){
-        res.json(err)
-      }else if (event){
-        res.json(event.ideation)
+      if (err) {
+        res.json(err);
+      } else if (event) {
+        res.json(event.ideation);
       }
-    })
-  })
+    });
+  });
 
-
-  //get user info
-  router.post("/getUserInfo", function(req,res){
+  //get user info --> SOCKETS
+  router.post("/getUserInfo", function(req, res) {
     User.findById(req.user._id, (err, user) => {
-      if(user){
-        res.json(user)
-      }else if(!user){
-        res.send("user not found")
-      }else{
+      if (user) {
+        res.json(user);
+      } else if (!user) {
+        res.send("user not found");
+      } else {
         res.json({
           status: "error",
           error: err
         });
       }
-    })
-  })
+    });
+  });
 
   return router;
 };

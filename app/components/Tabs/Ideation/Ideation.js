@@ -127,10 +127,11 @@ export default class Ideation extends React.Component {
   render() {
     return (
       <div>
+                <Header as='h1'>Ideation</Header>
+        <Divider />
         <div>
           {this.state.topic.map((oneTopic, topicI) => (
             <div
-              className="divScroll"
               style={{
                 display: "inline-block",
                 width: "calc(35% - 30px)",
@@ -155,9 +156,10 @@ export default class Ideation extends React.Component {
                 <EditIdeationModal oneTopic={oneTopic} socket={this.props.socket} eventId={this.props.eventId} onDone={(a,b,c)=>this.onDone(a,b,c)}/>
                 <div>
                 <Header 
+                
                 floated="left"
                 className="topicName"
-                style={{ color: "black" }}
+                style={{ color: "black",fontFamily:"palatino" }}
                 as='h2'>{oneTopic.topic}</Header>
                 </div><br />
                 {/* <div>

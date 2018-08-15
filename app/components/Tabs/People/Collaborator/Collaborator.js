@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { List, Icon, Button, Grid, Divider, Message, Checkbox, Input, Table } from 'semantic-ui-react'
+import { List, Icon, Button, Grid, Divider, Message, Checkbox, Input, Table, Header } from 'semantic-ui-react'
 import UpdateCollaboratorModal from '../../../Modals/UpdateCollaboratorModal'
 import SendEmailModal from '../../../Modals/SendEmailModal'
 
@@ -18,6 +18,8 @@ export default class Collaborator extends React.Component {
   render() {
     return (
       <div className="collaboratorTable">
+        <Header as='h2'>Team</Header>
+        <Divider />
           <Table striped basic>
             <Table.Header>
              <Table.Row>
