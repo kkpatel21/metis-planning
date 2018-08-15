@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { List, Icon, Button, Grid, Divider, Message, Checkbox, Input, Table } from 'semantic-ui-react'
+import { List, Icon, Button, Grid, Divider, Message, Checkbox, Input, Table, Header } from 'semantic-ui-react'
 import './Invitees.css'
 import AddGuestModal from '../../../Modals/AddGuestModal'
 import UpdateGuestModal from '../../../Modals/UpdateGuestModal'
@@ -44,6 +44,8 @@ export default class Invitees extends React.Component {
   render() {
     return (
       <div className="peopleTable">
+              <Header as='h2'>Invitees</Header>
+        <Divider />
           <Table striped basic>
             <Table.Header>
              <Table.Row>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, Menu, Dropdown, Input, Label, Progress, Header, Icon, Button } from 'semantic-ui-react';
+import { Table, Menu, Dropdown, Input, Label, Progress, Header, Icon, Divider, Button } from 'semantic-ui-react';
 import './Budget.css';
 import UpdateBudgetLineItemModal from '../../Modals/UpdateBudgetLineItemModal.js'
 
@@ -111,12 +111,13 @@ export default class Budget extends React.Component {
 
     return (
       <div>
+                <Header as='h1'>Event Budget</Header>
+        <Divider />
         {percent > 100 ?
           <Progress percent={percent} progress error />
           :
           <Progress percent={percent} progress inverted color='blue'/>
         }
-        <Header as='h1'>Event Budget</Header>
         <Table singleLine>
           <Table.Header>
             <Table.Row>
