@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Menu, Input, Table, Icon, Label} from 'semantic-ui-react'
 import './ScrollerView.css'
 import { Draggable } from 'react-drag-and-drop'
+import dateFormat from 'dateformat'
 
 
 class ScrollerView extends React.Component {
@@ -17,7 +18,37 @@ class ScrollerView extends React.Component {
 
   render() {
     let eventsRender = [];
-    this.props.events.forEach(event => {
+    let sortedE = this.props.events.sort(function(a, b) {
+      a = new Date(a.date)
+      b = new Date(b.date)
+      return a>b ? -1 : a<b ? 1 : 0
+    })
+    sortedE.forEach(event => {
+      let date = new Date(event.date)
+      date = dateFormat(date, 'dddd, mmmm dS, yyyy')
+      let status;
+      if (event.priority === 'Moderate') {
+        status = (<Label color='yellow'>{event.priority}</Label>)
+      } else if (event.priority === 'Urgent') {
+        status = (<Label color='red'>{event.priority}</Label>)
+      } else if (event.priority === 'Low') {
+        status = (<Label color='teal'>{event.priority}</Label>)
+      }
+
+      let pORa = event.startTime.substring(0, 2);
+      let startMinutes = event.startTime.substring(2, 5);
+      let startString = pORa + startMinutes + " AM"
+      if (parseInt(pORa) > 12) {
+        startString = (pORa-12) + startMinutes + ' PM'
+      }
+
+      let aORp = event.endTime.substring(0, 2);
+      let endMinutes = event.endTime.substring(2, 5);
+      let endString = aORp + endMinutes + ' AM'
+      if (parseInt(aORp) > 12) {
+        endString = (aORp-12) + endMinutes + ' PM'
+      }
+
       eventsRender.push((
           <Draggable
             className="card"
@@ -25,13 +56,13 @@ class ScrollerView extends React.Component {
             type='event'
             onMouseDown={()=>this.props.sendData(event._id)}
             onClick={()=>this.props.openEvent(event._id)}>
-            <div>
+            <div className='renderCard'>
               <h2>
                 {event.title}
               </h2>
-              <p>{event.date}</p>
-              <p>{event.startTime} to {event.endTime}</p>
-              <p>{event.priority}</p>
+              <p>{date}</p>
+              <p>{startString} to {endString}</p>
+              {status}
             </div>
           </Draggable>
       ))

@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Input, Button, List, Icon, Divider, Header} from "semantic-ui-react";
-import Notepad from "./Notepad/Notepad";
 import Speaker from "./Speaker/Speaker";
 import AddIdeationModal from "../../Modals/AddIdeationModal";
 import "./Ideation.css";

@@ -16,8 +16,7 @@ class UserDash extends React.Component {
       idBeingDeleted: "",
       openEvent: false,
       eventId: "",
-      events: [],
-      user: ''
+      events: []
     };
   }
 
@@ -40,12 +39,12 @@ class UserDash extends React.Component {
 
   getObjects = () => {
     this.props.socket.emit('fetchEvents', (data) => {
+      console.log(data)
       if (data.err) {
         return alert(data)
       } else {
         this.setState({
-          events: data.filtered,
-          user: data.name
+          events: data.filtered
         })
       }
     })
@@ -106,17 +105,14 @@ class UserDash extends React.Component {
     if (!this.state.openEvent) {
       eventRender = (
         <div>
-          <span className="greetings"> Welcome {this.state.user} </span>
-          <span className="viewSwitch">
-            <Toggle
-              defaultChecked={this.state.view}
-              icons={{
-                checked: <span> Card </span>,
-                unchecked: <span> Calendar </span>
-              }}
-              onChange={this.viewChange}
-            />
-          </span>
+          <Toggle
+            defaultChecked={this.state.view}
+            icons={{
+              checked: <span> Card </span>,
+              unchecked: <span> Calendar </span>
+            }}
+            onChange={this.viewChange}
+          />
           {viewRender}
           <div className="addIcon">
             <AddEventModal getObjects={this.getObjects}/>
