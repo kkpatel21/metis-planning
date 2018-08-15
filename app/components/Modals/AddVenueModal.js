@@ -26,32 +26,44 @@ class AddVenueModal extends React.Component {
       status: "",
       contact: "",
       address: "",
+      email:"",
       open: false,
       uploadFile: null,
-      owner: ""
+      lat: "",
+      long: ""
     };
   }
-  fileChangedHandler = event => {
-    this.setState({ uploadFile: event.target.files[0] });
-  };
   onDone = () => {
-    var data = new FormData();
-    data.append("name", this.state.name);
-    data.append("status", this.state.status);
-    data.append("contact", this.state.contact);
-    data.append("address", this.state.address);
-    data.append("uploadFile", this.state.uploadFile);
-    data.append("id", this.props.eventId);
-    for (var value of data.values()) {
-      console.log(value);
-    }
-    this.props.socket.emit("addVenue", data, res => {
-      console.log(res);
-      this.setState({ open: false });
-    });
+    // console.log("eventId is here*********", this.props.eventId)
+    var venueData = new FormData();
+    venueData.append("name", this.state.name);
+    venueData.append("status", this.state.status);
+    venueData.append("contact", this.state.contact);
+    venueData.append("address", this.state.address);
+    venueData.append("uploadFile", this.state.uploadFile);
+    venueData.append("lat", this.state.lat)
+    venueData.append("long", this.state.long)
+    venueData.append("email", this.state.email)
+    venueData.append("id", this.props.eventId);
+    // for (var value of venueData.values()) {
+    //   console.log(value);
+    // }
+    fetch("/api/addVenue", {
+      method: "POST",
+      body: venueData
+    })
+      .then(res => res.json())
+      .then(json => {
+        if (json.status === "success") {
+          this.setState({ open: false });
+          this.props.onProps()
+        } else if (json.status === "error") {
+          alert("Error!" + json.error);
+        }
+      });
   };
   onStatus = (e, value) => {
-    this.setState({ priority: value.value });
+    this.setState({ status: value.value });
   };
   onCancel = () => {
     this.setState({ open: false });
@@ -65,10 +77,19 @@ class AddVenueModal extends React.Component {
   handleSelect = address => {
     geocodeByAddress(address)
       .then(results => {
-          console.log("what dis-------->",results[0])
-          this.setState({address: results[0].formatted_address})
-        })
-      .catch(error => console.error('Error', error));
+        console.log("what Address-------->", results[0]);
+
+        this.setState({ address: results[0].formatted_address });
+        return getLatLng(results[0]);
+      })
+      .then(latlng => {
+        console.log("what LATLONG-------->", latlng);
+        this.setState({lat: latlng.lat, long: latlng.lng})
+      })
+      .catch(error => console.error("Error", error));
+  };
+  fileChangedHandler = event => {
+    this.setState({ uploadFile: event.target.files[0] });
   };
   render() {
     const options = [
@@ -98,50 +119,50 @@ class AddVenueModal extends React.Component {
                 />
               </Form.Field>
               <Form.Field>
-              <label>Address</label>
-              <PlacesAutocomplete
-                value={this.state.address}
-                onChange={this.handleChange}
-                onSelect={this.handleSelect}
-              >
-                {({
-                  getInputProps,
-                  suggestions,
-                  getSuggestionItemProps,
-                  loading
-                }) => (
-                  <div>
-                    <input
-                      {...getInputProps({
-                        placeholder: "Where is the venue?",
-                        className: "location-search-input"
-                      })}
-                    />
-                    <div className="autocomplete-dropdown-container">
-                      {loading && <div>Loading...</div>}
-                      {suggestions.map(suggestion => {
-                        const className = suggestion.active
-                          ? "suggestion-item--active"
-                          : "suggestion-item";
-                        // inline style for demonstration purpose
-                        const style = suggestion.active
-                          ? { backgroundColor: "#fafafa", cursor: "pointer" }
-                          : { backgroundColor: "#ffffff", cursor: "pointer" };
-                        return (
-                          <div
-                            {...getSuggestionItemProps(suggestion, {
-                              className,
-                              style
-                            })}
-                          >
-                            <span>{suggestion.description}</span>
-                          </div>
-                        );
-                      })}
+                <label>Address</label>
+                <PlacesAutocomplete
+                  value={this.state.address}
+                  onChange={this.handleChange}
+                  onSelect={this.handleSelect}
+                >
+                  {({
+                    getInputProps,
+                    suggestions,
+                    getSuggestionItemProps,
+                    loading
+                  }) => (
+                    <div>
+                      <input
+                        {...getInputProps({
+                          placeholder: "Where is the venue?",
+                          className: "location-search-input"
+                        })}
+                      />
+                      <div className="autocomplete-dropdown-container">
+                        {loading && <div>Loading...</div>}
+                        {suggestions.map(suggestion => {
+                          const className = suggestion.active
+                            ? "suggestion-item--active"
+                            : "suggestion-item";
+                          // inline style for demonstration purpose
+                          const style = suggestion.active
+                            ? { backgroundColor: "#fafafa", cursor: "pointer" }
+                            : { backgroundColor: "#ffffff", cursor: "pointer" };
+                          return (
+                            <div
+                              {...getSuggestionItemProps(suggestion, {
+                                className,
+                                style
+                              })}
+                            >
+                              <span>{suggestion.description}</span>
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
-                  </div>
-                )}
-              </PlacesAutocomplete>
+                  )}
+                </PlacesAutocomplete>
               </Form.Field>
               {/* <Form.Field>
                 <label>Address</label>
@@ -157,7 +178,7 @@ class AddVenueModal extends React.Component {
                 <input
                   placeholder="Phone number?"
                   type="text"
-                  onChange={e => this.setState({ startTime: e.target.value })}
+                  onChange={e => this.setState({ contact: e.target.value })}
                 />
               </Form.Field>
               <Form.Field>
@@ -165,7 +186,7 @@ class AddVenueModal extends React.Component {
                 <input
                   placeholder="Email?"
                   type="text"
-                  onChange={e => this.setState({ endTime: e.target.value })}
+                  onChange={e => this.setState({ email: e.target.value })}
                 />
               </Form.Field>
               <Form.Field>

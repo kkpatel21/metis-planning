@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { List, Label, Tab, Icon, Header } from 'semantic-ui-react'
+import { List, Label, Tab, Icon, Header, Divider } from 'semantic-ui-react'
 import AddNewTab from '../../Modals/AddNewTab'
 import './Fundraising.css'
 import FundingStats from './FundingStats.js'
@@ -56,7 +56,13 @@ export default class Fundraising extends React.Component {
 
   render() {
     return(
+      <div>
+        <div>
+        <Header as='h1'>Fundraising</Header>
+        <Divider />
+        </div>
       <Tab panes={this.state.allTabs} />
+      </div>
     )
   }
 }

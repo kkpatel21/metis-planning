@@ -31,7 +31,6 @@ class AddEventModal extends React.Component {
     this.setState({ uploadFile: event.target.files[0] });
   };
   onCreate = () => {
-    // console.log(req.user)
     var data = new FormData();
     data.append("uploadFile", this.state.uploadFile);
     data.append("title", this.state.title);

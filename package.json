@@ -41,6 +41,7 @@
     "react-dom": "^16.0.0",
     "react-drag-and-drop": "^2.4.0",
     "react-event-calendar": "^0.3.0",
+    "react-google-maps": "^9.4.5",
     "react-modal": "^3.5.1",
     "react-places-autocomplete": "^7.2.0",
     "react-redux": "^5.0.7",
