@@ -374,6 +374,7 @@ module.exports = (io, store) => {
           next({ err });
         });
     });
+
     //Deleting topic
     socket.on("deleteIdeation", (data, next) => {
       Event.findById(data.id, (err, event) => {
@@ -548,6 +549,7 @@ module.exports = (io, store) => {
         }
       });
     });
+    
     //deleteVenue
     socket.on("deleteVenue", (data, next) => {
       Event.findById(data.id, (err, event) => {

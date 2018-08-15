@@ -9,6 +9,8 @@ export default class CalendarView extends React.Component {
     super(props);
     this.socket = io('http://localhost:8888')
     this.state = {
+      events: [],
+      displayEvents: [],
       calendarHeading: '',
       now: new Date(),
       currentMonth: new Date().getMonth()+1,
@@ -29,6 +31,26 @@ export default class CalendarView extends React.Component {
   }
 
   componentDidMount() {
+    this.props.socket.emit('fetchEvents', (res) => {
+      this.setState({events: res.filtered})
+      let displayEvents = []
+      this.state.events.forEach(event => {
+        let month = new Date(event.date).getMonth() //this is a number
+        let date = new Date(event.date).getDate()
+        let index = date + firstDayOfMonth
+        if (month === this.state.currentMonth-1) {
+          displayEvents.push({
+            title: event.title,
+            date: date + 1,
+            startTime: event.startTime,
+            endTime: event.endTime,
+            index: index
+          })
+        }
+      })
+      this.setState({displayEvents: displayEvents})
+    })
+
     let currentMonthName = (this.state.monthNames[this.state.month]);
     this.setState({calendarHeading: currentMonthName + " " + this.state.currentYear})
 
@@ -57,19 +79,29 @@ export default class CalendarView extends React.Component {
     })
   }
 
-  // showEvent = () => {
-  //   this.socket.emit('fetchEvents', (res) => {
-  //     if (res.err) {
-  //       return alert(res)
-  //     } else {
-  //       this.setState({
-  //         events: res.events
-  //       })
-  //     }
-  //   })
-  // }
-
   prevMonth = () => {
+    //log events on calendar
+    let firstDayOfMonth = new Date(this.state.currentYear + "-" + this.state.currentMonth + '-1').getDay()
+    this.props.socket.emit('fetchEvents', (res) => {
+      this.setState({events: res.filtered})
+      let displayEvents = []
+      this.state.events.forEach(event => {
+        let month = new Date(event.date).getMonth() //this is a number
+        let date = new Date(event.date).getDate()
+        let index = date + firstDayOfMonth
+        if (month === this.state.currentMonth-1) {
+          displayEvents.push({
+            title: event.title,
+            date: date + 1,
+            startTime: event.startTime,
+            endTime: event.endTime,
+            index: index
+          })
+        }
+      })
+      this.setState({displayEvents: displayEvents})
+    })
+
     if(this.state.month === 0) {
       let prevMonthName = this.state.monthNames[11];
       let firstDayOfMonth = new Date(parseInt(this.state.currentYear)-1 + "-" + '12' + '-1').getDay()
@@ -115,6 +147,28 @@ export default class CalendarView extends React.Component {
   }
 
   nextMonth = () => {
+    //log events on calendar
+    let firstDayOfMonth = new Date(this.state.currentYear + "-" + this.state.currentMonth + '-1').getDay()
+    this.props.socket.emit('fetchEvents', (res) => {
+      this.setState({events: res.filtered})
+      let displayEvents = []
+      this.state.events.forEach(event => {
+        let month = new Date(event.date).getMonth() //this is a number
+        let date = new Date(event.date).getDate()
+        let index = date + firstDayOfMonth
+        if (month === this.state.currentMonth-1) {
+          displayEvents.push({
+            title: event.title,
+            date: date + 1,
+            startTime: event.startTime,
+            endTime: event.endTime,
+            index: index
+          })
+        }
+      })
+      this.setState({displayEvents: displayEvents})
+    })
+
     if(this.state.month === 11) {
       let nextMonthName = this.state.monthNames[0];
       let firstDayOfMonth = new Date(parseInt(this.state.currentYear)+1 + "-" + '1' + '-1').getDay()
@@ -144,9 +198,6 @@ export default class CalendarView extends React.Component {
       for (var i = 0; i < this.state.calendarGrid.length; i++) {
         calendarDates.push(new Date(+firstDayOfMonth-(1000*60*60*24*(firstDayOfMonth-1))+(1000*60*60*24*i)).getDate())
       }
-      console.log(new Date(firstDayOfMonth-(1000*60*60*24*(firstDayOfMonth-1))+(1000*60*60*24)).getDate(), firstDayOfMonth)
-      console.log(this.state.daysInMonthCount)
-
       this.setState({
         month: this.state.month+1,
         currentMonth: this.state.currentMonth+1,
@@ -161,7 +212,6 @@ export default class CalendarView extends React.Component {
       })
     }
   }
-
 
   render() {
     return(
@@ -189,36 +239,161 @@ export default class CalendarView extends React.Component {
             {this.state.dayNames.map((day) => <Grid.Column width={2}><span className="day-block">{day}</span></Grid.Column>)}<br />
             <Grid.Column width={1}></Grid.Column>
           </Grid.Row>
+
           <Grid.Row>
             <Grid.Column width={1}></Grid.Column>
-            {this.state.calendarDatesWk1.map((date) => <Grid.Column width={2}><span className='date-block'>{date}</span></Grid.Column>)}
+            {this.state.calendarDatesWk1.map((date) => {
+              let found = false
+              let index = this.state.displayEvents.findIndex(event => {
+                return date === event.date
+              })
+              if(index !== -1) {
+                return <Grid.Column width={2}>
+                  <span className='date-block'>
+                    {date}
+                    <div>{this.state.displayEvents[index].title}</div>
+                    <div>{this.state.displayEvents[index].startTime}-{this.state.displayEvents[index].endTime}</div>
+                  </span>
+                </Grid.Column>
+              } else {
+                return <Grid.Column width={2}>
+                  <span className='date-block'>
+                    {date}
+                  </span>
+                </Grid.Column>
+              }
+            })}
             <Grid.Column width={1}></Grid.Column>
           </Grid.Row>
           <Grid.Row>
             <Grid.Column width={1}></Grid.Column>
-            {this.state.calendarDatesWk2.map((date) => <Grid.Column width={2}><span className='date-block'>{date}</span></Grid.Column>)}
+            {this.state.calendarDatesWk2.map((date) => {
+              let found = false
+              let index = this.state.displayEvents.findIndex(event => {
+                return date === event.date
+              })
+              if(index !== -1) {
+                return <Grid.Column width={2}>
+                  <span className='date-block'>
+                    {date}
+                    <div>{this.state.displayEvents[index].title}</div>
+                    <div>{this.state.displayEvents[index].startTime}-{this.state.displayEvents[index].endTime}</div>
+                  </span>
+                </Grid.Column>
+              } else {
+                return <Grid.Column width={2}>
+                  <span className='date-block'>
+                    {date}
+                  </span>
+                </Grid.Column>
+              }
+            })}
             <Grid.Column width={1}></Grid.Column>
           </Grid.Row>
           <Grid.Row>
             <Grid.Column width={1}></Grid.Column>
-            {this.state.calendarDatesWk3.map((date) => <Grid.Column width={2}><span className='date-block'>{date}</span></Grid.Column>)}
+            {this.state.calendarDatesWk3.map((date) => {
+              let found = false
+              let index = this.state.displayEvents.findIndex(event => {
+                return date === event.date
+              })
+              if(index !== -1) {
+                return <Grid.Column width={2}>
+                  <span className='date-block'>
+                    {date}
+                    <div>{this.state.displayEvents[index].title}</div>
+                    <div>{this.state.displayEvents[index].startTime}-{this.state.displayEvents[index].endTime}</div>
+                  </span>
+                </Grid.Column>
+              } else {
+                return <Grid.Column width={2}>
+                  <span className='date-block'>
+                    {date}
+                  </span>
+                </Grid.Column>
+              }
+            })}
             <Grid.Column width={1}></Grid.Column>
           </Grid.Row>
           <Grid.Row>
             <Grid.Column width={1}></Grid.Column>
-            {this.state.calendarDatesWk4.map((date) => <Grid.Column width={2}><span className='date-block'>{date}</span></Grid.Column>)}
+            {this.state.calendarDatesWk4.map((date) => {
+              let found = false
+              let index = this.state.displayEvents.findIndex(event => {
+                return date === event.date
+              })
+              if(index !== -1) {
+                return <Grid.Column width={2}>
+                  <span className='date-block'>
+                    {date}
+                    <div>{this.state.displayEvents[index].title}</div>
+                    <div>{this.state.displayEvents[index].startTime}-{this.state.displayEvents[index].endTime}</div>
+                  </span>
+                </Grid.Column>
+              } else {
+                return <Grid.Column width={2}>
+                  <span className='date-block'>
+                    {date}
+                  </span>
+                </Grid.Column>
+              }
+            })}
             <Grid.Column width={1}></Grid.Column>
           </Grid.Row>
           <Grid.Row>
             <Grid.Column width={1}></Grid.Column>
-            {this.state.calendarDatesWk5.map((date) => <Grid.Column width={2}><span className='date-block'>{date}</span></Grid.Column>)}
+            {this.state.calendarDatesWk5.map((date) => {
+              let found = false
+              let index = this.state.displayEvents.findIndex(event => {
+                return date === event.date
+              })
+              if(index !== -1) {
+                return <Grid.Column width={2}>
+                  <span className='date-block'>
+                    {date}
+                    <div>{this.state.displayEvents[index].title}</div>
+                    <div>{this.state.displayEvents[index].startTime}-{this.state.displayEvents[index].endTime}</div>
+                  </span>
+                </Grid.Column>
+              } else {
+                return <Grid.Column width={2}>
+                  <span className='date-block'>
+                    {date}
+                  </span>
+                </Grid.Column>
+              }
+            })}
             <Grid.Column width={1}></Grid.Column>
           </Grid.Row>
+          {this.state.calendarDatesWk6[0]>=30 ?
           <Grid.Row>
             <Grid.Column width={1}></Grid.Column>
-            {this.state.calendarDatesWk6.map((date) => <Grid.Column width={2}><span className='date-block'>{date}</span></Grid.Column>)}
+            {this.state.calendarDatesWk6.map((date) => {
+              let found = false
+              let index = this.state.displayEvents.findIndex(event => {
+                return date === event.date
+              })
+              if(index !== -1) {
+                return <Grid.Column width={2}>
+                  <span className='date-block'>
+                    {date}
+                    <div>{this.state.displayEvents[index].title}</div>
+                    <div>{this.state.displayEvents[index].startTime}-{this.state.displayEvents[index].endTime}</div>
+                  </span>
+                </Grid.Column>
+              } else {
+                return <Grid.Column width={2}>
+                  <span className='date-block'>
+                    {date}
+                  </span>
+                </Grid.Column>
+              }
+            })}
             <Grid.Column width={1}></Grid.Column>
           </Grid.Row>
+              :
+              null
+            }
         </Grid>
       </div>
     )
