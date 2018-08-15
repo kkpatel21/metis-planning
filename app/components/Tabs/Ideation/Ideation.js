@@ -11,7 +11,11 @@ export default class Ideation extends React.Component {
     this.state = {
       topic: [],
       typing: "",
-      newTopic: ""
+      newTopic: "",
+      commentChanging : {},
+      comment: "",
+      userName: '',
+      once: false
     };
   }
 
@@ -20,6 +24,24 @@ export default class Ideation extends React.Component {
     this.props.socket.emit("getIdeation", { id: this.props.eventId }, res => {
       this.setState({ topic: res.event.ideation });
     });
+    if (!this.state.once) {
+      this.props.socket.emit('getNameBack')
+    }
+    this.props.socket.on('getNameBack', (data) => {
+      this.setState({ userName: data.name, once: true })
+    })
+  }
+
+  componentWillUnmount() {
+    this.props.socket.removeListener('getIdeation')
+    this.props.socket.removeListener('getNameBack')
+    this.props.socket.removeListener('getNameBack')
+    this.props.socket.removeListener('addComment')
+    this.props.socket.removeListener('saveComment')
+    this.props.socket.removeListener('deleteComment')
+    this.props.socket.removeListener('deleteIdeation')
+    this.props.socket.removeListener('editIdeation')
+
   }
 
   handleChange = e => {
@@ -48,6 +70,25 @@ export default class Ideation extends React.Component {
       alert("Please type something!");
     }
   };
+
+  handleEdit = (topicI, commentI, topic, newComment) => {
+
+    if (newComment.length !== 0) {
+      this.props.socket.emit('saveComment', {
+        id: this.props.eventId,
+        topic: topic,
+        topicI: topicI,
+        commentI: commentI,
+        comment: newComment
+      }, res => {
+        if (res.event) {
+          console.log(res.event.ideation)
+          this.setState({ topic: res.event.ideation, comment: "", commentChanging: {}})
+        }
+      })
+    }
+  }
+
   handleKeyPress = (event,topic) => {
     if(event.key === 'Enter') {
       if (this.state.typing.length !== 0) {
@@ -60,6 +101,7 @@ export default class Ideation extends React.Component {
           },
           res => {
             if (res.event) {
+              console.log(res.event)
               this.setState({ topic: res.event.ideation, typing: "" });
             }
           }
@@ -85,6 +127,17 @@ export default class Ideation extends React.Component {
       }
     );
   };
+
+  //changing a comment
+  commentChange = e => {
+    this.setState({
+      comment: e.target.value
+    })
+  }
+  //change a comment
+  onCommentClick = (topicI, commentI, topic, comment) => {
+    this.setState({commentChanging: {topic: topic, comment: comment, topicI: topicI, commentI: commentI, changing: true}})
+  }
   //deleting comment
   delete = (topicI,commentI) => {
     this.props.socket.emit("deleteComment", {
@@ -95,15 +148,6 @@ export default class Ideation extends React.Component {
       if(res.event) {
         this.componentDidMount();
       }
-    })
-  }
-
-  onEdit = (topic) => {
-    this.props.socket.emit("editIdeation", {
-      id:this.props.eventId,
-      topic:topic
-    }, res => {
-
     })
   }
 
@@ -143,7 +187,7 @@ export default class Ideation extends React.Component {
             >
               <div>
                 <Button
-                basic color='transparent' content='Grey'
+                  basic color='transparent' content='Grey'
                   size='mini'
                   icon
                   floated="right"
@@ -154,8 +198,8 @@ export default class Ideation extends React.Component {
                 </Button>
                 <EditIdeationModal oneTopic={oneTopic} socket={this.props.socket} eventId={this.props.eventId} onDone={(a,b,c)=>this.onDone(a,b,c)}/>
                 <div>
-                <Header 
-                
+                <Header
+
                 floated="left"
                 className="topicName"
                 style={{ color: "black",fontFamily:"palatino" }}
@@ -184,19 +228,40 @@ export default class Ideation extends React.Component {
               </div>
               <div>
                 <List style={{ paddingTop: 10 }}>
-                  {oneTopic.note.map((note, commentI) => {
-                    return (
-                      <List.Item>
-                        <List.Icon name="bolt" />{" "}
-                        <List.Content> {note.comment} </List.Content>
-                        <List.Content floated="right">
-                          by {note.user}
-                          <Icon floated="right" name='trash' onClick={() => this.delete(topicI,commentI)}/>
-                        </List.Content>
+                  {oneTopic.note.map((comment, commentI) => {
+                    let changing = this.state.commentChanging
+                    if (changing.topicI === topicI && changing.commentI === commentI && comment.user === this.state.userName ) {
+                      return (
+                        <Input
+                          value={this.state.comment}
+                          style={{ width: "100%" }}
+                          onChange={this.commentChange}
+                          placeholder={changing.comment.comment}
+                          icon={
+                            <Icon
+                              name="edit"
+                              inverted
+                              circular
+                              link
+                              onClick={() => this.handleEdit(topicI, commentI, oneTopic, this.state.comment)}
+                            />
+                          }
+                        />
+                      )
+                    } else {
+                      return (
+                        <List.Item onDoubleClick={() => this.onCommentClick(topicI, commentI, oneTopic, comment)}>
+                          <List.Icon name="bolt" />{" "}
+                          <List.Content> {comment.comment} </List.Content>
+                          <List.Content floated="right">
+                            by {comment.user}
+                            <Icon floated="right" name='trash' onClick={() => this.delete(topicI,commentI)}/>
+                          </List.Content>
 
-                        <Divider />
-                      </List.Item>
-                    );
+                          <Divider />
+                        </List.Item>
+                      );
+                    }
                   })}
                 </List>
               </div>

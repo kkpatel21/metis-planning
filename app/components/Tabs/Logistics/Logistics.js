@@ -35,8 +35,8 @@ export default class Logistics extends React.Component {
   onProps = () => {
     this.componentDidMount()
   }
+  
   onDelete = (index) => {
-    console.log("ondelete?")
     this.props.socket.emit("deleteVenue", {
       id: this.props.eventId,
       index:index

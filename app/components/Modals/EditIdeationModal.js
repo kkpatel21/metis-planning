@@ -45,8 +45,8 @@ class EditIdeationModal extends React.Component {
     return (
       <Modal
         trigger={
-          <Button basic color='transparent' content='Grey' size="mini" icon floated="right">
-            <Icon onClick={() => this.onTrigger()} name="pencil" />
+          <Button onClick={() => this.onTrigger()} basic color='transparent' content='Grey' size="mini" icon floated="right">
+            <Icon name="pencil" />
           </Button>
         }
         onClose={this.onCancel}
@@ -60,7 +60,7 @@ class EditIdeationModal extends React.Component {
               <Form.Field>
                 <label>Topic</label>
                 <input
-                  placeholder="New Topic"
+                  placeholder="Title"
                   type="text"
                   onChange={e => this.setState({ newTopic: e.target.value })}
                 />
