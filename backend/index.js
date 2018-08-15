@@ -570,6 +570,7 @@ module.exports = (io, store) => {
         }
       });
     });
+
     //deleteVenue
     socket.on("deleteVenue", (data, next) => {
       Event.findById(data.id, (err, event) => {

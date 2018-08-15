@@ -39,7 +39,6 @@ class UserDash extends React.Component {
 
   getObjects = () => {
     this.props.socket.emit('fetchEvents', (data) => {
-      console.log(data)
       if (data.err) {
         return alert(data)
       } else {
@@ -96,7 +95,9 @@ class UserDash extends React.Component {
     } else {
       viewRender = (
         <div className="calendar">
-          <CalendarView />
+          <CalendarView
+          socket={this.props.socket}
+        />
         </div>)
     }
 
