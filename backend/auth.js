@@ -38,10 +38,6 @@ module.exports = (passport) => {
     return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(userData.email);
   };
 
-  router.get('/getCurrentUser', function(req, res) {
-    console.log('hey')
-  })
-
   router.post("/signup", function(req, res) {
     if (!validateReq(req.body)) {
       return res.send("incomplete");
@@ -78,20 +74,16 @@ module.exports = (passport) => {
 
   //login
   router.post("/login", passport.authenticate("local"), (req, res) => {
-    res.json({
-      userId: req.user._id,
-      success: true
-    });
+    res.redirect('/')
   });
 
   //logout
   router.get("/logout", function(req, res) {
     // mongoose.sessions.remove({ 'session.user': req.userId. });
-    // req.session = null;
+    req.session.destroy()
     req.logout();
-    res.json({
-      success: true
-    });
+    res.redirect('/')
+
   });
 
   //new event

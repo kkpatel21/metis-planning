@@ -7,6 +7,7 @@ import Overview from "../Tabs/Overview/Overview";
 import Fundraising from "../Tabs/Fundraising/Fundraising";
 import Tickets from "../Tabs/Tickets/Tickets";
 import Logistics from "../Tabs/Logistics/Logistics";
+import './Event.css'
 
 export default class Event extends React.Component {
   constructor() {
@@ -47,7 +48,7 @@ export default class Event extends React.Component {
     return (
       <Grid>
         <Grid.Column width={2}>
-          <Menu vertical pointing>
+          <Menu fluid vertical pointing>
             <Menu.Item
               name="Dashboard"
               active={activeItem === "Dashboard"}
@@ -81,7 +82,7 @@ export default class Event extends React.Component {
           </Menu>
         </Grid.Column>
 
-        <Grid.Column stretched width={14}>
+        <Grid.Column stretched width={14} className='page'>
           <Segment>{tabRender}</Segment>
         </Grid.Column>
       </Grid>

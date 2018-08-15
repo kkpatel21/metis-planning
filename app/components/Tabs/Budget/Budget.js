@@ -111,12 +111,12 @@ export default class Budget extends React.Component {
 
     return (
       <div>
+        <Header as='h1'>Event Budget</Header>
         {percent > 100 ?
           <Progress percent={percent} progress error />
           :
           <Progress percent={percent} progress inverted color='blue'/>
         }
-        <Header as='h1'>Event Budget</Header>
         <Table singleLine>
           <Table.Header>
             <Table.Row>
@@ -214,6 +214,9 @@ export default class Budget extends React.Component {
                 <Table.Cell>
                   <span></span>
                 </Table.Cell>
+                <Table.Cell>
+                  <span></span>
+                </Table.Cell>
               </Table.Row>
 
               <Table.Row>
@@ -236,11 +239,8 @@ export default class Budget extends React.Component {
                         </Input>
                       </span>
                     :
-                    <div className='summation'>
+                    <div className='summation' onClick={() =>this.onTrigger()}>
                       ${this.state.totalBudget}
-                      <div className='editTotalIcon'>
-                        <Icon name='pencil' onClick={() => this.onTrigger()}/>
-                      </div>
                     </div>
                   }
                 </Table.Cell>
@@ -256,6 +256,9 @@ export default class Budget extends React.Component {
                       />
                     </Menu>
                   </div>
+                </Table.Cell>
+                <Table.Cell>
+                  <span></span>
                 </Table.Cell>
               </Table.Row>
             </Table.Body>

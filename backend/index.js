@@ -17,6 +17,8 @@ var upload = multer({ storage: storage });
 import sgMail from "@sendgrid/mail";
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
+
+
 module.exports = (io, store) => {
   // This function gets us the user ID that has just logged in to the server
   io.use((socket, next) => {
@@ -24,8 +26,8 @@ module.exports = (io, store) => {
     if (socket.request.headers.cookie) {
       cookies = cookie.parse(socket.request.headers.cookie);
       cookies = cookieParser.signedCookies(cookies, process.env.SECRET);
-      socket.sid = cookies["connect.sid"];
-      store.get(socket.sid, (err, session) => {
+      let sid = cookies["connect.sid"];
+      store.get(sid, (err, session) => {
         if (!err) {
           delete session.cookie;
           socket.session = session;
@@ -45,8 +47,13 @@ module.exports = (io, store) => {
     // This is to get the user.id: socket.session.passport.user
 
     // Res works with Next, and the first parameter works with the second parameter.
+    if (socket.session.passport.user) {
+      socket.emit('loggedIn')
+    }
+
     socket.on("fetchEvents", next => {
       User.findById(socket.session.passport.user).then(user => {
+        console.log(user)
         Event.find({}, (err, events) => {
           let filtered = [];
           events.forEach(event => {
@@ -66,6 +73,24 @@ module.exports = (io, store) => {
       });
     });
 
+    //In OverView
+    socket.on('getEventInfo', (data) => {
+      Event.findById(data.eventId, (err, event) => {
+        io.to(data.eventId).emit('getEvent', {
+          event: event
+        })
+      })
+    })
+
+    //In EditEventModal
+    socket.on('getEventInfoInside', (data) => {
+      Event.findById(data.eventId, (err, event) => {
+        console.log(event)
+        io.to(data.eventId).emit('getEventInside', {
+          event: event
+        })
+      })
+    })
     socket.on('getName', next => {
       console.log('hm')
       User.findById(socket.session.passport.user).then(user => {
@@ -182,6 +207,17 @@ module.exports = (io, store) => {
         event.markModified('fundraising');
         event.save((err, eve) => {
           io.to(data.eventId).emit('addTab', { newTab: {title:data.title, data: [], goal: data.goal} })
+        })
+      })
+    })
+
+    //edit tab
+    socket.on('editTab', data => {
+      Event.findById(data.eventId, (err, event) => {
+        event.fundraising[data.index] = {title: data.title, data: event.fundraising[data.index].data, goal: data.goal}
+        event.markModified('fundraising');
+        event.save((err, eve) => {
+          io.to(data.eventId).emit('sendTabs', {tabs: event.fundraising})
         })
       })
     })
@@ -427,7 +463,6 @@ module.exports = (io, store) => {
 
     //update total budget
     socket.on('updateTotalBudget', (data, next) => {
-      console.log('hey', data.totalBudget)
       Event.findById(data.eventId, (err, event) => {
         event.budget.total = data.totalBudget
         event.markModified('budget');
@@ -502,6 +537,7 @@ module.exports = (io, store) => {
         })
       })
     })
+
 
     //get Fundraising
     socket.on('getFundraiser', (data, next) => {

@@ -8,46 +8,21 @@ class Login extends React.Component {
     this.state = {
       email: "",
       password: "",
-      userId: ""
     };
-  }
-
-  onLogin = () => {
-    fetch('/api/login',{
-      method:"POST",
-      headers:{
-        "Content-Type" : 'application/json',
-      },
-      credentials: "same-origin",
-      body: JSON.stringify({
-        username: this.state.email,
-        password: this.state.password
-      })
-    })
-    .then(user => user.json())
-    .then(json => {
-      if(json.success === true){
-        this.setState({userId: json.userId})
-        this.props.toggleLogged();
-      }
-    })
-    .catch(error => {
-      alert("error: " + error)
-    })
   }
 
   render() {
     return (
-      <Form inverted>
+      <Form inverted method='POST' action='/api/login'>
           <Form.Field>
             <label>Email</label>
-            <input placeholder='Email' onChange={(e)=>this.setState({email:e.target.value})} />
+            <input placeholder='Email' name='username' onChange={(e)=>this.setState({email:e.target.value})} />
           </Form.Field>
           <Form.Field>
             <label>Password</label>
-            <input placeholder='Password' type="password" onChange={(e)=>this.setState({password:e.target.value})} />
+            <input placeholder='Password' name='password' type="password" onChange={(e)=>this.setState({password:e.target.value})} />
           </Form.Field>
-        <Button type='submit' onClick={()=>this.onLogin()} >Login</Button>
+        <Button type='submit' >Login</Button>
         <br />
         <br />
         <br />

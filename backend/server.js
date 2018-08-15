@@ -37,12 +37,13 @@ let ioMongoStore = new MongoStore({
   mongooseConnection: require('mongoose').connection,
   autoRemove: 'native'
 })
+
 app.use(session({
   secret: process.env.SECRET,
   store: ioMongoStore,
-  // cookie: {
-  //   maxAge: 60 * 60 * 24 * 14
-  // }
+  cookie: {
+    maxAge: 60 * 60 * 24 * 1000 * 7
+  }
 }));
 
 app.use(passport.initialize());

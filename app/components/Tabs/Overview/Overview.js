@@ -1,17 +1,29 @@
 import React, { Component } from 'react'
-import ShareEventModal from '../../Modals/ShareEventModal'
+import { Header } from 'semantic-ui-react'
+import EditEventModal from '../../Modals/EditEventModal'
 
 export default class Overview extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+    this.state = {
+      event: {}
+    }
   }
 
+  componentDidMount() {
+    this.props.socket.emit('getEventInfo', {eventId: this.props.eventId})
+    this.props.socket.on('getEvent', (data) => {
+      console.log(data.event)
+      this.setState({event: data.event})
+    })
+  }
   render() {
+    console.log(this.state.event)
     return(
       <div>
-        <ShareEventModal socket={this.props.socket} eventId={this.props.eventId}/>
-        <h1>This is the Overview</h1>
+        <Header as='h1'>{this.state.event.title}</Header>
         This section will be developed at the end.
+        <EditEventModal socket={this.props.socket} eventId={this.props.eventId} />
       </div>
     )
   }

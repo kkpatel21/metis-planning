@@ -1,0 +1,13 @@
+
+.page {
+  padding-left: 0px !important
+}
+
+.ui.vertical.menu .active.item {
+  background-color: #004e92;
+  color: white;
+}
+
+.ui.grid {
+  height: 95vh;
+}

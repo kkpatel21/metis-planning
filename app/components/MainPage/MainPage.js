@@ -17,18 +17,14 @@ class MainPage extends React.Component {
     };
   }
 
+  componentDidMount() {
+    this.socket.on('loggedIn', () => {
+      this.loggedIn()
+    })
+  }
+
   toggleLogged = () => {
-    fetch("/api/logout")
-    .then(res => res.json())
-    .then(json => {
-      console.log("loggin out!")
-      if (json.success === true){
-        this.setState({logged: false})
-      }
-    })
-    .catch(err => {
-      alert("Error! "+ err)
-    })
+    window.location='/api/logout'
   };
 
   loggedIn = () => {
