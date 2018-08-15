@@ -2,3 +2,7 @@
   overflow: scroll;
   overflow-y: hidden;
 }
+
+.addTab {
+  text-align: center;
+}

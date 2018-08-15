@@ -1,1 +1,10 @@
 
+
+.people {
+  overflow: hidden !important;
+}
+
+body ::-webkit-scrollbar {
+  height: 1px;
+  width: 1px;
+}

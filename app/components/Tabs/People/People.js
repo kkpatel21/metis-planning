@@ -7,6 +7,7 @@ import Specials from './Specials/Specials'
 import Collaborator from './Collaborator/Collaborator'
 import AddSpecialModal from '../../Modals/AddSpecialModal'
 import ShareEventModal from '../../Modals/ShareEventModal'
+import './People.css'
 
 export default class People extends React.Component {
   constructor(props) {
@@ -95,7 +96,7 @@ export default class People extends React.Component {
   render() {
     let panes = [
       { menuItem: 'Invitees', render: () =>
-      <Tab.Pane>
+      <Tab.Pane className='word'>
         <div>
           <Invitees socket={this.props.socket} filteredList={this.filteredList} eventId={this.props.eventId} sendEmailsBack={this.sendEmailsBack} guestsList={this.state.filteredGuestsList}/>
           <AddGuestModal socket={this.props.socket} eventId={this.props.eventId} />
@@ -119,7 +120,7 @@ export default class People extends React.Component {
     ]
     return (
       <div>
-                <Header as='h1'>People</Header>
+        <Header as='h1'>People</Header>
         <Divider />
         <Tab panes={panes} />
       </div>
