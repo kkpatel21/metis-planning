@@ -251,7 +251,7 @@ export default class Ideation extends React.Component {
                     } else {
                       return (
                         <List.Item onDoubleClick={() => this.onCommentClick(topicI, commentI, oneTopic, comment)}>
-                          <List.Icon name="bolt" />{" "}
+                          <List.Icon name="bolt" onClick={() => this.onCommentClick(topicI, commentI, oneTopic, comment)}/>{" "}
                           <List.Content> {comment.comment} </List.Content>
                           <List.Content floated="right">
                             by {comment.user}
