@@ -2,7 +2,7 @@ import express from "express";
 import User from "../models/user";
 import Event from "../models/event";
 
-import Feedback from '../models/feedback';
+import Feedback from "../models/feedback";
 import path from "path";
 import mongoose from "mongoose";
 import multer from "multer";
@@ -37,7 +37,6 @@ module.exports = passport => {
   var validateEmail = function(userData) {
     return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(userData.email);
   };
-
 
   router.post("/signup", function(req, res) {
     if (!validateReq(req.body)) {
@@ -75,16 +74,15 @@ module.exports = passport => {
 
   //login
   router.post("/login", passport.authenticate("local"), (req, res) => {
-    res.redirect('/')
+    res.redirect("/");
   });
 
   //logout
   router.get("/logout", function(req, res) {
     // mongoose.sessions.remove({ 'session.user': req.userId. });
-    req.session.destroy()
+    req.session.destroy();
     req.logout();
-    res.redirect('/')
-
+    res.redirect("/");
   });
 
   //new event
@@ -107,7 +105,7 @@ module.exports = passport => {
       if (err) {
         res.send(err);
         return;
-      }else if(event){
+      } else if (event) {
         res.json({
           status: "success"
         });
@@ -132,14 +130,41 @@ module.exports = passport => {
           if(err) {
             req.json({status: "error", error: err})
           } else {
-            res.json({ status: "success"})
+            res.json({ status: "success" });
           }
-        })
-
+        });
       }
     });
   });
-  router.post('/newFeedback', function(req, res) {
+
+  //edit venues
+  router.post("/editVenue", upload.single("uploadFile"), (req, res) => {
+    console.log("EDIT VALUES RECEIVED!!!!!!!!!!", req.body)
+    Event.findById(req.body.id, (err, event) => {
+      if (event) {
+        event.logistics[req.body.index] = {
+          name: req.body.name,
+          email: req.body.email,
+          status: req.body.status,
+          contact: req.body.contact,
+          address: req.body.address,
+          uploadFile: req.file,
+          lat: req.body.lat,
+          long: req.body.long
+        };
+        event.markModified("logistics");
+        event.save((err, event) => {
+          if (err) {
+            req.json({ status: "error", error: err });
+          } else {
+            res.json({ status: "success", event: event });
+          }
+        });
+      }
+    });
+  });
+
+  router.post("/newFeedback", function(req, res) {
     new Feedback({
       feedback: req.body.feedback,
       reach: req.body.reach
@@ -149,16 +174,14 @@ module.exports = passport => {
       } else if (feedback) {
         res.json({
           status: 200
-        })
+        });
       }
-    })
-  })
+    });
+  });
 
   //add list to ideation(in progress) --> SOCKETS
   router.post("/addIdeation", function(req, res) {
-
-    User.findById(req.user._id)
-    .then((user) => {
+    User.findById(req.user._id).then(user => {
       Event.findById(req.body.id, (err, event) => {
         if (event) {
           event.ideation.push({

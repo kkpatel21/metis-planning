@@ -64,10 +64,6 @@ var EventSchema = new mongoose.Schema({
       required: false
     }
   },
-  logistics:{
-    type:Array,
-    required: false
-  },
   allLogistics: {
     type: Array,
     required: false
