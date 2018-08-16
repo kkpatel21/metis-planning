@@ -6,6 +6,7 @@ h1 {
 .calendar {
   width: 95%;
   margin: 0 auto;
+  margin-top: -3em;
 }
 
 .days-of-week {
