@@ -140,6 +140,13 @@ module.exports = (io, store) => {
       });
     });
 
+    //get logistics tabs
+    socket.on('getLogisticsTabs', data => {
+      Event.findById(data.eventId, (err, event) => {
+        io.to(data.eventId).emit('sendLogisticsTabs', {tabs: event.allLogistics})
+      })
+    })
+
     //update guestList
     socket.on("savePeople", data => {
       Event.findById(data.eventId, (err, event) => {
@@ -224,6 +231,24 @@ module.exports = (io, store) => {
       });
     });
 
+    //add logistics tab
+    socket.on('addLogisticsTab', data => {
+      Event.findById(data.eventId, (err, event) => {
+        let v;
+        event.allLogistics.push({
+          title: data.title,
+          data: [],
+          vORp: data.vORp
+        })
+        event.markModified('allLogistics')
+        event.save((err, eve) => {
+          io.to(data.eventId).emit('addLogisticsTab', {
+            newTab: { title: data.title, data: [], vORp: data.vORp}
+          })
+        })
+      })
+    })
+
     //edit tab
     socket.on('editTab', data => {
       Event.findById(data.eventId, (err, event) => {
@@ -257,6 +282,19 @@ module.exports = (io, store) => {
         event.save((err, eve) => {
           io.to(data.eventId).emit("sendTabs", { tabs: event.fundraising });
         });
+      });
+    });
+
+    //delete Fundraising Tabs
+    socket.on("deleteLogisticsTab", data => {
+      Event.findById(data.eventId, (err, event) => {
+        let logistics = event.allLogistics.slice();
+        logistics.splice(data.index, 1)
+        event.allLogistics = logistics.slice();
+        event.markModified('allLogistics')
+        event.save((err, eve) => {
+          io.to(data.eventId).emit('sendLogisticsTabs', { tabs: event.allLogistics})
+        })
       });
     });
 
@@ -433,7 +471,8 @@ module.exports = (io, store) => {
     socket.on("renderVenue", (data, next) => {
       Event.findById(data.id, (err, event) => {
         if (event) {
-          next({ err, event });
+          let index = data.index
+          next({ err, event, index });
         } else {
           next({ err });
         }
