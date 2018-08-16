@@ -79,10 +79,10 @@ module.exports = (io, store) => {
       })
     })
 
+
     //In EditEventModal
     socket.on('getEventInfoInside', (data) => {
       Event.findById(data.eventId, (err, event) => {
-        console.log(event)
         io.to(data.eventId).emit('getEventInside', {
           event: event
         })

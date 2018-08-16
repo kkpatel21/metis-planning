@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import { Header, Progress } from 'semantic-ui-react'
+import { Header, Progress, Grid, Segment, Icon } from 'semantic-ui-react'
 import EditEventModal from '../../Modals/EditEventModal'
+import './Overview.css'
 
 export default class Overview extends React.Component {
   constructor(props) {
@@ -98,54 +99,81 @@ export default class Overview extends React.Component {
 
     return(
       <div>
-        <div className='collaboratorInfo'>
-          I couldn't find the code to map through an array of different renders, but if you map through collaboratorRender it has each collaborator, so maybe we can show which collaborators are there.
-        </div>
-        <span className='overview-header'>
-          <Header as='h1'>{this.state.event.title}</Header>
+        <div className='overview-header'>
+
+          <Header className='header' as='h1'>{this.state.event.title}</Header>
+          <br />
+          <span className='eventInfo'>
+            {this.state.event.date}
+            <br />
+            {this.state.event.startTime} to {this.state.event.endTime}
+            <br />
+          </span>
           <EditEventModal socket={this.props.socket} eventId={this.props.eventId} />
-        </span>
-        <div className='eventInfo'>
-          {this.state.event.date}
-          <br />
-          {this.state.event.startTime}
-          <br />
-          {this.state.event.endTime}
-          <br />
         </div>
-        <br />
-        <div className='peopleInfo'>
-          <h3>People</h3>
-          <div>
-            Invited: {total}
-          </div>
-          <div>
-            Attending: {attending}
-          </div>
-          <div>
-            Pending: {pending}
-          </div>
-          <div>
-            Not Coming: {notComing}
-          </div>
-        </div>
-        <div className='budget'>
-          <h3>Budget</h3>
-          {percent > 100 ?
-            <Progress className='pbar' percent={percent} progress error />
-            :
-            <Progress className='pbar' percent={percent} progress inverted color='blue'/>
-          }
-          <div>
-            Allocated: ${allocated}
-          </div>
-          <div>
-            Total Budget: ${totalBudget}
-          </div>
-        </div>
-        <div className='funds'>
-          Your event has raised ${totalFundsRaised} for the event!
-        </div>
+          <Segment.Group raised clearing>
+            <Segment>
+              <div className='logisticsInfo'>
+                This box will contain the Venue and People
+              </div>
+            </Segment>
+            <Segment>
+              <Grid text-align='center' className='dashboardGrid'>
+                <Grid.Row>
+                  <Grid.Column width={5} className='icon-column'>
+                    <Icon color='teal' name='users' size='massive'/>
+                  </Grid.Column>
+                  <Grid.Column width={11}>
+                    <div className='peopleInfo'>
+                      <h3>People</h3>
+                      <div>
+                        Invited: {total}
+                      </div>
+                      <div>
+                        Attending: {attending}
+                      </div>
+                      <div>
+                        Pending: {pending}
+                      </div>
+                      <div>
+                        Not Coming: {notComing}
+                      </div>
+                    </div>
+                  </Grid.Column>
+                </Grid.Row>
+              </Grid>
+            </Segment>
+            <Segment>
+              <Grid text-align='center' className='dashboardGrid'>
+                <Grid.Row>
+                  <Grid.Column width={11} className='icon-column'>
+                    <div className='budget'>
+                      <h3>Budget</h3>
+                      {percent > 100 ?
+                        <Progress className='pbar' percent={percent} progress error />
+                        :
+                        <Progress className='pbar' percent={percent} progress inverted color='blue'/>
+                      }
+                      <div>
+                        Allocated: ${allocated}
+                      </div>
+                      <div>
+                        Total Budget: ${totalBudget}
+                      </div>
+                    </div>
+                  </Grid.Column>
+                  <Grid.Column width={5}>
+                    <Icon color='teal' name='money' size='massive'/>
+                  </Grid.Column>
+                </Grid.Row>
+              </Grid>
+            </Segment>
+            <Segment>
+              <div className='funds'>
+                Your event has raised ${totalFundsRaised} for the event!
+              </div>
+            </Segment>
+          </Segment.Group>
       </div>
     )
   }
