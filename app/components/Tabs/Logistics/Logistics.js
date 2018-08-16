@@ -45,7 +45,7 @@ export default class Logistics extends React.Component {
         } else {
           fundRender = (
             <div>
-              <Venue socket={this.props.socket} eventId={this.props.eventId} index={i}/>
+              <Venue key={i} title={tab.title} socket={this.props.socket} eventId={this.props.eventId} tabIndex={i}/>
             </div>
           )
         }
@@ -72,11 +72,11 @@ export default class Logistics extends React.Component {
         )
       } else {
         addRender = (
-          <Venue eventId={this.props.eventId} socket={this.props.socket} index={(updateTabs.length-2)}/>
+          <Venue key={updateTabs.length} title={data.newTab.title} eventId={this.props.eventId} socket={this.props.socket} tabIndex={(updateTabs.length)}/>
         )
       }
       updateTabs.push({
-        menuItem: {key: data.newTab.title, content: <Header as='h4'><Header.Content>{data.newTab.title} &emsp;<Icon color='grey' name='cancel' onClick={() => this.deleteTab(updateTabs.length-2)} /> </Header.Content></Header>},
+        menuItem: {key: data.newTab.title, content: <Header as='h4'><Header.Content>{data.newTab.title} &emsp;<Icon color='grey' name='cancel' onClick={() => this.deleteTab(updateTabs.length)} /> </Header.Content></Header>},
         render: () => <Tab.Pane>{addRender}</Tab.Pane>
       })
       updateTabs.push(add)

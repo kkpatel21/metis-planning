@@ -32,7 +32,7 @@ class AddVenueModal extends React.Component {
       long: ""
     };
   }
-  onDone = () => {
+  onDone = async () => {
     // console.log("eventId is here*********", this.props.eventId)
     let venue = {
       name: this.state.name,
@@ -42,28 +42,16 @@ class AddVenueModal extends React.Component {
       lat: this.state.lat,
       long: this.state.long,
       email: this.state.email,
-      id: this.props.eventId
     }
-    fetch("/api/addVenue", {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        venueData: venue,
-        index: this.props.index
-      })
+    console.log(this.props.index)
+
+    this.props.socket.emit('addVenue', {venueData: venue, index: this.props.index, eventId: this.props.eventId})
+    await this.setState({
+      open: false,
+      address: ""
     })
-      .then(res => res.json())
-      .then(json => {
-        if (json.status === "success") {
-          this.setState({ open: false, address: "" });
-          this.props.onProps()
-        } else if (json.status === "error") {
-          alert("Error!" + json.error);
-        }
-      });
   };
+
   onStatus = (e, value) => {
     this.setState({ status: value.value });
   };
@@ -76,16 +64,15 @@ class AddVenueModal extends React.Component {
   handleChange = address => {
     this.setState({ address });
   };
+
   handleSelect = address => {
     geocodeByAddress(address)
       .then(results => {
-        console.log("what Address-------->", results[0]);
 
         this.setState({ address: results[0].formatted_address });
         return getLatLng(results[0]);
       })
       .then(latlng => {
-        console.log("what LATLONG-------->", latlng);
         this.setState({lat: latlng.lat, long: latlng.lng})
       })
       .catch(error => console.error("Error", error));
