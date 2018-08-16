@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Header } from 'semantic-ui-react'
+import { Header, Progress } from 'semantic-ui-react'
 import EditEventModal from '../../Modals/EditEventModal'
 
 export default class Overview extends React.Component {
@@ -16,8 +16,22 @@ export default class Overview extends React.Component {
       this.setState({event: data.event})
     })
   }
+
   render() {
     console.log(this.state.event)
+
+    //Collaborators
+    let collaborators = this.state.event.collaborators
+    let collaboratorRender = [];
+    if (collaborators) {
+      collaborators.forEach((person) => {
+        collaboratorRender.push(
+          <div>
+            {person}
+          </div>)
+      })
+    }
+
     //THIS IS INFO FOR ALL INVITEES -- CAN SHOW INFO BASED ON THE STATUS
     let attending = 0;
     let pending = 0;
@@ -54,16 +68,20 @@ export default class Overview extends React.Component {
       })
     }
 
-    let collaborators = this.state.event.collaborators
-    let collaboratorRender = [];
-    if (collaborators) {
-      collaborators.forEach((person) => {
-        collaboratorRender.push(
-          <div>
-            {person}
-          </div>)
+    //budget
+    let allocated = 0;
+    let totalBudget = 0;
+    let percent = 0;
+    let budget = this.state.event.budget
+    if (budget) {
+      totalBudget = this.state.event.budget.total
+      this.state.event.budget.budgetItems.forEach((item) => {
+        allocated += parseInt(item.amount)
       })
+      percent = parseInt(allocated/totalBudget*100)
     }
+
+
 
     //How much funds the event has raised.
     let fundraisers = this.state.event.fundraising
@@ -71,7 +89,6 @@ export default class Overview extends React.Component {
     if (fundraisers) {
       fundraisers.forEach((fund) => {
         fund.data.forEach((donation) => {
-          console.log(donation)
           totalFundsRaised += parseInt(donation.amount)
         })
       })
@@ -81,9 +98,14 @@ export default class Overview extends React.Component {
 
     return(
       <div>
-        <Header as='h1'>{this.state.event.title}</Header>
+        <div className='collaboratorInfo'>
+          I couldn't find the code to map through an array of different renders, but if you map through collaboratorRender it has each collaborator, so maybe we can show which collaborators are there.
+        </div>
+        <span className='overview-header'>
+          <Header as='h1'>{this.state.event.title}</Header>
+          <EditEventModal socket={this.props.socket} eventId={this.props.eventId} />
+        </span>
         <div className='eventInfo'>
-          This is just general info about the event itself.
           {this.state.event.date}
           <br />
           {this.state.event.startTime}
@@ -93,24 +115,37 @@ export default class Overview extends React.Component {
         </div>
         <br />
         <div className='peopleInfo'>
-          There are {total} invited.
-          Of those invited, {attending} people are coming, {notComing} are not coming, and {pending} have still not replied.
+          <h3>People</h3>
+          <div>
+            Invited: {total}
+          </div>
+          <div>
+            Attending: {attending}
+          </div>
+          <div>
+            Pending: {pending}
+          </div>
+          <div>
+            Not Coming: {notComing}
+          </div>
         </div>
-        <br />
-        <div className='collaboratorInfo'>
-          I couldn't find the code to map through an array of different renders, but if you map through collaboratorRender it has each collaborator, so maybe we can show which collaborators are there.
+        <div className='budget'>
+          <h3>Budget</h3>
+          {percent > 100 ?
+            <Progress className='pbar' percent={percent} progress error />
+            :
+            <Progress className='pbar' percent={percent} progress inverted color='blue'/>
+          }
+          <div>
+            Allocated: ${allocated}
+          </div>
+          <div>
+            Total Budget: ${totalBudget}
+          </div>
         </div>
         <div className='funds'>
           Your event has raised ${totalFundsRaised} for the event!
         </div>
-        <br />
-        <div className='budget'>
-
-        </div>
-
-
-        This section will be developed at the end.
-        <EditEventModal socket={this.props.socket} eventId={this.props.eventId} />
       </div>
     )
   }

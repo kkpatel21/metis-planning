@@ -96,8 +96,9 @@ class UserDash extends React.Component {
       viewRender = (
         <div className="calendar">
           <CalendarView
-          socket={this.props.socket}
-        />
+            openEvent={this.openEvent}
+            socket={this.props.socket}
+          />
         </div>)
     }
 

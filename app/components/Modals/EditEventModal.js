@@ -90,7 +90,7 @@ class EditEventModal extends React.Component {
       <Modal
         trigger={
           <Button className='editEvent' onClick={() => this.onTrigger()} floated='right' icon labelPosition='left' primary size='small'>
-            <Icon name='pencil' /> EditEvent
+            <Icon name='pencil' /> Edit Event
           </Button>
         }
         onClose={this.onCancel}

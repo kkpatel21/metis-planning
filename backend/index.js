@@ -17,8 +17,6 @@ var upload = multer({ storage: storage });
 import sgMail from "@sendgrid/mail";
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-
-
 module.exports = (io, store) => {
   // This function gets us the user ID that has just logged in to the server
   io.use((socket, next) => {
@@ -42,7 +40,6 @@ module.exports = (io, store) => {
   });
 
   //All socket calls should be within here
-
   io.on("connection", function(socket) {
     // This is to get the user.id: socket.session.passport.user
 
@@ -68,7 +65,7 @@ module.exports = (io, store) => {
               filtered.push(event);
             }
           });
-          next({ err, filtered});
+          next({ err, filtered });
         });
       });
     });
@@ -91,6 +88,7 @@ module.exports = (io, store) => {
         })
       })
     })
+
     socket.on('getName', next => {
       User.findById(socket.session.passport.user).then(user => {
         let name = user.firstname

@@ -43,7 +43,7 @@ export default class CalendarView extends React.Component {
             date: date + 1,
             startTime: event.startTime,
             endTime: event.endTime,
-            index: index
+            id: event._id
           })
         }
       })
@@ -106,7 +106,7 @@ export default class CalendarView extends React.Component {
             date: date + 1,
             startTime: event.startTime,
             endTime: event.endTime,
-            index: index
+            id: event._id
           })
         }
       })
@@ -189,7 +189,7 @@ export default class CalendarView extends React.Component {
             date: date + 1,
             startTime: event.startTime,
             endTime: event.endTime,
-            index: index
+            id: event._id
           })
         }
       })
@@ -279,7 +279,12 @@ export default class CalendarView extends React.Component {
           </Grid.Row>
           <Grid.Row className='calendar-row'>
             <Grid.Column width={1}></Grid.Column>
-            {this.state.dayNames.map((day) => <Grid.Column width={2}><span className="day-block">{day}</span></Grid.Column>)}<br />
+            {this.state.dayNames.map((day) =>
+              <Grid.Column width={2}>
+                <span className="day-block">
+                  {day}
+                </span></Grid.Column>)}
+                <br />
             <Grid.Column width={1}></Grid.Column>
           </Grid.Row>
 
@@ -294,7 +299,7 @@ export default class CalendarView extends React.Component {
                 return <Grid.Column width={2}>
                   <span className='date-block'>
                     <span className='date-number'>{date}</span>
-                  <div className='event-block'>
+                  <div className='event-block' onClick={() => this.props.openEvent(this.state.displayEvents[index].id)}>
                      <div>{this.state.displayEvents[index].title}</div>
                     <div>{this.state.displayEvents[index].startTime}-{this.state.displayEvents[index].endTime}</div>
                   </div>
@@ -321,7 +326,7 @@ export default class CalendarView extends React.Component {
                 return <Grid.Column width={2}>
                   <span className='date-block'>
                     <span className='date-number'>{date}</span>
-                  <div className='event-block'>
+                  <div className='event-block' onClick={() => this.props.openEvent(this.state.displayEvents[index].id)}>
                     <div>{this.state.displayEvents[index].title}</div>
                     <div>{this.state.displayEvents[index].startTime}-{this.state.displayEvents[index].endTime}</div>
                   </div>
@@ -348,7 +353,7 @@ export default class CalendarView extends React.Component {
                 return <Grid.Column width={2}>
                   <span className='date-block'>
                     <span className='date-number'>{date}</span>
-                  <div className='event-block'>
+                  <div className='event-block' onClick={() => this.props.openEvent(this.state.displayEvents[index].id)}>
                     <div>{this.state.displayEvents[index].title}</div>
                     <div>{this.state.displayEvents[index].startTime}-{this.state.displayEvents[index].endTime}</div>
                   </div>
@@ -375,7 +380,7 @@ export default class CalendarView extends React.Component {
                 return <Grid.Column width={2}>
                   <span className='date-block'>
                     <span className='date-number'>{date}</span>
-                  <div className='event-block'>
+                  <div className='event-block' onClick={() => this.props.openEvent(this.state.displayEvents[index].id)}>
                     <div>{this.state.displayEvents[index].title}</div>
                     <div>{this.state.displayEvents[index].startTime}-{this.state.displayEvents[index].endTime}</div>
                   </div>
@@ -402,7 +407,7 @@ export default class CalendarView extends React.Component {
                 return <Grid.Column width={2}>
                   <span className='date-block'>
                     <span className='date-number'>{date}</span>
-                  <div className='event-block'>
+                  <div className='event-block' onClick={() => this.props.openEvent(this.state.displayEvents[index].id)}>
                     <div>{this.state.displayEvents[index].title}</div>
                     <div>{this.state.displayEvents[index].startTime}-{this.state.displayEvents[index].endTime}</div>
                   </div>
@@ -430,7 +435,7 @@ export default class CalendarView extends React.Component {
                 return <Grid.Column width={2}>
                   <span className='date-block'>
                     <span className='date-number'>{date}</span>
-                  <div className='event-block'>
+                  <div className='event-block' onClick={() => this.props.openEvent(this.state.displayEvents[index].id)}>
                     <div>{this.state.displayEvents[index].title}</div>
                     <div>{this.state.displayEvents[index].startTime}-{this.state.displayEvents[index].endTime}</div>
                   </div>
