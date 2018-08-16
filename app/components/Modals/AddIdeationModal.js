@@ -24,7 +24,6 @@ class AddIdeationModal extends React.Component {
       topic: this.state.topic
     }, (res) => {
       if(res.event){
-        alert("topic saved!");
         this.setState({open:false})
         this.props.autoRender()
       }
@@ -62,8 +61,8 @@ class AddIdeationModal extends React.Component {
                   onChange={e => this.setState({ topic: e.target.value })}
                 />
               </Form.Field>
-              <Button 
-              type="submit" 
+              <Button
+              type="submit"
               onClick={() => this.onCreate()}
               onKeyPress={()=> this.onCreate()}
               >

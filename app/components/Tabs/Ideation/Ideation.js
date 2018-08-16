@@ -82,7 +82,6 @@ export default class Ideation extends React.Component {
         comment: newComment
       }, res => {
         if (res.event) {
-          console.log(res.event.ideation)
           this.setState({ topic: res.event.ideation, comment: "", commentChanging: {}})
         }
       })
@@ -101,7 +100,6 @@ export default class Ideation extends React.Component {
           },
           res => {
             if (res.event) {
-              console.log(res.event)
               this.setState({ topic: res.event.ideation, typing: "" });
             }
           }
