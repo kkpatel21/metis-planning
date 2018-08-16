@@ -27,9 +27,8 @@ h1 {
   -ms-flex-align: stretch;
   align-items: stretch;
   width: 100%!important;
-  padding: 0;
   padding-top: 0rem!important;
-  padding-bottom: 0.75rem!important;
+  padding-bottom: 0rem!important;
 }
 
 .days-of-month {
@@ -55,8 +54,8 @@ h1 {
   box-sizing: border-box;
   padding-left: 2%;
   padding-right: 2%;
-  margin-bottom: 4px;
-  height: 30px;
+  /* margin-bottom: 4px; */
+  /* height: 30px; */
   background: #0d8cb280;
   color: #ffffff;
   text-transform: uppercase;
