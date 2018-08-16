@@ -87,7 +87,8 @@ export default class Overview extends React.Component {
 
 
     //How much funds the event has raised.
-    let fundraisers = this.state.event.fundraising
+    let fundraisers = this.state.event.fundraising;
+    let numCampaigns = 0;
     let totalFundsRaised = 0;
     if (fundraisers) {
       fundraisers.forEach((fund) => {
