@@ -21,30 +21,33 @@ export default class AddPeopleModal extends React.Component {
       price: 0,
       quantity: 0,
       option1: "",
-      option2:"",
+      option2: "",
       pricePerPerson: 0,
       website: "",
-      open: false,
+      open: false
     };
   }
   onDone = () => {
-
-      var calculated = this.state.price/this.state.quantity
-      this.props.socket.emit("addCaterer", {
-          name: this.state.name,
-          contact: this.state.contact,
-          status: this.state.status,
+    var calculated = this.state.price / this.state.quantity;
+    this.props.socket.emit(
+      "addCaterer",
+      {
+        name: this.state.name,
+        contact: this.state.contact,
+        status: this.state.status,
         //   price: this.state.price,
         //   quantity: this.state.quantity,
         //   option1: this.state.option1,
         //   option2: this.state.option2,
         //   pricePerPerson: calculated,
-          website: this.state.website,
-          id: this.props.eventId
-      }, res => {
-          res
-      })
-    }
+        website: this.state.website,
+        id: this.props.eventId
+      },
+      res => {
+        res;
+      }
+    );
+  };
 
   onStatus = (e, value) => {
     this.setState({ status: value.value });

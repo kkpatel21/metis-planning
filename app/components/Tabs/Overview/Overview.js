@@ -38,7 +38,8 @@ export default class Overview extends React.Component {
     let pending = 0;
     let notComing = 0;
     let total = 0;
-    if (this.state.event.people) {
+    let people = this.state.event.people
+    if (people) {
       total = this.state.event.people.length
       this.state.event.people.forEach((people) => {
         if (people.status === 'Coming') {
@@ -56,7 +57,8 @@ export default class Overview extends React.Component {
     let sPending = 0;
     let sNotComing = 0;
     let sTotal = 0;
-    if (this.state.event.caterers) {
+    let caterers = this.state.event.caterers
+    if (caterers) {
       sTotal = this.state.event.caterers.length
       this.state.event.caterers.forEach((special) => {
         if (people.status === 'Unable') {

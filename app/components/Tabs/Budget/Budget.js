@@ -33,6 +33,7 @@ export default class Budget extends React.Component {
       //this lags
       budgetList = data.budget.budgetItems
       this.setState({
+        totalBudget: data.budget.total,
         totalApproval: data.budget.totalApproval
       })
     })
@@ -103,7 +104,6 @@ export default class Budget extends React.Component {
     const totalValue = this.state.totalApproval
     let allocated = 0
     budgetList.forEach((item) => {
-      console.log(item.amount)
       allocated+=parseInt(item.amount)
     })
     let percent = parseInt(allocated/this.state.totalBudget*100)
