@@ -8,6 +8,36 @@ h1 {
   margin: 0 auto;
 }
 
+.calendar-row {
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-box-pack: inherit;
+  -ms-flex-pack: inherit;
+  justify-content: inherit;
+  -webkit-box-align: stretch;
+  -ms-flex-align: stretch;
+  align-items: stretch;
+  width: 100%!important;
+  padding: 0;
+  padding-top: 0rem!important;
+  padding-bottom: 0.75rem!important;
+}
+
+.days-of-month {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  width: 100%;
+ }
+
 .days-of-week {
   display: flex;
   flex-wrap: wrap;
@@ -19,14 +49,14 @@ h1 {
 .day-block {
   display: inline-block;
   flex-wrap: wrap;
-  width: 100%;
+  width: 10vw;
   text-align: center;
   box-sizing: border-box;
   padding-left: 2%;
   padding-right: 2%;
   margin-bottom: 4px;
   height: 30px;
-  background: #0d8cb2;
+  background: #0d8cb280;
   color: #ffffff;
   text-transform: uppercase;
   font-size: 0.8em;
@@ -34,28 +64,31 @@ h1 {
   line-height: 30px;
 }
 
-.days-of-month {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-  width: 100%;
- }
-
 .date-block {
   display: inline-block;
   text-align: left;
   justify-content: space-between;
-  box-sizing: border-box;
-  padding-left: 2%;
-  padding-right: 2%;
+  border: solid 0.5px white;
   margin-bottom: 4px;
-  height: 100px;
-  width: 100%;
-  background: #0d8cb2;
+  height: 13vh;
+  width: 10vw;
   color: #ffffff;
   font-size: 0.8em;
   letter-spacing: 0.1em;
   line-height: 30px;
+}
+
+.date-number {
+  padding-left: 6%;
+}
+
+.event-block {
+  text-align: center;
+  font-size: 1em;
+  background: #0d8cb280;
+  color: #ffffff;
+  width: 100%!important;
+  line-height: 1.3em;
 }
 
 /* /body {

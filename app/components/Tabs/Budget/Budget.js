@@ -33,7 +33,6 @@ export default class Budget extends React.Component {
       //this lags
       budgetList = data.budget.budgetItems
       this.setState({
-        totalBudget: data.budget.total,
         totalApproval: data.budget.totalApproval
       })
     })

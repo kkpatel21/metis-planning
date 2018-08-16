@@ -16,7 +16,6 @@ export default class CalendarView extends React.Component {
       currentMonth: new Date().getMonth()+1,
       month: new Date().getMonth(),
       currentYear: new Date().getFullYear(),
-      daysInMonthCount: new Date(new Date().getFullYear(), 2, 0).getDate(),
       dayNames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
       monthNames: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
       calendarGrid: [],
@@ -65,9 +64,21 @@ export default class CalendarView extends React.Component {
     let firstDayOfMonth = new Date(this.state.currentYear + "-" + this.state.currentMonth + '-1').getDay()
     let calendarDates = []
     let firstDayOfCalendarBlock = calendarGrid[firstDayOfMonth]
-    for (var i = 0; i < calendarGrid.length; i++) {
-      calendarDates.push(new Date(+firstDayOfMonth-(1000*60*60*24*(firstDayOfMonth-1))+(1000*60*60*24*i)).getDate())
+    let daysInMonthCount = new Date(this.state.currentYear, this.state.currentMonth, 0).getDate()
+    let daysInPrevMonthCount = new Date(this.state.currentYear, this.state.currentMonth-1, 0).getDate()
+    for (var i = 0; i < firstDayOfMonth; i++) {
+      calendarDates.push(daysInPrevMonthCount+1-firstDayOfMonth+i)
     }
+    for (var i = 1; i < daysInMonthCount+1; i++) {
+      calendarDates.push(i)
+    }
+    for (var i = 1; i < calendarGrid.length-daysInMonthCount-firstDayOfMonth+1; i++) {
+      calendarDates.push(i)
+    }
+    // for (var i = 0; i < calendarGrid.length; i++) {
+    //   calendarDates.push(new Date(+firstDayOfMonth-(1000*60*60*24*(firstDayOfMonth-1))+(1000*60*60*24*i)).getDate())
+    // }
+
     this.setState({
       calendarDates: calendarDates,
       calendarDatesWk1: calendarDates.slice(0,7),
@@ -107,8 +118,16 @@ export default class CalendarView extends React.Component {
       let firstDayOfMonth = new Date(parseInt(this.state.currentYear)-1 + "-" + '12' + '-1').getDay()
       let calendarDates = []
       let firstDayOfCalendarBlock = this.state.calendarGrid[firstDayOfMonth]
-      for (var i = 0; i < this.state.calendarGrid.length; i++) {
-        calendarDates.push(new Date(+firstDayOfMonth-(1000*60*60*24*(firstDayOfMonth-1))+(1000*60*60*24*i)).getDate())
+      let daysInMonthCount = new Date(this.state.currentYear-1, this.state.currentMonth-1, 0).getDate()
+      let daysInPrevMonthCount = new Date(this.state.currentYear-1, this.state.currentMonth-2, 0).getDate()
+      for (var i = 0; i < firstDayOfMonth; i++) {
+        calendarDates.push(daysInPrevMonthCount+1-firstDayOfMonth+i)
+      }
+      for (var i = 1; i < daysInMonthCount+1; i++) {
+        calendarDates.push(i)
+      }
+      for (var i = 1; i < this.state.calendarGrid.length-daysInMonthCount-firstDayOfMonth+1; i++) {
+        calendarDates.push(i)
       }
       this.setState({
         month: 11,
@@ -128,8 +147,16 @@ export default class CalendarView extends React.Component {
       let firstDayOfMonth = new Date(this.state.currentYear + "-" + (parseInt(this.state.currentMonth)-1) + '-1').getDay()
       let calendarDates = []
       let firstDayOfCalendarBlock = this.state.calendarGrid[firstDayOfMonth]
-      for (var i = 0; i < this.state.calendarGrid.length; i++) {
-        calendarDates.push(new Date(+firstDayOfMonth-(1000*60*60*24*(firstDayOfMonth-1))+(1000*60*60*24*i)).getDate())
+      let daysInMonthCount = new Date(this.state.currentYear, this.state.currentMonth-1, 0).getDate()
+      let daysInPrevMonthCount = new Date(this.state.currentYear, this.state.currentMonth-2, 0).getDate()
+      for (var i = 0; i < firstDayOfMonth; i++) {
+        calendarDates.push(daysInPrevMonthCount+1-firstDayOfMonth+i)
+      }
+      for (var i = 1; i < daysInMonthCount+1; i++) {
+        calendarDates.push(i)
+      }
+      for (var i = 1; i < this.state.calendarGrid.length-daysInMonthCount-firstDayOfMonth+1; i++) {
+        calendarDates.push(i)
       }
       this.setState({
         month: this.state.month-1,
@@ -174,8 +201,16 @@ export default class CalendarView extends React.Component {
       let firstDayOfMonth = new Date(parseInt(this.state.currentYear)+1 + "-" + '1' + '-1').getDay()
       let calendarDates = []
       let firstDayOfCalendarBlock = this.state.calendarGrid[firstDayOfMonth]
-      for (var i = 0; i < this.state.calendarGrid.length; i++) {
-        calendarDates.push(new Date(+firstDayOfMonth-(1000*60*60*24*(firstDayOfMonth-1))+(1000*60*60*24*i)).getDate())
+      let daysInMonthCount = new Date(this.state.currentYear+1, this.state.currentMonth+1, 0).getDate()
+      let daysInPrevMonthCount = new Date(this.state.currentYear+1, this.state.currentMonth, 0).getDate()
+      for (var i = 0; i < firstDayOfMonth; i++) {
+        calendarDates.push(daysInPrevMonthCount+1-firstDayOfMonth+i)
+      }
+      for (var i = 1; i < daysInMonthCount+1; i++) {
+        calendarDates.push(i)
+      }
+      for (var i = 1; i < this.state.calendarGrid.length-daysInMonthCount-firstDayOfMonth+1; i++) {
+        calendarDates.push(i)
       }
       this.setState({
         month: 0,
@@ -195,8 +230,16 @@ export default class CalendarView extends React.Component {
       let firstDayOfMonth = new Date(this.state.currentYear + "-" + (parseInt(this.state.currentMonth)+1) + '-1').getDay()
       let calendarDates = []
       let firstDayOfCalendarBlock = this.state.calendarGrid[firstDayOfMonth]
-      for (var i = 0; i < this.state.calendarGrid.length; i++) {
-        calendarDates.push(new Date(+firstDayOfMonth-(1000*60*60*24*(firstDayOfMonth-1))+(1000*60*60*24*i)).getDate())
+      let daysInMonthCount = new Date(this.state.currentYear, this.state.currentMonth+1, 0).getDate()
+      let daysInPrevMonthCount = new Date(this.state.currentYear, this.state.currentMonth, 0).getDate()
+      for (var i = 0; i < firstDayOfMonth; i++) {
+        calendarDates.push(daysInPrevMonthCount+1-firstDayOfMonth+i)
+      }
+      for (var i = 1; i < daysInMonthCount+1; i++) {
+        calendarDates.push(i)
+      }
+      for (var i = 1; i < this.state.calendarGrid.length-daysInMonthCount-firstDayOfMonth+1; i++) {
+        calendarDates.push(i)
       }
       this.setState({
         month: this.state.month+1,
@@ -234,13 +277,13 @@ export default class CalendarView extends React.Component {
             </Grid.Column>
             <Grid.Column width={1}></Grid.Column>
           </Grid.Row>
-          <Grid.Row>
+          <Grid.Row className='calendar-row'>
             <Grid.Column width={1}></Grid.Column>
             {this.state.dayNames.map((day) => <Grid.Column width={2}><span className="day-block">{day}</span></Grid.Column>)}<br />
             <Grid.Column width={1}></Grid.Column>
           </Grid.Row>
 
-          <Grid.Row>
+          <Grid.Row className='calendar-row'>
             <Grid.Column width={1}></Grid.Column>
             {this.state.calendarDatesWk1.map((date) => {
               let found = false
@@ -250,22 +293,24 @@ export default class CalendarView extends React.Component {
               if(index !== -1) {
                 return <Grid.Column width={2}>
                   <span className='date-block'>
-                    {date}
-                    <div>{this.state.displayEvents[index].title}</div>
+                    <span className='date-number'>{date}</span>
+                  <div className='event-block'>
+                     <div>{this.state.displayEvents[index].title}</div>
                     <div>{this.state.displayEvents[index].startTime}-{this.state.displayEvents[index].endTime}</div>
+                  </div>
                   </span>
                 </Grid.Column>
               } else {
                 return <Grid.Column width={2}>
                   <span className='date-block'>
-                    {date}
+                    <span className='date-number'>{date}</span>
                   </span>
                 </Grid.Column>
               }
             })}
             <Grid.Column width={1}></Grid.Column>
           </Grid.Row>
-          <Grid.Row>
+          <Grid.Row className='calendar-row'>
             <Grid.Column width={1}></Grid.Column>
             {this.state.calendarDatesWk2.map((date) => {
               let found = false
@@ -275,22 +320,24 @@ export default class CalendarView extends React.Component {
               if(index !== -1) {
                 return <Grid.Column width={2}>
                   <span className='date-block'>
-                    {date}
+                    <span className='date-number'>{date}</span>
+                  <div className='event-block'>
                     <div>{this.state.displayEvents[index].title}</div>
                     <div>{this.state.displayEvents[index].startTime}-{this.state.displayEvents[index].endTime}</div>
+                  </div>
                   </span>
                 </Grid.Column>
               } else {
                 return <Grid.Column width={2}>
                   <span className='date-block'>
-                    {date}
+                    <span className='date-number'>{date}</span>
                   </span>
                 </Grid.Column>
               }
             })}
             <Grid.Column width={1}></Grid.Column>
           </Grid.Row>
-          <Grid.Row>
+          <Grid.Row className='calendar-row'>
             <Grid.Column width={1}></Grid.Column>
             {this.state.calendarDatesWk3.map((date) => {
               let found = false
@@ -300,22 +347,24 @@ export default class CalendarView extends React.Component {
               if(index !== -1) {
                 return <Grid.Column width={2}>
                   <span className='date-block'>
-                    {date}
+                    <span className='date-number'>{date}</span>
+                  <div className='event-block'>
                     <div>{this.state.displayEvents[index].title}</div>
                     <div>{this.state.displayEvents[index].startTime}-{this.state.displayEvents[index].endTime}</div>
+                  </div>
                   </span>
                 </Grid.Column>
               } else {
                 return <Grid.Column width={2}>
                   <span className='date-block'>
-                    {date}
+                    <span className='date-number'>{date}</span>
                   </span>
                 </Grid.Column>
               }
             })}
             <Grid.Column width={1}></Grid.Column>
           </Grid.Row>
-          <Grid.Row>
+          <Grid.Row className='calendar-row'>
             <Grid.Column width={1}></Grid.Column>
             {this.state.calendarDatesWk4.map((date) => {
               let found = false
@@ -325,22 +374,24 @@ export default class CalendarView extends React.Component {
               if(index !== -1) {
                 return <Grid.Column width={2}>
                   <span className='date-block'>
-                    {date}
+                    <span className='date-number'>{date}</span>
+                  <div className='event-block'>
                     <div>{this.state.displayEvents[index].title}</div>
                     <div>{this.state.displayEvents[index].startTime}-{this.state.displayEvents[index].endTime}</div>
+                  </div>
                   </span>
                 </Grid.Column>
               } else {
                 return <Grid.Column width={2}>
                   <span className='date-block'>
-                    {date}
+                    <span className='date-number'>{date}</span>
                   </span>
                 </Grid.Column>
               }
             })}
             <Grid.Column width={1}></Grid.Column>
           </Grid.Row>
-          <Grid.Row>
+          <Grid.Row className='calendar-row'>
             <Grid.Column width={1}></Grid.Column>
             {this.state.calendarDatesWk5.map((date) => {
               let found = false
@@ -350,15 +401,17 @@ export default class CalendarView extends React.Component {
               if(index !== -1) {
                 return <Grid.Column width={2}>
                   <span className='date-block'>
-                    {date}
+                    <span className='date-number'>{date}</span>
+                  <div className='event-block'>
                     <div>{this.state.displayEvents[index].title}</div>
                     <div>{this.state.displayEvents[index].startTime}-{this.state.displayEvents[index].endTime}</div>
+                  </div>
                   </span>
                 </Grid.Column>
               } else {
                 return <Grid.Column width={2}>
                   <span className='date-block'>
-                    {date}
+                    <span className='date-number'>{date}</span>
                   </span>
                 </Grid.Column>
               }
@@ -366,7 +419,7 @@ export default class CalendarView extends React.Component {
             <Grid.Column width={1}></Grid.Column>
           </Grid.Row>
           {this.state.calendarDatesWk6[0]>=30 ?
-          <Grid.Row>
+          <Grid.Row className='calendar-row'>
             <Grid.Column width={1}></Grid.Column>
             {this.state.calendarDatesWk6.map((date) => {
               let found = false
@@ -376,15 +429,17 @@ export default class CalendarView extends React.Component {
               if(index !== -1) {
                 return <Grid.Column width={2}>
                   <span className='date-block'>
-                    {date}
+                    <span className='date-number'>{date}</span>
+                  <div className='event-block'>
                     <div>{this.state.displayEvents[index].title}</div>
                     <div>{this.state.displayEvents[index].startTime}-{this.state.displayEvents[index].endTime}</div>
+                  </div>
                   </span>
                 </Grid.Column>
               } else {
                 return <Grid.Column width={2}>
                   <span className='date-block'>
-                    {date}
+                    <span className='date-number'>{date}</span>
                   </span>
                 </Grid.Column>
               }
