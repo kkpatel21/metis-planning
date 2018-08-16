@@ -32,7 +32,7 @@ class Login extends React.Component {
             <Icon name='facebook' /> Facebook
           </Button>
           <Button color="google plus">
-            <Icon name='google plus' /> Google Plus
+            <Icon name='google plus' /> Google 
           </Button>
         </div>
       </Form>

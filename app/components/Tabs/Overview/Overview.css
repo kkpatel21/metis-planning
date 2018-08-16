@@ -1,1 +1,28 @@
+.overview-header {
+  margin: auto;
+  text-align: center;
+}
 
+.ui.labeled.icon.button, .ui.labeled.icon.buttons .button .editModal{
+  margin-top: 73vh
+}
+
+.header {
+  display: inline
+}
+
+.ui.segments>.segment {
+  height: 17vh
+}
+
+.icon-column {
+  height: 14vh
+}
+
+.ui.grid>.row {
+  height: 14vh
+}
+
+.dashboardGrid {
+  height: 17vh !important
+}

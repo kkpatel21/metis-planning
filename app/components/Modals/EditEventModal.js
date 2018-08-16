@@ -53,21 +53,20 @@ class EditEventModal extends React.Component {
     data.append("priority", this.state.priority);
     data.append("startTime", this.state.startTime);
     data.append("endTime", this.state.endTime);
-    fetch("/api/newEvent", {
-      method: "POST",
-      credentials: "same-origin",
-      body: data
-    })
-      .then(res => {
-        console.log(res);
-        if (res.status === 200) {
-          this.props.getObjects();
-          this.setState({ open: false });
-        }
-      })
-      .catch(err => {
-        alert("Error: " + err);
-      });
+    // fetch("/api/newEvent", {
+    //   method: "POST",
+    //   credentials: "same-origin",
+    //   body: data
+    // })
+    //   .then(res => {
+    //     if (res.status === 200) {
+    //       this.props.getObjects();
+    //       this.setState({ open: false });
+    //     }
+    //   })
+    //   .catch(err => {
+    //     alert("Error: " + err);
+    //   });
   };
   onPriority = (e, value) => {
     this.setState({ priority: value.value });
@@ -89,14 +88,14 @@ class EditEventModal extends React.Component {
     return (
       <Modal
         trigger={
-          <Button className='editEvent' onClick={() => this.onTrigger()} floated='right' icon labelPosition='left' primary size='small'>
-            <Icon name='pencil' /> EditEvent
+          <Button className='editModal' onClick={() => this.onTrigger()} floated='right' icon labelPosition='left' primary size='small'>
+            <Icon name='pencil' /> Edit Event
           </Button>
         }
         onClose={this.onCancel}
         open={this.state.open}
       >
-        <Modal.Header>Create a New Event</Modal.Header>
+        <Modal.Header>Edit Your Event: {this.state.title}</Modal.Header>
         <Modal.Content image>
           <Modal.Description>
             <Header />

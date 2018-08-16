@@ -17,8 +17,6 @@ var upload = multer({ storage: storage });
 import sgMail from "@sendgrid/mail";
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-
-
 module.exports = (io, store) => {
   // This function gets us the user ID that has just logged in to the server
   io.use((socket, next) => {
@@ -42,7 +40,6 @@ module.exports = (io, store) => {
   });
 
   //All socket calls should be within here
-
   io.on("connection", function(socket) {
     // This is to get the user.id: socket.session.passport.user
 
@@ -68,7 +65,7 @@ module.exports = (io, store) => {
               filtered.push(event);
             }
           });
-          next({ err, filtered});
+          next({ err, filtered });
         });
       });
     });
@@ -82,20 +79,28 @@ module.exports = (io, store) => {
       })
     })
 
+
     //In EditEventModal
     socket.on('getEventInfoInside', (data) => {
       Event.findById(data.eventId, (err, event) => {
-        console.log(event)
         io.to(data.eventId).emit('getEventInside', {
           event: event
         })
       })
     })
+
     socket.on('getName', next => {
-      console.log('hm')
       User.findById(socket.session.passport.user).then(user => {
         let name = user.firstname
         io.emit('getName', {name: name});
+        next({err, name})
+      })
+    })
+
+    socket.on('getNameBack', next => {
+      User.findById(socket.session.passport.user).then(user => {
+        let name = user.firstname
+        io.emit('getNameBack', {name: name});
         next({err, name})
       })
     })
@@ -132,6 +137,13 @@ module.exports = (io, store) => {
         io.to(data.eventId).emit("sendTabs", { tabs: event.fundraising });
       });
     });
+
+    //get logistics tabs
+    socket.on('getLogisticsTabs', data => {
+      Event.findById(data.eventId, (err, event) => {
+        io.to(data.eventId).emit('sendLogisticsTabs', {tabs: event.allLogistics})
+      })
+    })
 
     //update guestList
     socket.on("savePeople", data => {
@@ -217,6 +229,24 @@ module.exports = (io, store) => {
       });
     });
 
+    //add logistics tab
+    socket.on('addLogisticsTab', data => {
+      Event.findById(data.eventId, (err, event) => {
+        let v;
+        event.allLogistics.push({
+          title: data.title,
+          data: [],
+          vORp: data.vORp
+        })
+        event.markModified('allLogistics')
+        event.save((err, eve) => {
+          io.to(data.eventId).emit('addLogisticsTab', {
+            newTab: { title: data.title, data: [], vORp: data.vORp}
+          })
+        })
+      })
+    })
+
     //edit tab
     socket.on('editTab', data => {
       Event.findById(data.eventId, (err, event) => {
@@ -250,6 +280,19 @@ module.exports = (io, store) => {
         event.save((err, eve) => {
           io.to(data.eventId).emit("sendTabs", { tabs: event.fundraising });
         });
+      });
+    });
+
+    //delete Fundraising Tabs
+    socket.on("deleteLogisticsTab", data => {
+      Event.findById(data.eventId, (err, event) => {
+        let logistics = event.allLogistics.slice();
+        logistics.splice(data.index, 1)
+        event.allLogistics = logistics.slice();
+        event.markModified('allLogistics')
+        event.save((err, eve) => {
+          io.to(data.eventId).emit('sendLogisticsTabs', { tabs: event.allLogistics})
+        })
       });
     });
 
@@ -374,6 +417,21 @@ module.exports = (io, store) => {
           next({ err });
         });
     });
+
+    //save comment
+    socket.on('saveComment', (data, next) => {
+      Event.findById(data.id, (err, event) => {
+        if (event) {
+          event.ideation[data.topicI].note[data.commentI].comment = data.comment
+          event.markModified('ideation')
+          event.save((err, event) => {
+            console.log(event)
+            next({ err, event})
+          })
+        }
+      })
+    })
+
     //Deleting topic
     socket.on("deleteIdeation", (data, next) => {
       Event.findById(data.id, (err, event) => {
@@ -411,7 +469,8 @@ module.exports = (io, store) => {
     socket.on("renderVenue", (data, next) => {
       Event.findById(data.id, (err, event) => {
         if (event) {
-          next({ err, event });
+          let index = data.index
+          next({ err, event, index });
         } else {
           next({ err });
         }
@@ -548,6 +607,7 @@ module.exports = (io, store) => {
         }
       });
     });
+
     //deleteVenue
     socket.on("deleteVenue", (data, next) => {
       Event.findById(data.id, (err, event) => {

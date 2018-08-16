@@ -28,29 +28,31 @@ class AddVenueModal extends React.Component {
       address: "",
       email:"",
       open: false,
-      uploadFile: null,
       lat: "",
       long: ""
     };
   }
   onDone = () => {
     // console.log("eventId is here*********", this.props.eventId)
-    var venueData = new FormData();
-    venueData.append("name", this.state.name);
-    venueData.append("status", this.state.status);
-    venueData.append("contact", this.state.contact);
-    venueData.append("address", this.state.address);
-    venueData.append("uploadFile", this.state.uploadFile);
-    venueData.append("lat", this.state.lat)
-    venueData.append("long", this.state.long)
-    venueData.append("email", this.state.email)
-    venueData.append("id", this.props.eventId);
-    // for (var value of venueData.values()) {
-    //   console.log(value);
-    // }
+    let venue = {
+      name: this.state.name,
+      status: this.state.status,
+      contact: this.state.contact,
+      address: this.state.address,
+      lat: this.state.lat,
+      long: this.state.long,
+      email: this.state.email,
+      id: this.props.eventId
+    }
     fetch("/api/addVenue", {
       method: "POST",
-      body: venueData
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        venueData: venue,
+        index: this.props.index
+      })
     })
       .then(res => res.json())
       .then(json => {
@@ -87,9 +89,6 @@ class AddVenueModal extends React.Component {
         this.setState({lat: latlng.lat, long: latlng.lng})
       })
       .catch(error => console.error("Error", error));
-  };
-  fileChangedHandler = event => {
-    this.setState({ uploadFile: event.target.files[0] });
   };
   render() {
     const options = [
@@ -188,10 +187,6 @@ class AddVenueModal extends React.Component {
                   type="text"
                   onChange={e => this.setState({ email: e.target.value })}
                 />
-              </Form.Field>
-              <Form.Field>
-                <label>Venue Preview</label>
-                <input type="file" onChange={this.fileChangedHandler} />
               </Form.Field>
               <Form.Field>
                 <label>Confirmed</label>

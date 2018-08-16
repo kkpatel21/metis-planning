@@ -33,7 +33,6 @@ export default class Budget extends React.Component {
       //this lags
       budgetList = data.budget.budgetItems
       this.setState({
-        totalBudget: data.budget.total,
         totalApproval: data.budget.totalApproval
       })
     })
@@ -114,9 +113,9 @@ export default class Budget extends React.Component {
         <Header as='h1'>Event Budget</Header>
         <Divider />
         {percent > 100 ?
-          <Progress percent={percent} progress error />
+          <Progress className='pbar' percent={percent} progress error />
           :
-          <Progress percent={percent} progress inverted color='blue'/>
+          <Progress className='pbar' percent={percent} progress inverted color='blue'/>
         }
         <Table singleLine>
           <Table.Header>
