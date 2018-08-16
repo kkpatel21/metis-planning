@@ -18,46 +18,25 @@ export default class Venue extends React.Component {
     super();
     this.state = {
       data: [],
-
     };
   }
 
   componentDidMount = () => {
-    this.props.socket.emit(
-      "renderVenue",
-      {
-        id: this.props.eventId,
-        index: this.props.index
-      },
-      res => {
-        console.log(res.event.allLogistics[res.index].data )
-        this.setState({ data: res.event.allLogistics[res.index].data });
-      }
-    );
+    this.props.socket.emit("getVenue", {eventId: this.props.eventId, index: this.props.tabIndex})
+    this.props.socket.on('updatedLogistics', (data) => {
+      this.setState({data: data.updatedLogistics.data})
+    })
   };
-  onProps = () => {
-    this.componentDidMount();
-  };
+
   onDelete = index => {
-    console.log("ondelete?");
-    this.props.socket.emit(
-      "deleteVenue",
-      {
-        id: this.props.eventId,
-        index: index
-      },
-      res => {
-        console.log("got back from deleting venue!!!!", res);
-        this.setState({ data: res.event.allLogistics });
-      }
-    );
+    this.props.socket.emit("deleteVenue", {eventId: this.props.eventId, index: this.props.tabIndex, i: index })
   };
 
   render() {
     return (
       <div>
         <div>
-          <Header as="h1">Venue</Header>
+          <Header as="h1">{this.props.title}</Header>
           <Divider />
         </div>
         {this.state.data.map((oneVenue, venueI) => (
@@ -70,13 +49,14 @@ export default class Venue extends React.Component {
                 status={oneVenue.status}
                 contact={oneVenue.contact}
                 address={oneVenue.address}
-                uploadFile={oneVenue.uploadFile}
                 email={oneVenue.email}
                 eventId={this.props.eventId}
                 lat={oneVenue.lat}
                 long={oneVenue.long}
                 index={venueI}
                 onProps={this.onProps}
+                tabIndex={this.props.tabIndex}
+                socket={this.props.socket}
               />
               <Button
                 basic
@@ -134,7 +114,7 @@ export default class Venue extends React.Component {
           eventId={this.props.eventId}
           socket={this.props.socket}
           onProps={this.onProps}
-          index={this.props.index}
+          index={this.props.tabIndex}
         />
       </div>
     );
