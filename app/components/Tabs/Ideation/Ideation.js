@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Input, Button, List, Icon, Divider, Header} from "semantic-ui-react";
+import { Input, Button, List, Icon, Divider, Header } from "semantic-ui-react";
 import Speaker from "./Speaker/Speaker";
 import AddIdeationModal from "../../Modals/AddIdeationModal";
 import "./Ideation.css";
@@ -48,8 +48,8 @@ export default class Ideation extends React.Component {
       alert("Please type something!");
     }
   };
-  handleKeyPress = (event,topic) => {
-    if(event.key === 'Enter') {
+  handleKeyPress = (event, topic) => {
+    if (event.key === "Enter") {
       if (this.state.typing.length !== 0) {
         this.props.socket.emit(
           "addComment",
@@ -68,7 +68,7 @@ export default class Ideation extends React.Component {
         alert("Please type something!");
       }
     }
-  }
+  };
   //deleting topic
   onDelete = (topic, topicI) => {
     this.props.socket.emit(
@@ -86,90 +86,107 @@ export default class Ideation extends React.Component {
     );
   };
   //deleting comment
-  delete = (topicI,commentI) => {
-    this.props.socket.emit("deleteComment", {
-      id: this.props.eventId,
-      topicI:topicI,
-      commentI: commentI
-    }, res => {
-      if(res.event) {
-        this.componentDidMount();
+  delete = (topicI, commentI) => {
+    this.props.socket.emit(
+      "deleteComment",
+      {
+        id: this.props.eventId,
+        topicI: topicI,
+        commentI: commentI
+      },
+      res => {
+        if (res.event) {
+          this.componentDidMount();
+        }
       }
-    })
-  }
+    );
+  };
 
-  onEdit = (topic) => {
-    this.props.socket.emit("editIdeation", {
-      id:this.props.eventId,
-      topic:topic
-    }, res => {
-
-    })
-  }
+  onEdit = topic => {
+    this.props.socket.emit(
+      "editIdeation",
+      {
+        id: this.props.eventId,
+        topic: topic
+      },
+      res => {}
+    );
+  };
 
   onDone = (oldtopic, newTopic, cancel) => {
-    this.props.socket.emit("editIdeation", {
-      id: this.props.eventId,
-      topic: oldtopic,
-      newTopic: newTopic
-    }, (res) => {
-      if(res.event){
-        cancel();
-        this.componentDidMount();
+    this.props.socket.emit(
+      "editIdeation",
+      {
+        id: this.props.eventId,
+        topic: oldtopic,
+        newTopic: newTopic
+      },
+      res => {
+        if (res.event) {
+          cancel();
+          this.componentDidMount();
+        }
+        if (res.err) {
+          alert("There was an error: ", res.err);
+        }
       }
-      if(res.err){
-        alert("There was an error: ", res.err)
-      }
-    });
+    );
   };
 
   render() {
     return (
       <div>
-                <Header as='h1'>Ideation</Header>
+        <Header as="h1">Ideation</Header>
         <Divider />
-        <div>
+        <div style={{ display: "flex", justifyContent: "center" }}>
           {this.state.topic.map((oneTopic, topicI) => (
             <div
               style={{
                 display: "inline-block",
-                width: "calc(35% - 30px)",
+                width: "calc(35% - 35px)",
                 height: "400px",
                 padding: "10px",
                 margin: "5px",
                 overflow: "auto",
-                border: "solid 1px grey",
+                border: "solid 1px grey"
               }}
             >
               <div>
                 <Button
-                basic color='transparent' content='Grey'
-                  size='mini'
+                  basic
+                  color="transparent"
+                  content="Grey"
+                  size="mini"
                   icon
                   floated="right"
                   type="submit"
                   onClick={() => this.onDelete(oneTopic.topic, topicI)}
                 >
-                  <Icon name="delete"  />
+                  <Icon name="delete" />
                 </Button>
-                <EditIdeationModal oneTopic={oneTopic} socket={this.props.socket} eventId={this.props.eventId} onDone={(a,b,c)=>this.onDone(a,b,c)}/>
+                <EditIdeationModal
+                  oneTopic={oneTopic}
+                  socket={this.props.socket}
+                  eventId={this.props.eventId}
+                  onDone={(a, b, c) => this.onDone(a, b, c)}
+                />
                 <div>
-                <Header 
-                
-                floated="left"
-                className="topicName"
-                style={{ color: "black",fontFamily:"palatino" }}
-                as='h2'>{oneTopic.topic}</Header>
-                </div><br />
-                {/* <div>
-                <Divider />
-                </div> */}
+                  <Header
+                    floated="left"
+                    className="topicName"
+                    style={{ color: "black", fontFamily: "palatino" }}
+                    as="h2"
+                  >
+                    {oneTopic.topic}
+                  </Header>
+                </div>
+                <br />
                 <Input
                   value={this.state.typing}
                   style={{ width: "100%" }}
                   onChange={this.handleChange}
                   placeholder="Write your ideas here!"
-                  onKeyPress={(e) => this.handleKeyPress(e, oneTopic)}
+                  onKeyPress={e => this.handleKeyPress(e, oneTopic)}
                   icon={
                     <Icon
                       name="edit"
@@ -191,9 +208,12 @@ export default class Ideation extends React.Component {
                         <List.Content> {note.comment} </List.Content>
                         <List.Content floated="right">
                           by {note.user}
-                          <Icon floated="right" name='trash' onClick={() => this.delete(topicI,commentI)}/>
+                          <Icon
+                            floated="right"
+                            name="trash"
+                            onClick={() => this.delete(topicI, commentI)}
+                          />
                         </List.Content>
-
                         <Divider />
                       </List.Item>
                     );

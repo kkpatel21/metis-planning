@@ -18,7 +18,7 @@ import {
   getLatLng
 } from "react-places-autocomplete";
 
-class AddVenueModal extends React.Component {
+class EditVenueModal extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -26,12 +26,24 @@ class AddVenueModal extends React.Component {
       status: "",
       contact: "",
       address: "",
-      email:"",
+      email: "",
       open: false,
       uploadFile: null,
       lat: "",
       long: ""
     };
+  }
+  componentDidMount(){
+      this.setState({
+          name: this.props.name,
+          status: this.props.status,
+          contact: this.props.contact,
+          address: this.props.address,
+          email: this.props.email,
+          uploadFile: this.props.uploadFile,
+          lat: this.props.lat,
+          long: this.props.long
+      })
   }
   onDone = () => {
     // console.log("eventId is here*********", this.props.eventId)
@@ -41,22 +53,21 @@ class AddVenueModal extends React.Component {
     venueData.append("contact", this.state.contact);
     venueData.append("address", this.state.address);
     venueData.append("uploadFile", this.state.uploadFile);
-    venueData.append("lat", this.state.lat)
-    venueData.append("long", this.state.long)
-    venueData.append("email", this.state.email)
+    venueData.append("lat", this.state.lat);
+    venueData.append("long", this.state.long);
+    venueData.append("email", this.state.email);
     venueData.append("id", this.props.eventId);
-    // for (var value of venueData.values()) {
-    //   console.log(value);
-    // }
-    fetch("/api/addVenue", {
+    venueData.append('index', this.props.index)
+    fetch("/api/editVenue", {
       method: "POST",
       body: venueData
     })
       .then(res => res.json())
       .then(json => {
         if (json.status === "success") {
+        console.log("EVENT FROM BACKEND",json.event)
           this.setState({ open: false, address: "" });
-          this.props.onProps()
+          this.props.onProps();
         } else if (json.status === "error") {
           alert("Error!" + json.error);
         }
@@ -77,14 +88,11 @@ class AddVenueModal extends React.Component {
   handleSelect = address => {
     geocodeByAddress(address)
       .then(results => {
-        console.log("what Address-------->", results[0]);
-
         this.setState({ address: results[0].formatted_address });
         return getLatLng(results[0]);
       })
       .then(latlng => {
-        console.log("what LATLONG-------->", latlng);
-        this.setState({lat: latlng.lat, long: latlng.lng})
+        this.setState({ lat: latlng.lat, long: latlng.lng });
       })
       .catch(error => console.error("Error", error));
   };
@@ -100,7 +108,18 @@ class AddVenueModal extends React.Component {
     return (
       <Modal
         trigger={
-          <Button onClick={() => this.onTrigger()}>Add your venue!</Button>
+          <Button
+            basic
+            color="transparent"
+            content="Grey"
+            size="mini"
+            icon
+            floated="right"
+            type="submit"
+            onClick={() => this.onTrigger()}
+          >
+            <Icon name="pencil" />
+          </Button>
         }
         onClose={this.onCancel}
         open={this.state.open}
@@ -113,6 +132,7 @@ class AddVenueModal extends React.Component {
               <Form.Field>
                 <label>Name</label>
                 <input
+                value={this.state.name}
                   placeholder="Name"
                   type="text"
                   onChange={e => this.setState({ name: e.target.value })}
@@ -164,18 +184,10 @@ class AddVenueModal extends React.Component {
                   )}
                 </PlacesAutocomplete>
               </Form.Field>
-              {/* <Form.Field>
-                <label>Address</label>
-                <input
-                  placeholder="Where is the venue?"
-                  type="text"
-                  onChange={e => this.setState({ date: e.target.value })}
-                />
-                <Address />
-              </Form.Field> */}
               <Form.Field>
                 <label>Contact</label>
                 <input
+                value={this.state.contact}
                   placeholder="Phone number?"
                   type="text"
                   onChange={e => this.setState({ contact: e.target.value })}
@@ -184,6 +196,7 @@ class AddVenueModal extends React.Component {
               <Form.Field>
                 <label>Email</label>
                 <input
+                value={this.state.email}
                   placeholder="Email?"
                   type="text"
                   onChange={e => this.setState({ email: e.target.value })}
@@ -191,7 +204,7 @@ class AddVenueModal extends React.Component {
               </Form.Field>
               <Form.Field>
                 <label>Venue Preview</label>
-                <input type="file" onChange={this.fileChangedHandler} />
+                <input value={this.state.uploadFile} type="file" onChange={this.fileChangedHandler} />
               </Form.Field>
               <Form.Field>
                 <label>Confirmed</label>
@@ -219,4 +232,4 @@ class AddVenueModal extends React.Component {
   }
 }
 
-export default AddVenueModal;
+export default EditVenueModal;

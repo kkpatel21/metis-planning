@@ -11,6 +11,8 @@ import {
 import "./Logistics.css";
 import AddVenueModal from "../../Modals/AddVenueModal";
 import { withGoogleMap, GoogleMap, Marker } from "react-google-maps";
+import EditVenueModal from "../../Modals/EditVenueModal";
+import AddPeopleModal from "../../Modals/AddPeopleModal";
 
 export default class Logistics extends React.Component {
   constructor() {
@@ -27,24 +29,27 @@ export default class Logistics extends React.Component {
         id: this.props.eventId
       },
       res => {
-        var venueArr = this.state.venue.concat(res.event.logistics);
-        this.setState({ venue: venueArr });
+        this.setState({ venue: res.event.logistics });
       }
     );
   };
   onProps = () => {
-    this.componentDidMount()
-  }
-  onDelete = (index) => {
-    console.log("ondelete?")
-    this.props.socket.emit("deleteVenue", {
-      id: this.props.eventId,
-      index:index
-    }, res => {
-      console.log("got back from deleting venue!!!!",res)
-      this.setState({venue: res.event.logistics})
-    })
-  }
+    this.componentDidMount();
+  };
+  onDelete = index => {
+    console.log("ondelete?");
+    this.props.socket.emit(
+      "deleteVenue",
+      {
+        id: this.props.eventId,
+        index: index
+      },
+      res => {
+        console.log("got back from deleting venue!!!!", res);
+        this.setState({ venue: res.event.logistics });
+      }
+    );
+  };
 
   render() {
     return (
@@ -58,6 +63,19 @@ export default class Logistics extends React.Component {
             <Segment
               color={oneVenue.status === "Confirmed" ? "teal" : "orange"}
             >
+              <EditVenueModal
+                name={oneVenue.name}
+                status={oneVenue.status}
+                contact={oneVenue.contact}
+                address={oneVenue.address}
+                uploadFile={oneVenue.uploadFile}
+                email={oneVenue.email}
+                eventId={this.props.eventId}
+                lat={oneVenue.lat}
+                long={oneVenue.long}
+                index={venueI}
+                onProps={this.onProps}
+              />
               <Button
                 basic
                 color="transparent"
@@ -92,7 +110,6 @@ export default class Logistics extends React.Component {
                     fontSize: "20px"
                   }}
                 >
-                  {/* <Icon name="marker" /> */}
                   Name: <strong>{oneVenue.name}</strong> <br />
                   <br />
                   Address: {oneVenue.address} <br />
@@ -110,6 +127,12 @@ export default class Logistics extends React.Component {
         <br />
         <br />
         <AddVenueModal
+          floated="right"
+          eventId={this.props.eventId}
+          socket={this.props.socket}
+          onProps={this.onProps}
+        />
+        <AddPeopleModal
           floated="right"
           eventId={this.props.eventId}
           socket={this.props.socket}
