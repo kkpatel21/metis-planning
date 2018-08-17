@@ -49,6 +49,9 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.get('/', (req, res) => {
+  res.sendFile('../build/index.html')
+})
 app.use('/api', auth(passport));
 index(io, ioMongoStore)
 
