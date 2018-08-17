@@ -387,7 +387,6 @@ module.exports = (io, store) => {
       });
     });
 
-    var userId = socket.session.passport.user;
     //Saving Ideation - Array of Objects{topic: "someTopic", user:"writer's name", notes:[comments]}
     socket.on("addIdeation", (data, next) => {
       User.findById(socket.session.passport.user).then(user => {
@@ -417,7 +416,7 @@ module.exports = (io, store) => {
 
     //Adding Comments to Ideation
     socket.on("addComment", (data, next) => {
-      User.findById(userId)
+      User.findById(socket.session.passport.user)
       .then(user => {
         Event.findById(data.id, (err, event) => {
           if (event) {
