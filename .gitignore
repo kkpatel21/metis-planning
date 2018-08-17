@@ -7,7 +7,6 @@
 /coverage
 
 # production
-build/*
 !build/.gitkeep
 !build/index.html
 
