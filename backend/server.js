@@ -28,7 +28,7 @@ mongoose.connection.on('error', (err) =>{
 mongoose.connect(process.env.MONGODB_URI);
 mongoose.set('debug', true);
 
-// app.use(express.static(path.join(__dirname, 'build')));
+app.use(express.static(path.join(__dirname, 'build')));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
