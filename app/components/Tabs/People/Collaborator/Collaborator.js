@@ -15,10 +15,11 @@ export default class Collaborator extends React.Component {
   delete = (index) => {
     this.props.socket.emit('deleteCollaborator', {index: index, eventId: this.props.eventId})
   }
+  
   render() {
     return (
       <div className="collaboratorTable">
-        <Header as='h2'>Team</Header>
+        <Header as='h2'>Collaborators</Header>
         <Divider />
           <Table striped basic>
             <Table.Header>
