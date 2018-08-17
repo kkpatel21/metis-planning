@@ -15,6 +15,7 @@ export default class Collaborator extends React.Component {
   delete = (index) => {
     this.props.socket.emit('deleteCollaborator', {index: index, eventId: this.props.eventId})
   }
+  
   render() {
     return (
       <div className="collaboratorTable">

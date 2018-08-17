@@ -673,15 +673,21 @@ module.exports = (io, store) => {
     //deleting comment
     socket.on("deleteComment", (data, next) => {
       Event.findById(data.id, (err, event) => {
-        if (event) {
-          var copy = event.ideation[data.topicI].note.slice();
-          copy.splice(data.commentI, 1);
-          event.ideation[data.topicI].note = copy;
-          event.markModified("ideation");
-          event.save((err, event) => {
-            next({ err, event });
-          });
-        }
+        User.findById(socket.session.passport.user).then(user => {
+          if (event) {
+            var copy = event.ideation[data.topicI].note.slice();
+            if (copy[data.commentI].user === user.firstname) {
+              copy.splice(data.commentI, 1);
+              event.ideation[data.topicI].note = copy;
+              event.markModified('ideation');
+              event.save((err, event) => {
+                next({ err, event })
+              })
+            } else {
+              alert("Can't delete other's comments")
+            }
+          }
+        })
       });
     });
 
