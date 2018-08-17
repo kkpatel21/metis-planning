@@ -1,24 +1,65 @@
-.overview-header {
-  margin: auto;
-  text-align: center;
+h2 {
+  margin-bottom: 0!important;
 }
 
-.ui.labeled.icon.button, .ui.labeled.icon.buttons .button .editModal{
-  margin-top: 73vh
+.overview-header {
+  display: flex;
+  margin: auto;
+  width: 100%;
+  text-align: center;
+  justify-content: space-between;
+}
+
+.collaborators {
+  text-align: left;
+  width: 20vw
+}
+
+.edit-event-button {
+  width: 20vw
 }
 
 .ui.segments>.segment {
   height: 17vh
 }
 
-.icon-column {
-  height: 14vh
-}
-
-.ui.grid>.row {
-  height: 14vh
-}
-
 .dashboardGrid {
   height: 17vh !important
+}
+
+.logistics-block {
+  display: flex;
+  justify-content: space-between;
+}
+
+.logistics-title {
+  display: inline-block;
+}
+
+.logistics-fields {
+  display: inline-block;
+  text-align: center;
+  margin-right: 15em;
+}
+
+.venue {
+  display: inline-block;
+  text-align: center;
+}
+
+.caterers {
+  display: inline-block;
+}
+
+.people-title {
+  text-align: right;
+}
+
+.budget-title {
+  display: inline-block;
+}
+
+.budget-info-block {
+  display: flex!important;
+  justify-content: space-between!important;
 }
