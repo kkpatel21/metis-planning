@@ -165,6 +165,7 @@ export default class Overview extends React.Component {
         if (caterer.vORp === 'caterer') {
           caterer.data.forEach(catererData => {
             if(catererData.status === 'Confirmed') {
+              console.log("DATA", catererData)
               catererDetails.push({catererName: catererData.name, catererContact: catererData.contact})
               console.log(catererDetails)
             }
@@ -227,7 +228,7 @@ export default class Overview extends React.Component {
               </div>
               <div className='logistics-fields'>
                 Caterers:
-                {catererDetails.map((caterer) => <ul><li>{caterer.catererName} | {caterer.catererWebsite}</li></ul>)}
+                {catererDetails.map((caterer) => <ul><li>{caterer.catererName} | {caterer.catererContact}</li></ul>)}
               </div>
             </div>
           </Segment>

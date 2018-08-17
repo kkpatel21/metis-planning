@@ -23,26 +23,31 @@ export default class Food extends React.Component {
       price: 0,
       quantity: 0,
       option: "",
-      pricePerPerson: 0
+      pricePerPerson: 0,
+      total: 0
     };
   }
 
   componentDidMount = () => {
-      
     this.props.socket.emit("getFood", {
       eventId: this.props.eventId,
       index: this.props.tabIndex
     });
     this.props.socket.on("updatedFood", data => {
-        console.log("updatedfood?????", data.updatedFood.data)
+      console.log("updatedfood?????", data.updatedFood.data);
       this.setState({ data: data.updatedFood.data });
-      console.log("DATA UGH", this.state.data)
+      console.log("DATA UGH", this.state.data);
     });
     this.props.socket.on("updatedFoodOptions", data => {
-      console.log(
-        "updatedFoodOptions!!!!!",
-        data.updatedFood.data[data.optionIndex].option
-      );
+      //   var newTotal =
+      //     data.updatedFood.data[data.optionIndex].total +
+      //     data.updatedFood.data[data.optionIndex].option[
+      //       data.updatedFood.data[data.optionIndex].option.length - 1
+      //     ].price;
+      //   console.log(
+      //     "updatedFoodOptions!!!!!",
+      //     data.updatedFood.data[data.optionIndex].option
+      //   );
       console.log("what data state looks like--------> ", this.state.data);
       this.setState({ data: data.updatedFood.data });
       console.log(
@@ -51,7 +56,7 @@ export default class Food extends React.Component {
       );
     });
   };
-
+  //deleting whole food
   onDelete = index => {
     this.props.socket.emit("deleteFood", {
       eventId: this.props.eventId,
@@ -59,7 +64,15 @@ export default class Food extends React.Component {
       i: index
     });
   };
-
+  //delete one option
+  deleteItem = (indexOfData, indexOfOption) => {
+    this.props.socket.emit("deleteFoodItem", {
+      eventId: this.props.eventId,
+      index: this.props.tabIndex,
+      iofd: indexOfData,
+      iofo: indexOfOption
+    });
+  };
   onClick = async index => {
     // if (this.state.amount === "") {
     //   await this.setState({ amount: 0 });
@@ -87,7 +100,8 @@ export default class Food extends React.Component {
 
   render() {
     let optionsRender = [];
-
+    let total = 0;
+    let totalQ = 0;
     return (
       <div>
         <div>
@@ -153,7 +167,7 @@ export default class Food extends React.Component {
                   <Table.Header>
                     <Table.Row>
                       <Table.HeaderCell>Options</Table.HeaderCell>
-                      <Table.HeaderCell>Quantity</Table.HeaderCell>
+                      <Table.HeaderCell>Servings</Table.HeaderCell>
                       <Table.HeaderCell>Price</Table.HeaderCell>
                       <Table.HeaderCell>Price Per Person</Table.HeaderCell>
                       <Table.HeaderCell />
@@ -205,6 +219,7 @@ export default class Food extends React.Component {
                           </Input>
                         </span>
                       </Table.Cell>
+                      <Table.Cell />
                       <Table.Cell>
                         <Button icon onClick={() => this.onClick(foodI)}>
                           <Icon name="add square" />
@@ -215,66 +230,52 @@ export default class Food extends React.Component {
                     {/* {optionsRender.map((item, i) => {
                       return item;
                     })} */}
-                    {oneFood.option.map((option, optionIndex) => 
-                          
-                             <Table.Row>
-                             <Table.Cell>{option.option}</Table.Cell>
-                             <Table.Cell>${option.price}</Table.Cell>
-                             <Table.Cell>{option.quantity}</Table.Cell>
-                             <Table.Cell>
-                               ${option.price / option.quantity}
-                             </Table.Cell>
-                             {/* <Table.Cell>
-                                         <span>
-                                       <UpdateBudgetLineItemModal
-                                         socket={this.props.socket}
-                                         lineItem={item}
-                                         i={index}
-                                         eventId={this.props.eventId}
-                                       />
-                                       <Icon
-                                         name="trash"
-                                         onClick={() => this.deleteLineItem(index)}
-                                       />
-                                     </span>
-                                   </Table.Cell> */}
-                           </Table.Row>
-                          
-                       )}
-                    
+                    {oneFood.option.map((option, optionIndex) => (
+                      <Table.Row>
+                        <Table.Cell>{option.option}</Table.Cell>
+                        <Table.Cell>{option.quantity}</Table.Cell>
+                        <Table.Cell>${option.price}</Table.Cell>
+                        <Table.Cell>
+                          ${option.price / option.quantity}
+                        </Table.Cell>
+                        <Table.Cell>
+                          <span>
+                            {/* <UpdateBudgetLineItemModal
+                              socket={this.props.socket}
+                              lineItem={item}
+                              i={index}
+                              eventId={this.props.eventId}
+                            /> */}
+                            <Icon
+                              name="trash"
+                              onClick={() =>
+                                this.deleteItem(foodI, optionIndex)
+                              }
+                            />
+                          </span>
+                        </Table.Cell>
+                      </Table.Row>
+                    ))}
 
                     <Table.Row>
                       <Table.Cell>
                         <div className="summation">Total</div>
                       </Table.Cell>
                       <Table.Cell>
-                        {this.state.editTotalBudget === false ? (
-                          <span>
-                            <Input
-                              labelPosition="right"
-                              type="number"
-                              placeholder="Total Amount"
-                              onKeyPress={this.handleNewTotal}
-                              onChange={e =>
-                                this.setState({ totalBudget: e.target.value })
-                              }
-                              value={this.state.totalBudget}
-                            >
-                              <Label basic>$</Label>
-                              <input />
-                            </Input>
-                          </span>
-                        ) : (
-                          <div
-                            className="summation"
-                            onClick={() => this.onTrigger()}
-                          >
-                            ${this.state.totalBudget}
-                          </div>
-                        )}
+                        <div>
+                          {oneFood.option.map(i => {
+                            totalQ += parseFloat(i.quantity);
+                          })}
+                          {totalQ} servings
+                        </div>
                       </Table.Cell>
                       <Table.Cell>
-                        <span />
+                        <div>
+                          {oneFood.option.map(i => {
+                            total += parseFloat(i.price);
+                          })}
+                          ${total}
+                        </div>
                       </Table.Cell>
                     </Table.Row>
                   </Table.Body>
