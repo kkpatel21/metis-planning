@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Header, Progress, Grid, Segment, Icon, Label } from 'semantic-ui-react'
+import { Header, Progress, Grid, Segment, Icon, Label, Popup } from 'semantic-ui-react'
 import moment from 'moment'
 import EditEventModal from '../../Modals/EditEventModal'
 import './Overview.css'
@@ -80,19 +80,29 @@ export default class Overview extends React.Component {
       ]
       collaborators.forEach((person) => {
         let randomIndex = Math.floor(Math.random() * Math.floor(13));
+        console.log(person.name)
         collaboratorRender.push(
-          <Label circular color={colors[randomIndex]} key={colors[randomIndex]}>
-            {person.name.substring(0,1)}
-          </Label>
+          <Popup
+            trigger={
+              <Label size='big' circular color={colors[randomIndex]} key={colors[randomIndex]}>
+                {person.name.substring(0,1)}
+              </Label>
+            }
+            content={person.name}
+          />
         )
       })
       let randomOwner = Math.floor(Math.random() * Math.floor(13));
       ownerRender = (
-        <Label circular color={colors[randomOwner]} key={colors[randomOwner]}>
-          {this.state.userName}
-        </Label>
+        <Popup
+          trigger={<Label size='big' circular color={colors[randomOwner]} key={colors[randomOwner]}>
+            {this.state.userName.substring(0, 1)}
+          </Label>}
+          content={this.state.userName}
+        />
       )
     }
+
 
     //THIS IS INFO FOR ALL INVITEES -- CAN SHOW INFO BASED ON THE STATUS
     let attending = 0;
@@ -195,8 +205,6 @@ export default class Overview extends React.Component {
       <div>
         <div className='overview-header'>
           <div className='collaborators'>
-            Event Shared With:
-            <br />
             {collaboratorRender.map((render) => {
               return render
             })}
@@ -251,7 +259,7 @@ export default class Overview extends React.Component {
                 <div>{notComing}</div>
               </div>
               <div className='people-title'>
-                <h2 className='people-header'>People</h2>
+                <h2 className=''>People</h2>
                 <Icon color='teal' name='users' size='massive'/>
               </div>
             </div>
@@ -301,7 +309,7 @@ export default class Overview extends React.Component {
                 {campaigns.map((campaign) => <ul><li>{campaign}</li></ul>)}
               </div>
               <div className='fundraising-title'>
-                <h2 className='fundraising-header'>Fundraising</h2>
+                <h2 className=''>Fundraising</h2>
                 <Icon color='teal' name='money' size='massive'/>
               </div>
             </div>
