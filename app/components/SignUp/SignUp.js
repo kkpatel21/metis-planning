@@ -70,6 +70,7 @@ class SignUp extends React.Component {
           <label>First Name</label>
           <input
             placeholder='First Name'
+            value={this.state.fName}
             onChange={(e) => this.setState({fName: e.target.value})}
           />
         </Form.Field>
@@ -77,6 +78,7 @@ class SignUp extends React.Component {
           <label>Last Name</label>
           <input
             placeholder='Last Name'
+            value={this.state.lName}
             onChange={(e) => this.setState({lName: e.target.value})}
           />
         </Form.Field>
@@ -84,6 +86,7 @@ class SignUp extends React.Component {
           <label>Email</label>
           <input
             placeholder='Email'
+            value={this.state.email}
             onChange={(e) => this.setState({email: e.target.value})}
           />
         </Form.Field>
@@ -92,6 +95,7 @@ class SignUp extends React.Component {
           <input
             type='password'
             placeholder='Password'
+            value={this.state.pWord}
             onChange={(e) => this.setState({pWord: e.target.value})}
           />
         </Form.Field>
@@ -100,6 +104,7 @@ class SignUp extends React.Component {
           <input
             type='password'
             placeholder='Password Repeat'
+            value={this.state.pWordR}
             onChange={(e) => this.setState({pWordR: e.target.value})}
           />
         </Form.Field>
