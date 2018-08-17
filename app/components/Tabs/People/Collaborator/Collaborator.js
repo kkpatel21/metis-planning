@@ -14,7 +14,7 @@ export default class Collaborator extends React.Component {
   }
 
   componentDidMount() {
-    this.props.socket.emit('getOwner')
+    this.props.socket.emit('getOwner', {eventId: this.props.eventId})
     this.props.socket.on('getOwner', (res) => {
       this.setState({
         name: res.name,
@@ -26,7 +26,7 @@ export default class Collaborator extends React.Component {
   delete = (index) => {
     this.props.socket.emit('deleteCollaborator', {index: index, eventId: this.props.eventId})
   }
-  
+
   render() {
     return (
       <div className="collaboratorTable">
