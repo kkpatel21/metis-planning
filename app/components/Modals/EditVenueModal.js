@@ -40,39 +40,26 @@ class EditVenueModal extends React.Component {
           contact: this.props.contact,
           address: this.props.address,
           email: this.props.email,
-          uploadFile: this.props.uploadFile,
           lat: this.props.lat,
           long: this.props.long
       })
   }
+
   onDone = () => {
-    // console.log("eventId is here*********", this.props.eventId)
-    var venueData = new FormData();
-    venueData.append("name", this.state.name);
-    venueData.append("status", this.state.status);
-    venueData.append("contact", this.state.contact);
-    venueData.append("address", this.state.address);
-    venueData.append("uploadFile", this.state.uploadFile);
-    venueData.append("lat", this.state.lat);
-    venueData.append("long", this.state.long);
-    venueData.append("email", this.state.email);
-    venueData.append("id", this.props.eventId);
-    venueData.append('index', this.props.index)
-    fetch("/api/editVenue", {
-      method: "POST",
-      body: venueData
-    })
-      .then(res => res.json())
-      .then(json => {
-        if (json.status === "success") {
-        console.log("EVENT FROM BACKEND",json.event)
-          this.setState({ open: false, address: "" });
-          this.props.onProps();
-        } else if (json.status === "error") {
-          alert("Error!" + json.error);
-        }
-      });
+    var venueData = {
+      name: this.state.name,
+      status: this.state.status,
+      contact: this.state.contact,
+      address: this.state.address,
+      lat: this.state.lat,
+      long: this.state.long,
+      email: this.state.email,
+    }
+    console.log(this.props.tabIndex)
+    this.props.socket.emit('editVenue', {venue: venueData, eventId: this.props.eventId, tabIndex: this.props.tabIndex, index: this.props.index})
+    this.onCancel()
   };
+
   onStatus = (e, value) => {
     this.setState({ status: value.value });
   };
@@ -85,6 +72,7 @@ class EditVenueModal extends React.Component {
   handleChange = address => {
     this.setState({ address });
   };
+
   handleSelect = address => {
     geocodeByAddress(address)
       .then(results => {
@@ -96,9 +84,7 @@ class EditVenueModal extends React.Component {
       })
       .catch(error => console.error("Error", error));
   };
-  fileChangedHandler = event => {
-    this.setState({ uploadFile: event.target.files[0] });
-  };
+
   render() {
     const options = [
       { key: 1, text: "Confirmed", value: "Confirmed" },
@@ -201,10 +187,6 @@ class EditVenueModal extends React.Component {
                   type="text"
                   onChange={e => this.setState({ email: e.target.value })}
                 />
-              </Form.Field>
-              <Form.Field>
-                <label>Venue Preview</label>
-                <input value={this.state.uploadFile} type="file" onChange={this.fileChangedHandler} />
               </Form.Field>
               <Form.Field>
                 <label>Confirmed</label>
