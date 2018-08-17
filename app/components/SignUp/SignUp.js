@@ -14,17 +14,6 @@ class SignUp extends React.Component {
     }
   }
 
-  refresh = () => {
-    this.setState({
-      fName: "",
-      lName: "",
-      email: "",
-      pWord: "",
-      pWordR: "",
-      checked: false
-    })
-  }
-
   onChecked = () => {
     this.setState({checked: !this.state.checked})
   }
@@ -57,7 +46,14 @@ class SignUp extends React.Component {
       } else if(text === 'exists') {
         alert('Account already exists. Please log in.')
       } else {
-        this.refresh()
+        this.setState({
+          fName: "",
+          lName: "",
+          email: "",
+          pWord: "",
+          pWordR: "",
+          checked: false
+        })
         alert('You are registered!')
       }
     })
