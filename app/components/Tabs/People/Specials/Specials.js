@@ -19,7 +19,7 @@ export default class Specials extends React.Component {
   render() {
     return (
       <div className="specialTable">
-              <Header as='h2'>VIP / Entertainers</Header>
+              <Header as='h2'>Special Guests</Header>
         <Divider />
           <Table striped basic>
             <Table.Header>
