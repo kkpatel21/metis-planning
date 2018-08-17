@@ -175,6 +175,7 @@ export default class Overview extends React.Component {
         if (caterer.vORp === 'caterer') {
           caterer.data.forEach(catererData => {
             if(catererData.status === 'Confirmed') {
+              console.log("DATA", catererData)
               catererDetails.push({catererName: catererData.name, catererContact: catererData.contact})
               console.log(catererDetails)
             }
