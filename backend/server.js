@@ -28,7 +28,7 @@ mongoose.connection.on('error', (err) =>{
 mongoose.connect(process.env.MONGODB_URI);
 mongoose.set('debug', true);
 
-app.use(express.static(path.join(__dirname, 'build')));
+app.use(express.static(path.join(__dirname, '../build')));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -49,9 +49,9 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '/../build', "index.html"))
-})
+// app.get('/', (req, res) => {
+//   res.sendFile(path.join(__dirname, '/../build', "index.html"))
+// })
 app.use('/api', auth(passport));
 index(io, ioMongoStore)
 
