@@ -27,6 +27,7 @@ export default class People extends React.Component {
   componentDidMount() {
     this.props.socket.emit('getPeople', {eventId: this.props.eventId})
     this.props.socket.on('sendPeople', (data) => {
+    console.log(data)
       this.setState({guestsList: data.guestList, filteredGuestsList: data.guestList, specialsList: data.catererList, filteredSpecialsList: data.catererList, collaboratorList: data.collaboratorList, filteredCollaboratorList: data.collaboratorList})
     })
     this.props.socket.on('updatedPeople', (data) => {

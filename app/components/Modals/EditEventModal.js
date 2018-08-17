@@ -1,16 +1,6 @@
 import React from "react";
-import {
-  Button,
-  Header,
-  Image,
-  Modal,
-  Form,
-  Menu,
-  Dropdown,
-  Icon,
-  Checkbox
-} from "semantic-ui-react";
-
+import { Button, Header, Image, Modal, Form, Menu, Dropdown, Icon, Checkbox } from "semantic-ui-react";
+import './EditEventModal.css'
 
 class EditEventModal extends React.Component {
   constructor() {
@@ -57,7 +47,8 @@ class EditEventModal extends React.Component {
       title: this.state.title,
       date: this.state.date,
       startTime: this.state.startTime,
-      endTime: this.state.endTime
+      endTime: this.state.endTime,
+      priority: this.state.priority
     }
     fetch('api/saveEvent', {
       method: 'POST',
