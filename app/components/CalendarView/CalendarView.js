@@ -8,7 +8,6 @@ import Loading from '../Loading.js'
 export default class CalendarView extends React.Component {
   constructor(props) {
     super(props);
-    this.socket = io('http://localhost:8888')
     this.state = {
       events: [],
       displayEvents: [],
