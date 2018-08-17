@@ -109,12 +109,14 @@ module.exports = (io, store) => {
       });
     });
 
-    socket.on('getOwner', next => {
-      User.findById(socket.session.passport.user).then(user => {
-        let name = user.firstname + ' ' + user.lastname
-        let email = user.email
-        io.emit('getOwner', {name: name, email: email});
-        next({err, name, email})
+    socket.on('getOwner', data => {
+      Event.findById(data.eventId, (err, event) => {
+        User.findById(event.owner).then(user => {
+          let name = user.firstname + ' ' + user.lastname
+          let email = user.email
+          io.emit('getOwner', {name: name, email: email});
+          next({err, name, email})
+        })
       })
     })
 
@@ -414,29 +416,29 @@ module.exports = (io, store) => {
     //Adding Comments to Ideation
     socket.on("addComment", (data, next) => {
       User.findById(userId)
-        .then(user => {
-          Event.findById(data.id, (err, event) => {
-            if (event) {
-              event.ideation.map(ideationObj => {
-                if (ideationObj.topic === data.topic.topic) {
-                  return (ideationObj.note = ideationObj.note.concat({
-                    comment: data.typing,
-                    user: user.firstname
-                  }));
-                }
-              });
-              event.markModified("ideation");
-              event.save((err, event) => {
-                next({ err, event });
-              });
-            } else if (err) {
-              next({ err });
-            }
-          });
-        })
-        .catch(err => {
-          next({ err });
+      .then(user => {
+        Event.findById(data.id, (err, event) => {
+          if (event) {
+            event.ideation.map(ideationObj => {
+              if (ideationObj.topic === data.topic.topic) {
+                return (ideationObj.note = ideationObj.note.concat({
+                  comment: data.typing,
+                  user: user.firstname
+                }));
+              }
+            });
+            event.markModified("ideation");
+            event.save((err, event) => {
+              next({ err, event });
+            });
+          } else if (err) {
+            next({ err });
+          }
         });
+      })
+      .catch(err => {
+        next({ err });
+      });
     });
 
     //save comment
@@ -444,7 +446,7 @@ module.exports = (io, store) => {
       Event.findById(data.id, (err, event) => {
         if (event) {
           event.ideation[data.topicI].note[data.commentI].comment =
-            data.comment;
+          data.comment;
           event.markModified("ideation");
           event.save((err, event) => {
             console.log(event);
