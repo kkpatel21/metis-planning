@@ -103,14 +103,14 @@ export default class People extends React.Component {
           <SendMultipleModal socket={this.props.socket} eventId={this.props.eventId} emailList={this.state.emailList} />
         </div>
       </Tab.Pane> },
-      { menuItem: 'Special Guests', render: () =>
+      { menuItem: 'VIP / Entertainers', render: () =>
       <Tab.Pane>
         <div>
           <Specials socket={this.props.socket} filteredList={this.filteredCaterer} eventId={this.props.eventId} specialsList={this.state.filteredSpecialsList}/>
           <AddSpecialModal socket={this.props.socket} eventId={this.props.eventId} />
         </div>
       </Tab.Pane>},
-      { menuItem: 'Team', render: () =>
+      { menuItem: 'Collaborators', render: () =>
       <Tab.Pane>
         <div>
           <Collaborator socket={this.props.socket} filteredList={this.filteredTeam} eventId={this.props.eventId} collaboratorList={this.state.filteredCollaboratorList}/>
