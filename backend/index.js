@@ -504,7 +504,7 @@ module.exports = (io, store) => {
 
     //goHome
     socket.on("goHome", next => {
-      io.emit("goingHome");
+      socket.emit("goingHome");
     });
 
     //load db budget information
