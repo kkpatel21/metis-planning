@@ -227,7 +227,7 @@ export default class Overview extends React.Component {
               </div>
               <div className='logistics-fields'>
                 Caterers:
-                {catererDetails.map((caterer) => <ul><li>{caterer.catererName} | {caterer.catererWebsite}</li></ul>)}
+                {catererDetails.map((caterer) => <ul><li>{caterer.catererName} | {caterer.catererContact}</li></ul>)}
               </div>
             </div>
           </Segment>
@@ -262,8 +262,8 @@ export default class Overview extends React.Component {
                 <Icon color='teal' name='usd' size='massive'/>
               </div>
               <div className='budget-block'>
-                {budgetPercent > 100 ?
-                  <Progress className='pbar' percent={budgetPercent} progress active error />
+                {budgetPercent >= 100 ?
+                  <Progress className='pbar' percent={budgetPercent} progress active success />
                   :
                   <Progress className='pbar' percent={budgetPercent} progress active inverted color='blue'/>
                 }
@@ -281,10 +281,10 @@ export default class Overview extends React.Component {
           <Segment>
             <div className='segment-block space-between'>
               <div className='fundraising-block'>
-                {fundraisingPercent > 100 ?
-                  <Progress className='pbar' percent={fundraisingPercent} progress indicating success />
+                {fundraisingPercent >= 100 ?
+                  <Progress className='pbar' percent={fundraisingPercent} progress active success />
                   :
-                  <Progress className='pbar' percent={fundraisingPercent} progress indicating inverted color='violet'/>
+                  <Progress className='pbar' percent={fundraisingPercent} progress active inverted color='violet'/>
                 }
                 <div className='fundraising-info-block'>
                   <div className='fundraising-fields'>

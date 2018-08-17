@@ -8,8 +8,19 @@ export default class Collaborator extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-
+      name: '',
+      email: ''
     }
+  }
+
+  componentDidMount() {
+    this.props.socket.emit('getOwner')
+    this.props.socket.on('getOwner', (res) => {
+      this.setState({
+        name: res.name,
+        email: res.email
+      })
+    })
   }
 
   delete = (index) => {
@@ -33,6 +44,17 @@ export default class Collaborator extends React.Component {
            </Table.Header>
 
            <Table.Body className="tableList">
+             <Table.Row>
+              <Table.Cell>{this.state.name}</Table.Cell>
+              <Table.Cell></Table.Cell>
+              <Table.Cell>{this.state.email}</Table.Cell>
+              <Table.Cell>Owner</Table.Cell>
+              <Table.Cell></Table.Cell>
+              <Table.Cell>
+                {/* <UpdateCollaboratorModal socket={this.props.socket} guest={guest} index={i} eventId={this.props.eventId}/> &ensp; */}
+                <SendEmailModal socket={this.props.socket} guest={{email: this.state.email}}/> &ensp;
+              </Table.Cell>
+            </Table.Row>
              {this.props.collaboratorList.map((guest, i) => {
                return (
                 <Table.Row>

@@ -111,6 +111,15 @@ module.exports = (io, store) => {
       })
     })
 
+    socket.on('getOwner', next => {
+      User.findById(socket.session.passport.user).then(user => {
+        let name = user.firstname + ' ' + user.lastname
+        let email = user.email
+        io.emit('getOwner', {name: name, email: email});
+        next({err, name, email})
+      })
+    })
+
     //deletes events
     socket.on("deleteEvent", (data, next) => {
       Event.findByIdAndRemove(data.id, (err, event) => {
