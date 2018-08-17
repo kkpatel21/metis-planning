@@ -28,12 +28,27 @@ export default class Food extends React.Component {
   }
 
   componentDidMount = () => {
+      
     this.props.socket.emit("getFood", {
       eventId: this.props.eventId,
       index: this.props.tabIndex
     });
     this.props.socket.on("updatedFood", data => {
+        console.log("updatedfood?????", data.updatedFood.data)
       this.setState({ data: data.updatedFood.data });
+      console.log("DATA UGH", this.state.data)
+    });
+    this.props.socket.on("updatedFoodOptions", data => {
+      console.log(
+        "updatedFoodOptions!!!!!",
+        data.updatedFood.data[data.optionIndex].option
+      );
+      console.log("what data state looks like--------> ", this.state.data);
+      this.setState({ data: data.updatedFood.data });
+      console.log(
+        "what data state looks like AFTER--------> ",
+        this.state.data
+      );
     });
   };
 
@@ -71,39 +86,7 @@ export default class Food extends React.Component {
   };
 
   render() {
-    let optionsRender=[];
-
-
-    this.state.data.map((item, index) => {
-        item.option.forEach((option, optionIndex)=> {
-            optionsRender.push(
-                <Table.Row>
-                    <Table.Cell>{option.option}</Table.Cell>
-                    <Table.Cell>${option.price}</Table.Cell>
-                    <Table.Cell>{option.quantity}</Table.Cell>
-                    <Table.Cell>
-                    ${option.price / option.quantity}
-                    </Table.Cell>
-                                {/* <Table.Cell>
-                                        <span>
-                                      <UpdateBudgetLineItemModal
-                                        socket={this.props.socket}
-                                        lineItem={item}
-                                        i={index}
-                                        eventId={this.props.eventId}
-                                      />
-                                      <Icon
-                                        name="trash"
-                                        onClick={() => this.deleteLineItem(index)}
-                                      />
-                                    </span>
-                                  </Table.Cell> */}
-                </Table.Row>
-            )
-        });
-      })
-
-      console.log(optionsRender)
+    let optionsRender = [];
 
     return (
       <div>
@@ -229,9 +212,36 @@ export default class Food extends React.Component {
                       </Table.Cell>
                     </Table.Row>
 
-                    {optionsRender.map((item, i) => {
-                        return item
-                    })}
+                    {/* {optionsRender.map((item, i) => {
+                      return item;
+                    })} */}
+                    {oneFood.option.map((option, optionIndex) => 
+                          
+                             <Table.Row>
+                             <Table.Cell>{option.option}</Table.Cell>
+                             <Table.Cell>${option.price}</Table.Cell>
+                             <Table.Cell>{option.quantity}</Table.Cell>
+                             <Table.Cell>
+                               ${option.price / option.quantity}
+                             </Table.Cell>
+                             {/* <Table.Cell>
+                                         <span>
+                                       <UpdateBudgetLineItemModal
+                                         socket={this.props.socket}
+                                         lineItem={item}
+                                         i={index}
+                                         eventId={this.props.eventId}
+                                       />
+                                       <Icon
+                                         name="trash"
+                                         onClick={() => this.deleteLineItem(index)}
+                                       />
+                                     </span>
+                                   </Table.Cell> */}
+                           </Table.Row>
+                          
+                       )}
+                    
 
                     <Table.Row>
                       <Table.Cell>

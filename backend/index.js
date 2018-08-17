@@ -583,7 +583,7 @@ module.exports = (io, store) => {
         io.to(data.eventId).emit('updatedFood', {
           updatedFood: event.allLogistics[data.index]
         })
-        event.allLogistics[data.index]
+        // event.allLogistics[data.index]
       })
     })
 
@@ -605,8 +605,10 @@ module.exports = (io, store) => {
         event.allLogistics[data.index].data[data.i].option.push(data.foodItem);
         event.markModified('allLogistics');
         event.save((err, event) => {
-          io.to(data.eventId).emit('updatedLogistics', {
-            updatedFood: event.allLogistics[data.index]
+          io.to(data.eventId).emit('updatedFoodOptions', {
+            updatedFood: event.allLogistics[data.index],
+            optionIndex: data.i,
+            objIndex: data.index
           })
         })
       })
