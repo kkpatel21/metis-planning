@@ -17,6 +17,13 @@ export default class Event extends React.Component {
 
   handleItemClick = (e, { name }) => this.setState({ activeItem: name });
 
+  // loaded = () => {
+  //   console.log(this.state.loading)
+  //   this.setState({
+  //     loading: false
+  //   })
+  // }
+
   render() {
     const { activeItem } = this.state;
     let tabRender;

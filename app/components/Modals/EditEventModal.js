@@ -53,20 +53,29 @@ class EditEventModal extends React.Component {
     data.append("priority", this.state.priority);
     data.append("startTime", this.state.startTime);
     data.append("endTime", this.state.endTime);
-    // fetch("/api/newEvent", {
-    //   method: "POST",
-    //   credentials: "same-origin",
-    //   body: data
-    // })
-    //   .then(res => {
-    //     if (res.status === 200) {
-    //       this.props.getObjects();
-    //       this.setState({ open: false });
-    //     }
-    //   })
-    //   .catch(err => {
-    //     alert("Error: " + err);
-    //   });
+    let eventInfo = {
+      title: this.state.title,
+      date: this.state.date,
+      startTime: this.state.startTime,
+      endTime: this.state.endTime
+    }
+    fetch('api/saveEvent', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        eventInfo: eventInfo,
+        eventId: this.props.eventId
+      })
+    })
+    .then(res => {
+      if (res.status === 200) {
+        this.props.updateEvent(eventInfo)
+        this.setState({ open: false})
+      }
+    })
   };
   onPriority = (e, value) => {
     this.setState({ priority: value.value });

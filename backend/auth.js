@@ -113,57 +113,20 @@ module.exports = passport => {
     });
   });
 
-  //add venues
-  // router.post("/addVenue", (req, res) => {
-  //   Event.findById(req.body.venueData.id, (err, event) => {
-  //     if (event) {
-  //       console.log(event.allLogistics)
-  //       event.allLogistics[req.body.index].data.push({
-  //         name: req.body.venueData.name,
-  //         status: req.body.venueData.status,
-  //         contact: req.body.venueData.contact,
-  //         address: req.body.venueData.address,
-  //         lat: req.body.venueData.lat,
-  //         long: req.body.venueData.long
-  //       });
-  //       event.markModified("allLogistics");
-  //       event.save((err,event) => {
-  //         if(err) {
-  //           req.json({status: "error", error: err})
-  //         } else {
-  //           res.json({ status: "success" });
-  //         }
-  //       });
-  //     }
-  //   });
-  // });
-
-  //edit venues
-  // router.post("/editVenue", upload.single("uploadFile"), (req, res) => {
-  //   console.log("EDIT VALUES RECEIVED!!!!!!!!!!", req.body)
-  //   Event.findById(req.body.id, (err, event) => {
-  //     if (event) {
-  //       event.allLogistics[req.body.index] = {
-  //         name: req.body.name,
-  //         email: req.body.email,
-  //         status: req.body.status,
-  //         contact: req.body.contact,
-  //         address: req.body.address,
-  //         uploadFile: req.file,
-  //         lat: req.body.lat,
-  //         long: req.body.long
-  //       };
-  //       event.markModified("logistics");
-  //       event.save((err, event) => {
-  //         if (err) {
-  //           req.json({ status: "error", error: err });
-  //         } else {
-  //           res.json({ status: "success", event: event });
-  //         }
-  //       });
-  //     }
-  //   });
-  // });
+  //save Event
+  router.post('/saveEvent', upload.single('uploadFile'), function(req, res) {
+    Event.findById(req.body.eventId, (err, event) => {
+      event.title = req.body.eventInfo.title,
+      event.date = req.body.eventInfo.date,
+      event.startTime = req.body.eventInfo.startTime,
+      event.endTime = req.body.eventInfo.endTime
+      event.save((err, eve) => {
+        res.json({
+          status: 200
+        })
+      })
+    })
+  })
 
   router.post("/newFeedback", function(req, res) {
     new Feedback({

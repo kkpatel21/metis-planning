@@ -14,13 +14,23 @@ export default class Overview extends React.Component {
   componentDidMount() {
     this.props.socket.emit('getEventInfo', {eventId: this.props.eventId})
     this.props.socket.on('getEvent', (data) => {
+      // this.props.loaded()
       this.setState({event: data.event})
     })
   }
 
+  updateEvent = (event) => {
+    let saveEvent = this.state.event
+    saveEvent.title = event.title
+    saveEvent.date = event.date
+    saveEvent.startTime = event.startTime
+    saveEvent.endTime = event.endTime
+    this.setState({
+      event: saveEvent
+    })
+  }
   //time
   convertTime = (time) => {
-    console.log(time)
     let timeSplit = time.split(':')
     let hour = timeSplit[0]
     if(timeSplit[0]>12) {
@@ -32,7 +42,7 @@ export default class Overview extends React.Component {
   }
 
   render() {
-    console.log(this.state.event)
+
 
     //Date
     const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
@@ -121,7 +131,6 @@ export default class Overview extends React.Component {
     let venueDetails = [];
     if (logistics) {
       this.state.event.allLogistics.forEach((venue) => {
-        console.log(venue)
         if (venue.status === 'Confirmed') {
           venueDetails.push({venueName: venue.name, venueAddress: venue.address})
         }
@@ -159,7 +168,7 @@ export default class Overview extends React.Component {
             {startTime} to {endTime}
             <br />
           </span>
-          <EditEventModal socket={this.props.socket} eventId={this.props.eventId} />
+          <EditEventModal updateEvent={this.updateEvent} socket={this.props.socket} eventId={this.props.eventId} />
         </div>
           <Segment.Group raised clearing>
             <Segment>
