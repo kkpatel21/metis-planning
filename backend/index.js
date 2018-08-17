@@ -98,7 +98,7 @@ module.exports = (io, store) => {
     socket.on("getName", next => {
       User.findById(socket.session.passport.user).then(user => {
         let name = user.firstname;
-        io.emit("getName", { name: name });
+        socket.emit("getName", { name: name });
         next({ err, name });
       });
     });
@@ -106,7 +106,7 @@ module.exports = (io, store) => {
     socket.on("getNameBack", next => {
       User.findById(socket.session.passport.user).then(user => {
         let name = user.firstname;
-        io.emit("getNameBack", { name: name });
+        socket.emit("getNameBack", { name: name });
         next({ err, name });
       });
     });
@@ -116,7 +116,7 @@ module.exports = (io, store) => {
         User.findById(event.owner).then(user => {
           let name = user.firstname + ' ' + user.lastname
           let email = user.email
-          io.emit('getOwner', {name: name, email: email});
+          socket.emit('getOwner', {name: name, email: email});
           next({err, name, email})
         })
       })
