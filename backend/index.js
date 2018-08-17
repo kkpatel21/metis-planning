@@ -73,9 +73,13 @@ module.exports = (io, store) => {
     //In OverView
     socket.on('getEventInfo', (data) => {
       Event.findById(data.eventId, (err, event) => {
-        io.to(data.eventId).emit('getEvent', {
-          event: event
+        User.findById(event.owner, (err, user) => {
+          io.to(data.eventId).emit('getEvent', {
+            event: event,
+            user: user.firstname + ' ' + user.lastname
+          })
         })
+
       })
     })
 
@@ -605,7 +609,7 @@ module.exports = (io, store) => {
         event.allLogistics[data.index].data[data.i].option.push(data.foodItem);
         event.markModified('allLogistics');
         event.save((err, event) => {
-          io.to(data.eventId).emit('updatedLogistics', {
+          io.to(data.eventId).emit('updatedFood', {
             updatedFood: event.allLogistics[data.index]
           })
         })
@@ -616,7 +620,6 @@ module.exports = (io, store) => {
     socket.on("addFood", (data, next) => {
       Event.findById(data.eventId, (err, event) => {
         if(event){
-          console.log("Should contain caterer's info",data)
           event.allLogistics[data.index].data.push(data.foodData);
           event.markModified("allLogistics");
           event.save((err,event) => {

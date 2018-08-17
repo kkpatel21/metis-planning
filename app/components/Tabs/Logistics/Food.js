@@ -74,7 +74,7 @@ export default class Food extends React.Component {
     let optionsRender=[];
 
 
-    this.state.data.map((item, index) => {
+    this.state.data.map((item) => {
         item.option.forEach((option, optionIndex)=> {
             optionsRender.push(
                 <Table.Row>

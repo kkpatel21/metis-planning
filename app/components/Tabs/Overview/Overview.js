@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Header, Progress, Grid, Segment, Icon } from 'semantic-ui-react'
+import { Header, Progress, Grid, Segment, Icon, Label, Popup } from 'semantic-ui-react'
 import moment from 'moment'
 import EditEventModal from '../../Modals/EditEventModal'
 import './Overview.css'
@@ -8,7 +8,8 @@ export default class Overview extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      event: {}
+      event: {},
+      userName: '',
     }
   }
 
@@ -16,7 +17,7 @@ export default class Overview extends React.Component {
     this.props.socket.emit('getEventInfo', {eventId: this.props.eventId})
     this.props.socket.on('getEvent', (data) => {
       // this.props.loaded()
-      this.setState({event: data.event})
+      this.setState({event: data.event, userName: data.user})
     })
   }
 
@@ -44,7 +45,6 @@ export default class Overview extends React.Component {
 
   render() {
 
-
     //Date
     const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
@@ -61,14 +61,47 @@ export default class Overview extends React.Component {
     //Collaborators
     let collaborators = this.state.event.collaborators
     let collaboratorRender = [];
+    let ownerRender;
     if (collaborators) {
+      let colors = [
+        'red',
+        'orange',
+        'yellow',
+        'olive',
+        'green',
+        'teal',
+        'blue',
+        'violet',
+        'purple',
+        'pink',
+        'brown',
+        'grey',
+        'black'
+      ]
       collaborators.forEach((person) => {
+        let randomIndex = Math.floor(Math.random() * Math.floor(13));
+        console.log(person.name)
         collaboratorRender.push(
-          <div>
-            {person}
-          </div>)
-        })
-      }
+          <Popup
+            trigger={
+              <Label circular color={colors[randomIndex]} key={colors[randomIndex]}>
+                {person.name.substring(0,1)}
+              </Label>
+            }
+            content={person.name}
+          />
+        )
+      })
+      let randomOwner = Math.floor(Math.random() * Math.floor(13));
+      ownerRender = (
+        <Popup
+          trigger={<Label circular color={colors[randomOwner]} key={colors[randomOwner]}>
+            {this.state.userName.substring(0, 1)}
+          </Label>}
+          content={this.state.userName}
+        />
+      )
+    }
 
       //THIS IS INFO FOR ALL INVITEES -- CAN SHOW INFO BASED ON THE STATUS
       let attending = 0;
@@ -170,7 +203,12 @@ export default class Overview extends React.Component {
         <div>
           <div className='overview-header'>
             <div className='collaborators'>
-              Collaborators
+              Event Shared With:
+              <br />
+              {collaboratorRender.map((render) => {
+                return render
+              })}
+              {ownerRender}
             </div>
             <div>
               <Header className='header' as='h1'>{this.state.event.title}</Header>
@@ -182,12 +220,12 @@ export default class Overview extends React.Component {
               </span>
             </div>
             <div className='edit-event-button'>
-              <EditEventModal socket={this.props.socket} eventId={this.props.eventId} />
+              <EditEventModal updateEvent={this.updateEvent} socket={this.props.socket} eventId={this.props.eventId} />
             </div>
           </div>
           <Segment.Group raised clearing>
             <Segment>
-              <div className='logistics-block'>
+              <div className='segment-block space-between'>
                 <div className='logistics-title'>
                   <h2>Logistics</h2>
                   <Icon color='teal' name='clipboard' size='massive'/>
@@ -198,23 +236,27 @@ export default class Overview extends React.Component {
                 </div>
                 <div className='logistics-fields'>
                   Caterers:
-                  {catererDetails.map((caterer) => <ul><li>{caterer.catererName} | {caterer.catererAddress}</li></ul>)}
+                  {catererDetails.map((caterer) => <ul><li>{caterer.catererName} | {caterer.catererWebsite}</li></ul>)}
                 </div>
               </div>
             </Segment>
             <Segment>
-              <div className='logistics-block'>
-                <div className='venue'>
-                  Invited: {total}
+              <div className='segment-block space-between'>
+                <div className='people-fields'>
+                  Invited:
+                  <div>{total}</div>
                 </div>
-                <div className='venue'>
-                  Attending: {attending}
+                <div className='people-fields'>
+                  Attending:
+                  <div>{attending}</div>
                 </div>
-                <div className='venue'>
-                  Pending: {pending}
+                <div className='people-fields'>
+                  Pending:
+                  <div>{pending}</div>
                 </div>
-                <div className='venue'>
-                  Not Coming: {notComing}
+                <div className='people-fields'>
+                  Not Coming:
+                  <div>{notComing}</div>
                 </div>
                 <div className='people-title'>
                   <h2>People</h2>
@@ -223,22 +265,22 @@ export default class Overview extends React.Component {
               </div>
             </Segment>
             <Segment>
-              <div className='logistics-block'>
+              <div className='segment-block'>
                 <div className='budget-title'>
                   <h2>Budget</h2>
                   <Icon color='teal' name='money' size='massive'/>
                 </div>
-                <div className='venue'>
+                <div className='budget-block'>
                   {budgetPercent > 100 ?
-                    <Progress className='pbar' percent={budgetPercent} progress error />
+                    <Progress className='pbar' percent={budgetPercent} progress active error />
                     :
-                    <Progress className='pbar' percent={budgetPercent} progress inverted color='blue'/>
+                    <Progress className='pbar' percent={budgetPercent} progress active inverted color='blue'/>
                   }
                   <div className='budget-info-block'>
-                    <div className='venue'>
+                    <div className='budget-fields'>
                       Allocated: ${allocated}
                     </div>
-                    <div className='venue'>
+                    <div className='budget-fields'>
                       Total Budget: ${totalBudget}
                     </div>
                   </div>
@@ -246,7 +288,7 @@ export default class Overview extends React.Component {
               </div>
             </Segment>
             <Segment>
-              <div className='logistics-block'>
+              <div className='segment-block'>
                 <div className='venue'>
                   {fundraisingPercent > 100 ?
                     <Progress className='pbar' percent={fundraisingPercent} progress success />
@@ -256,21 +298,21 @@ export default class Overview extends React.Component {
                 </div>
                 <div className='budget-info-block'>
                   <div className='venue'>
-                    Campaigns:
-                    {campaigns.map((campaign) => <ul><li>{campaign}</li></ul>)}
-                  </div>
-                  <div className='venue'>
                     Total Raised: ${totalFundsRaised}
                   </div>
                   <div className='venue'>
                     Total Goal: ${totalGoal}
+                  </div>
+                  </div>
+                  <div className='venue'>
+                    Campaigns:
+                    {campaigns.map((campaign) => <ul><li>{campaign}</li></ul>)}
                   </div>
                   <div className='people-title'>
                     <h2>Fundraising</h2>
                     <Icon color='teal' name='money' size='massive'/>
                   </div>
                 </div>
-              </div>
             </Segment>
           </Segment.Group>
         </div>
