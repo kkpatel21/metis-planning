@@ -31,28 +31,35 @@ class AddEventModal extends React.Component {
     this.setState({ uploadFile: event.target.files[0] });
   };
   onCreate = () => {
-    var data = new FormData();
-    data.append("uploadFile", this.state.uploadFile);
-    data.append("title", this.state.title);
-    data.append("date", this.state.date);
-    data.append("priority", this.state.priority);
-    data.append("startTime", this.state.startTime);
-    data.append("endTime", this.state.endTime);
-    fetch("/api/newEvent", {
-      method: "POST",
-      credentials: "same-origin",
-      body: data
-    })
-      .then(res => {
-        console.log(res);
-        if (res.status === 200) {
-          this.props.getObjects();
-          this.setState({ open: false });
-        }
+    if(this.state.title === '') {
+      alert('Please add an event title!')
+    } else if (this.state.startTime === '' || this.state.endTime === '') {
+      alert('Please add a time frame for your event!')
+    } else if (this.state.priority === '') {
+      alert('Please enter the priority of your event!')
+    } else {
+      var data = new FormData();
+      data.append("uploadFile", this.state.uploadFile);
+      data.append("title", this.state.title);
+      data.append("date", this.state.date);
+      data.append("priority", this.state.priority);
+      data.append("startTime", this.state.startTime);
+      data.append("endTime", this.state.endTime);
+      fetch("/api/newEvent", {
+        method: "POST",
+        credentials: "same-origin",
+        body: data
       })
-      .catch(err => {
-        alert("Error: " + err);
-      });
+        .then(res => {
+          if (res.status === 200) {
+            this.props.getObjects();
+            this.setState({ open: false });
+          }
+        })
+        .catch(err => {
+          alert("Error: " + err);
+        });
+    }
   };
   onPriority = (e, value) => {
     this.setState({ priority: value.value });
@@ -104,7 +111,6 @@ class AddEventModal extends React.Component {
                     placeholder="When is this event?"
                     type="date"
                     onChange={e => {
-                      console.log(this.state.date)
                       this.setState({ date: e.target.value })}
                     }
                   />

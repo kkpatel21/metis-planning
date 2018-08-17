@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "webpack": "webpack",
-    "start": "nodemon backend/start.js",
+    "start": "webpack-dev-server --content-base build/",
     "backend": "nodemon backend/start.js"
   },
   "author": "",
