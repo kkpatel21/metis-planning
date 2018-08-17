@@ -41,7 +41,7 @@ h2 {
 
 .logistics-fields {
   display: inline-block;
-  text-align: center;
+  text-align: left;
   width: 30em;
   font-weight: bold;
 }
