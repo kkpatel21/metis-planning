@@ -3,7 +3,7 @@ import { Button, Header, Image, Modal, Form, Menu, Dropdown, Icon } from "semant
 import './AddGuestModal.css'
 
 const options = [
-  { key: 'n', text: 'Not Coming', value: 'NotComing'},
+  { key: 'n', text: 'Not Coming', value: 'Not Coming'},
   { key: 'm', text: 'Pending', value: 'Pending'},
   { key: 'y', text: 'Coming', value: 'Coming'},
 ]
