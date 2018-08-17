@@ -28,12 +28,12 @@ class Login extends React.Component {
         <br />
         <br />
         <div className='socialButtons'>
-          <Button color="facebook">
+          {/* <Button color="facebook">
             <Icon name='facebook' /> Facebook
           </Button>
           <Button color="google plus">
             <Icon name='google plus' /> Google
-          </Button>
+          </Button> */}
         </div>
       </Form>
     )
