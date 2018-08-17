@@ -41,22 +41,11 @@ option:[],
       //   quantity: this.state.quantity,
       //   option1: this.state.option1,
       //   option2: this.state.option2,
-        // pricePerPerson: calculated,
+      //   pricePerPerson: calculated,
       website: this.state.website,
     }
-    this.props.socket.emit(
-      "addFood",
-      {
-        foodData:foodData,
-        eventId: this.props.eventId,
-        index: this.props.index
-      },
-      res => {
-        if(res.event){
-          this.setState({open:false})
-        }
-      }
-    );
+    this.props.socket.emit("addFood", {foodData:foodData, eventId: this.props.eventId, index: this.props.index})
+    this.onCancel()
   };
 
   onStatus = (e, value) => {
