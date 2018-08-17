@@ -116,10 +116,12 @@ module.exports = passport => {
   //save Event
   router.post('/saveEvent', upload.single('uploadFile'), function(req, res) {
     Event.findById(req.body.eventId, (err, event) => {
+      console.log(event.priority)
       event.title = req.body.eventInfo.title,
       event.date = req.body.eventInfo.date,
       event.startTime = req.body.eventInfo.startTime,
-      event.endTime = req.body.eventInfo.endTime
+      event.endTime = req.body.eventInfo.endTime,
+      event.priority = req.body.eventInfo.priority
       event.save((err, eve) => {
         res.json({
           status: 200

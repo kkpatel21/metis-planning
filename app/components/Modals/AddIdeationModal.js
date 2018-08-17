@@ -1,14 +1,6 @@
 import React from "react";
-import {
-  Button,
-  Header,
-  Image,
-  Modal,
-  Form,
-  Menu,
-  Dropdown,
-  Icon
-} from "semantic-ui-react";
+import { Button, Header, Image, Modal, Form, Menu, Dropdown, Icon } from "semantic-ui-react";
+import './AddIdeationModal.css'
 
 class AddIdeationModal extends React.Component {
   constructor() {
