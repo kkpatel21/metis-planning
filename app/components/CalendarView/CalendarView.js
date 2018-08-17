@@ -3,6 +3,7 @@ import { Grid, Button, Icon } from 'semantic-ui-react';
 import './CalendarView.css'
 import AddEventModal from '../Modals/AddEventModal.js'
 import io from 'socket.io-client'
+import Loading from '../Loading.js'
 
 export default class CalendarView extends React.Component {
   constructor(props) {
@@ -94,7 +95,7 @@ export default class CalendarView extends React.Component {
     //log events on calendar
     let firstDayOfMonth = new Date(this.state.currentYear + "-" + this.state.currentMonth + '-1').getDay()
     this.props.socket.emit('fetchEvents', (res) => {
-      this.setState({events: res.filtered})
+      this.setState({events: res.filtered, loading: true})
       let displayEvents = []
       this.state.events.forEach(event => {
         let month = new Date(event.date).getMonth() //this is a number
@@ -110,7 +111,7 @@ export default class CalendarView extends React.Component {
           })
         }
       })
-      this.setState({displayEvents: displayEvents})
+      this.setState({displayEvents: displayEvents, loading: false})
     })
 
     if(this.state.month === 0) {
@@ -140,7 +141,7 @@ export default class CalendarView extends React.Component {
         calendarDatesWk3: calendarDates.slice(14,21),
         calendarDatesWk4: calendarDates.slice(21,28),
         calendarDatesWk5: calendarDates.slice(28,35),
-        calendarDatesWk6: calendarDates.slice(35,42)
+        calendarDatesWk6: calendarDates.slice(35,42),
       })
     } else {
       let prevMonthName = this.state.monthNames[this.state.month-1];
@@ -177,7 +178,7 @@ export default class CalendarView extends React.Component {
     //log events on calendar
     let firstDayOfMonth = new Date(this.state.currentYear + "-" + this.state.currentMonth + '-1').getDay()
     this.props.socket.emit('fetchEvents', (res) => {
-      this.setState({events: res.filtered})
+      this.setState({events: res.filtered, loading: true})
       let displayEvents = []
       this.state.events.forEach(event => {
         let month = new Date(event.date).getMonth() //this is a number
@@ -193,7 +194,7 @@ export default class CalendarView extends React.Component {
           })
         }
       })
-      this.setState({displayEvents: displayEvents})
+      this.setState({displayEvents: displayEvents, loading: false})
     })
 
     if(this.state.month === 11) {

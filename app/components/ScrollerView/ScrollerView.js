@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Menu, Input, Table, Icon, Label} from 'semantic-ui-react'
 import './ScrollerView.css'
 import { Draggable } from 'react-drag-and-drop'
-import dateFormat from 'dateformat'
+import moment from 'moment'
 
 
 class ScrollerView extends React.Component {
@@ -24,8 +24,7 @@ class ScrollerView extends React.Component {
       return a>b ? -1 : a<b ? 1 : 0
     })
     sortedE.forEach(event => {
-      let date = new Date(event.date)
-      date = dateFormat(date, 'dddd, mmmm dS, yyyy')
+      let date = moment(event.date.substring(0, 10)).format('dddd, MMMM Do YYYY')
       let status;
       if (event.priority === 'Moderate') {
         status = (<Label color='yellow'>{event.priority}</Label>)

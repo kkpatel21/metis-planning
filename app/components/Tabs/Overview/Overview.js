@@ -14,12 +14,13 @@ export default class Overview extends React.Component {
   componentDidMount() {
     this.props.socket.emit('getEventInfo', {eventId: this.props.eventId})
     this.props.socket.on('getEvent', (data) => {
+      // this.props.loaded()
       this.setState({event: data.event})
     })
   }
 
   render() {
-    console.log(this.state.event)
+
 
     //Collaborators
     let collaborators = this.state.event.collaborators
