@@ -46,7 +46,7 @@ module.exports = (io, store) => {
     // This is to get the user.id: socket.session.passport.user
 
     // Res works with Next, and the first parameter works with the second parameter.
-    if (socket.session.passport.user) {
+    if (socket.session.passport && socket.session.passport.user) {
       socket.emit("loggedIn");
     }
 
