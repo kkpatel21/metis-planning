@@ -19,7 +19,39 @@ export default class Overview extends React.Component {
     })
   }
 
+  //time
+  convertTime = (time) => {
+    console.log(time)
+    let timeSplit = time.split(':')
+    let hour = timeSplit[0]
+    if(timeSplit[0]>12) {
+      timeSplit.splice(0,1,hour-12)
+      return timeSplit.join(':') + ' PM'
+    } else {
+      return time + ' AM'
+    }
+  }
+
   render() {
+
+
+    //Date
+    const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+    let date = 0;
+    let day = '';
+    let month = '';
+    let year = 0;
+    let startTime = '';
+    let endTime = '';
+    if (this.state.event.date && this.state.event.startTime && this.state.event.endTime) {
+      date = new Date(this.state.event.date).getDate()+1;
+      day = dayNames[new Date(this.state.event.date).getDay()];
+      month = monthNames[new Date(this.state.event.date).getMonth()];
+      year = new Date(this.state.event.date).getFullYear();
+      startTime = this.convertTime(this.state.event.startTime);
+      endTime = this.convertTime(this.state.event.endTime);
+    }
 
 
     //Collaborators
@@ -73,29 +105,45 @@ export default class Overview extends React.Component {
     }
 
     //budget
+    let budget = this.state.event.budget
     let allocated = 0;
     let totalBudget = 0;
-    let percent = 0;
-    let budget = this.state.event.budget
+    let budgetPercent = 0;
     if (budget) {
       totalBudget = this.state.event.budget.total
       this.state.event.budget.budgetItems.forEach((item) => {
         allocated += parseInt(item.amount)
       })
-      percent = parseInt(allocated/totalBudget*100)
+      budgetPercent = parseInt(allocated/totalBudget*100)
     }
 
-
+    //logistics
+    let logistics = this.state.event.allLogistics;
+    let venueDetails = [];
+    if (logistics) {
+      this.state.event.allLogistics.forEach((venue) => {
+        console.log(venue)
+        if (venue.status === 'Confirmed') {
+          venueDetails.push({venueName: venue.name, venueAddress: venue.address})
+        }
+      })
+    }
 
     //How much funds the event has raised.
-    let fundraisers = this.state.event.fundraising
+    let fundraisers = this.state.event.fundraising;
+    let campaigns = [];
     let totalFundsRaised = 0;
+    let totalGoal = 0;
+    let fundraisingPercent = 0
     if (fundraisers) {
       fundraisers.forEach((fund) => {
+        campaigns.push(fund.title)
+        totalGoal += parseInt(fund.goal)
         fund.data.forEach((donation) => {
           totalFundsRaised += parseInt(donation.amount)
         })
       })
+      fundraisingPercent = parseInt(totalFundsRaised/totalGoal*100)
     }
 
     //Need to figure out how we want to display the budget information Consult Perry and Ellie
@@ -107,9 +155,9 @@ export default class Overview extends React.Component {
           <Header className='header' as='h1'>{this.state.event.title}</Header>
           <br />
           <span className='eventInfo'>
-            {this.state.event.date}
+            {day}, {month} {date}, {year}
             <br />
-            {this.state.event.startTime} to {this.state.event.endTime}
+            {startTime} to {endTime}
             <br />
           </span>
           <EditEventModal socket={this.props.socket} eventId={this.props.eventId} />
@@ -117,7 +165,15 @@ export default class Overview extends React.Component {
           <Segment.Group raised clearing>
             <Segment>
               <div className='logisticsInfo'>
-                This box will contain the Venue and People
+                <h3>Logistics</h3>
+                <div>
+                  Venue:
+                  {venueDetails.map((venue) => <ul><li>{venue.venueName} | {venue.venueAddress}</li></ul>)}
+                </div>
+                <div>
+                  Caterers:
+
+                </div>
               </div>
             </Segment>
             <Segment>
@@ -152,10 +208,10 @@ export default class Overview extends React.Component {
                   <Grid.Column width={11} className='icon-column'>
                     <div className='budget'>
                       <h3>Budget</h3>
-                      {percent > 100 ?
-                        <Progress className='pbar' percent={percent} progress error />
+                      {budgetPercent > 100 ?
+                        <Progress className='pbar' percent={budgetPercent} progress error />
                         :
-                        <Progress className='pbar' percent={percent} progress inverted color='blue'/>
+                        <Progress className='pbar' percent={budgetPercent} progress inverted color='blue'/>
                       }
                       <div>
                         Allocated: ${allocated}
@@ -173,7 +229,22 @@ export default class Overview extends React.Component {
             </Segment>
             <Segment>
               <div className='funds'>
-                Your event has raised ${totalFundsRaised} for the event!
+                <h3>Fundraising</h3>
+                {fundraisingPercent > 100 ?
+                  <Progress className='pbar' percent={fundraisingPercent} progress success />
+                  :
+                  <Progress className='pbar' percent={fundraisingPercent} progress inverted color='teal'/>
+                }
+                <div>
+                  Campaigns:
+                  {campaigns.map((campaign) => <ul><li>{campaign}</li></ul>)}
+                </div>
+                <div>
+                  Total Raised: ${totalFundsRaised}
+                </div>
+                <div>
+                  Total Goal: ${totalGoal}
+                </div>
               </div>
             </Segment>
           </Segment.Group>

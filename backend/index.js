@@ -500,6 +500,16 @@ module.exports = (io, store) => {
       });
     });
 
+    //add food item to food page
+    socket.on("addFoodItem", (data, next) => {
+      Event.findById(data.eventId, (err, event) => {
+        event.allLogistics.budgetItems.push(data.budgetItems);
+        event.markModified("allLogistics");
+        event.save((err, event) => {
+        });
+      });
+    });
+
     //update total budget
     socket.on('updateTotalBudget', (data, next) => {
       Event.findById(data.eventId, (err, event) => {
@@ -567,6 +577,16 @@ module.exports = (io, store) => {
       })
     })
 
+    //get Food List
+    socket.on("getFood", (data,next) => {
+      Event.findById(data.eventId, (err,event) => {
+        io.to(data.eventId).emit('updatedFood', {
+          updatedFood: event.allLogistics[data.index]
+        })
+        event.allLogistics[data.index]
+      })
+    })
+
     //add Venue List
     socket.on('addVenue', (data, next) => {
       Event.findById(data.eventId, (err, event) => {
@@ -577,6 +597,35 @@ module.exports = (io, store) => {
             updatedLogistics: event.allLogistics[data.index]
           })
         })
+      })
+    })
+
+    socket.on("addFoodOptions", (data,next) => {
+      Event.findById(data.eventId, (err, event) => {
+        event.allLogistics[data.index].data[data.i].option.push(data.foodItem);
+        event.markModified('allLogistics');
+        event.save((err, event) => {
+          io.to(data.eventId).emit('updatedLogistics', {
+            updatedFood: event.allLogistics[data.index]
+          })
+        })
+      })
+    })
+
+    //add Catering List
+    socket.on("addFood", (data, next) => {
+      Event.findById(data.eventId, (err, event) => {
+        if(event){
+          console.log("Should contain caterer's info",data)
+          event.allLogistics[data.index].data.push(data.foodData);
+          event.markModified("allLogistics");
+          event.save((err,event) => {
+            io.to(data.eventId).emit("updatedFood", {
+              updatedFood: event.allLogistics[data.index]
+            })
+          })
+        }
+
       })
     })
 
@@ -647,6 +696,23 @@ module.exports = (io, store) => {
         }
       });
     });
+
+    //deleteFood
+    socket.on("deleteFood", (data, next) => {
+      Event.findById(data.eventId, (err, event) => {
+        if (event) {
+          var logCopy = event.allLogistics[data.index].data.slice()
+          logCopy.splice(data.i, 1);
+          event.allLogistics[data.index].data = logCopy
+          event.markModified("allLogistics");
+          event.save((err, event) => {
+            io.to(data.eventId).emit('updatedFood', {
+              updatedFood: event.allLogistics[data.index]
+            })
+          });
+        }
+      });
+    })
 
     // editVenue
     socket.on('editVenue', (data, next) => {
