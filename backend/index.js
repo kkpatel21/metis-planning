@@ -25,7 +25,9 @@ module.exports = (io, store) => {
       cookies = cookie.parse(socket.request.headers.cookie);
       cookies = cookieParser.signedCookies(cookies, process.env.SECRET);
       let sid = cookies["connect.sid"];
+      console.log('sid', sid)
       store.get(sid, (err, session) => {
+        console.log('session', session)
         if (!err) {
           delete session.cookie;
           socket.session = session;
