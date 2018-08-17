@@ -18,7 +18,7 @@ export default class Collaborator extends React.Component {
   render() {
     return (
       <div className="collaboratorTable">
-        <Header as='h2'>Team</Header>
+        <Header as='h2'>Collaborators</Header>
         <Divider />
           <Table striped basic>
             <Table.Header>

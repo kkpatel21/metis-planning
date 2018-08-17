@@ -11,27 +11,36 @@ import {
   Checkbox
 } from "semantic-ui-react";
 
-export default class AddPeopleModal extends React.Component {
+export default class EditFoodModal extends React.Component {
   constructor() {
     super();
     this.state = {
       name: "",
       contact: "",
       status: "",
-      option:[],
       website: "",
       open: false
     };
   }
-  onDone = () => {
+
+  componentDidMount() {
+    this.setState({
+      name: this.props.name,
+      contact: this.props.contact,
+      status: this.props.status,
+      website: this.props.website
+    })
+  }
+
+
+  onSave = () => {
     let foodData = {
       name: this.state.name,
       contact: this.state.contact,
       status: this.state.status,
-      option:[],
       website: this.state.website,
     }
-    this.props.socket.emit("addFood", {foodData:foodData, eventId: this.props.eventId, index: this.props.index})
+    this.props.socket.emit("saveFood", {foodData:foodData, eventId: this.props.eventId, index: this.props.index, tabIndex: this.props.tabIndex})
     this.onCancel()
   };
 
@@ -44,23 +53,29 @@ export default class AddPeopleModal extends React.Component {
   onTrigger = () => {
     this.setState({ open: true });
   };
-  handleChange = address => {
-    this.setState({ address });
-  };
 
-  fileChangedHandler = event => {
-    this.setState({ uploadFile: event.target.files[0] });
-  };
+
   render() {
     const options = [
       { key: 1, text: "Confirmed", value: "Confirmed" },
       { key: 2, text: "Pending", value: "Pending" }
     ];
-    const value = this.state.priority;
+    const value = this.state.status;
     return (
       <Modal
         trigger={
-          <Button onClick={() => this.onTrigger()}>Add your caterer!</Button>
+          <Button
+            basic
+            color="transparent"
+            content="Grey"
+            size="mini"
+            icon
+            floated="right"
+            type="submit"
+            onClick={() => this.onTrigger()}
+          >
+            <Icon name='pencil' />
+          </Button>
         }
         onClose={this.onCancel}
         open={this.state.open}
@@ -75,6 +90,7 @@ export default class AddPeopleModal extends React.Component {
                 <input
                   placeholder="Name"
                   type="text"
+                  value={this.state.name}
                   onChange={e => this.setState({ name: e.target.value })}
                 />
               </Form.Field>
@@ -83,6 +99,7 @@ export default class AddPeopleModal extends React.Component {
                 <input
                   placeholder="Phone number"
                   type="text"
+                  value={this.state.contact}
                   onChange={e => this.setState({ contact: e.target.value })}
                 />
               </Form.Field>
@@ -91,6 +108,7 @@ export default class AddPeopleModal extends React.Component {
                 <input
                   placeholder="Please insert url"
                   type="text"
+                  value={this.state.website}
                   onChange={e => this.setState({ website: e.target.value })}
                 />
               </Form.Field>
@@ -106,8 +124,8 @@ export default class AddPeopleModal extends React.Component {
                   />
                 </Menu>
               </Form.Field>
-              <Button type="submit" onClick={() => this.onDone()}>
-                Done
+              <Button type="submit" onClick={() => this.onSave()}>
+                Save
               </Button>
               <Button type="submit" onClick={() => this.onCancel()}>
                 Cancel

@@ -1,6 +1,5 @@
 import React from "react";
 import { Button, Header, Image, Modal, Form, Menu, Dropdown, Icon } from "semantic-ui-react";
-import './AddNewTab.css'
 
 class AddNewTab extends React.Component {
   constructor() {

@@ -13,7 +13,7 @@ import {
   Segment
 } from "semantic-ui-react";
 import AddPeopleModal from "../../Modals/AddPeopleModal";
-import EditFoodModal from "../../Modals/EditVenueModal";
+import EditFoodModal from "../../Modals/EditFoodModal";
 
 export default class Food extends React.Component {
   constructor() {
@@ -103,8 +103,6 @@ export default class Food extends React.Component {
         });
       })
 
-      console.log(optionsRender)
-
     return (
       <div>
         <div>
@@ -114,18 +112,16 @@ export default class Food extends React.Component {
         {this.state.data.map((oneFood, foodI) => (
           <div>
             <Segment color={oneFood.status === "Confirmed" ? "teal" : "orange"}>
-              {/* <EditFoodModal
+              <EditFoodModal
                 name={oneFood.name}
                 contact={oneFood.contact}
                 status={oneFood.status}
-                address={oneFood.address}
-                price={oneFood.price}
+                website={oneFood.website}
                 eventId={this.props.eventId}
-                index={venueI}
-                onProps={this.onProps}
+                index={foodI}
                 tabIndex={this.props.tabIndex}
                 socket={this.props.socket}
-              /> */}
+              />
               <Button
                 basic
                 color="transparent"
@@ -153,7 +149,7 @@ export default class Food extends React.Component {
                   <br />
                   Contact: {oneFood.contact} <br />
                   <br />
-                  Website: <a href={oneFood.website}>{oneFood.name}</a> <br />
+                  Website: <a href={oneFood.website}>{oneFood.website}</a> <br />
                   <br />
                   Status: {oneFood.status} <br />
                 </div>

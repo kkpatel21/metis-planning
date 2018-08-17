@@ -87,9 +87,11 @@ module.exports = (io, store) => {
     //In EditEventModal
     socket.on('getEventInfoInside', (data) => {
       Event.findById(data.eventId, (err, event) => {
+
         io.to(data.eventId).emit('getEventInside', {
-          event: event
+          event: event,
         })
+
       })
     })
 
@@ -728,6 +730,27 @@ module.exports = (io, store) => {
               updatedLogistics: event.allLogistics[data.tabIndex]
             })
           })
+        }
+      })
+    })
+
+    //saveFood
+    socket.on('saveFood', (data, next) => {
+      Event.findById(data.eventId, (err, event) => {
+        if (event) {
+          let currentFood = event.allLogistics[data.tabIndex].data[data.index]
+          currentFood.name = data.foodData.name
+          currentFood.contact = data.foodData.contact
+          currentFood.status = data.foodData.status
+          currentFood.website = data.foodData.website
+          event.allLogistics[data.tabIndex].data[data.index] = currentFood
+          event.markModified('allLogistics')
+          event.save((err, event) => {
+            io.to(data.eventId).emit('updatedFood', {
+              updatedFood: event.allLogistics[data.tabIndex]
+            })
+          })
+
         }
       })
     })

@@ -27,8 +27,11 @@ h2 {
   height: 17vh !important
 }
 
-.logistics-block {
+.segment-block {
   display: flex;
+}
+
+.space-between {
   justify-content: space-between;
 }
 
@@ -39,20 +42,32 @@ h2 {
 .logistics-fields {
   display: inline-block;
   text-align: center;
-  margin-right: 15em;
+  width: 30em;
+  font-weight: bold;
 }
 
-.venue {
+.people-fields {
   display: inline-block;
   text-align: center;
-}
-
-.caterers {
-  display: inline-block;
+  margin-top: 1.5em;
+  height: 10vh;
+  width: 20em;
+  font-weight: bold;
 }
 
 .people-title {
   text-align: right;
+}
+
+.people-header {
+  margin-bottom: -2vh!important;
+}
+
+.budget-block {
+  display: inline-block;
+  margin-left: 1.5em;
+  justify-content: space-evenly;
+  width: 70vw;
 }
 
 .budget-title {
@@ -62,4 +77,42 @@ h2 {
 .budget-info-block {
   display: flex!important;
   justify-content: space-between!important;
+}
+
+.budget-fields {
+  display: inline-block;
+  margin: 0 1em 0 1em;
+  width: 20em;
+  text-align: center;
+  font-weight: bold;
+}
+
+.fundraising-block {
+  display: inline-block;
+  margin-right: 1em;
+  justify-content: space-evenly;
+  width: 45vw;
+}
+
+.fundraising-info-block {
+  display: flex!important;
+  justify-content: space-between!important;
+}
+
+.fundraising-fields {
+  display: inline-block;
+  text-align: center;
+  font-weight: bold;
+}
+
+.fundraising-title {
+  text-align: right;
+}
+
+.fundraising-header {
+  margin-bottom: -2vh!important;
+}
+
+.bottom-segment {
+  height: 0.0001vh!important;
 }
