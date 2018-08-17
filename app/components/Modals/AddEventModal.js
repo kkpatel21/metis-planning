@@ -103,7 +103,10 @@ class AddEventModal extends React.Component {
                   <input
                     placeholder="When is this event?"
                     type="date"
-                    onChange={e => this.setState({ date: e.target.value })}
+                    onChange={e => {
+                      console.log(this.state.date)
+                      this.setState({ date: e.target.value })}
+                    }
                   />
                 </Form.Field>
                 <Form.Field>

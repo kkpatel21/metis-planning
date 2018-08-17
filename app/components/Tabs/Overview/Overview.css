@@ -1,24 +1,118 @@
-.overview-header {
-  margin: auto;
-  text-align: center;
+h2 {
+  margin-bottom: 0!important;
 }
 
-.ui.labeled.icon.button, .ui.labeled.icon.buttons .button .editModal{
-  margin-top: 73vh
+.overview-header {
+  display: flex;
+  margin: auto;
+  width: 100%;
+  text-align: center;
+  justify-content: space-between;
+}
+
+.collaborators {
+  text-align: left;
+  width: 20vw
+}
+
+.edit-event-button {
+  width: 20vw
 }
 
 .ui.segments>.segment {
   height: 17vh
 }
 
-.icon-column {
-  height: 14vh
-}
-
-.ui.grid>.row {
-  height: 14vh
-}
-
 .dashboardGrid {
   height: 17vh !important
+}
+
+.segment-block {
+  display: flex;
+}
+
+.space-between {
+  justify-content: space-between;
+}
+
+.logistics-title {
+  display: inline-block;
+}
+
+.logistics-fields {
+  display: inline-block;
+  text-align: center;
+  width: 30em;
+  font-weight: bold;
+}
+
+.people-fields {
+  display: inline-block;
+  text-align: center;
+  margin-top: 1.5em;
+  height: 10vh;
+  width: 20em;
+  font-weight: bold;
+}
+
+.people-title {
+  text-align: right;
+}
+
+.people-header {
+  margin-bottom: -2vh!important;
+}
+
+.budget-block {
+  display: inline-block;
+  margin-left: 1.5em;
+  justify-content: space-evenly;
+  width: 70vw;
+}
+
+.budget-title {
+  display: inline-block;
+}
+
+.budget-info-block {
+  display: flex!important;
+  justify-content: space-between!important;
+}
+
+.budget-fields {
+  display: inline-block;
+  margin: 0 1em 0 1em;
+  width: 20em;
+  text-align: center;
+  font-weight: bold;
+}
+
+.fundraising-block {
+  display: inline-block;
+  margin-right: 1em;
+  justify-content: space-evenly;
+  width: 45vw;
+}
+
+.fundraising-info-block {
+  display: flex!important;
+  justify-content: space-between!important;
+}
+
+.fundraising-fields {
+  display: inline-block;
+  text-align: center;
+  font-weight: bold;
+}
+
+.fundraising-title {
+  text-align: right;
+}
+
+.fundraising-header {
+  margin-bottom: -2vh!important;
+}
+
+.bottom-segment {
+  height: 0.0001vh!important;
 }

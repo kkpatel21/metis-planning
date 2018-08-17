@@ -73,9 +73,13 @@ module.exports = (io, store) => {
     //In OverView
     socket.on('getEventInfo', (data) => {
       Event.findById(data.eventId, (err, event) => {
-        io.to(data.eventId).emit('getEvent', {
-          event: event
+        User.findById(event.owner, (err, user) => {
+          io.to(data.eventId).emit('getEvent', {
+            event: event,
+            user: user.firstname.substring(0, 1)
+          })
         })
+
       })
     })
 
@@ -83,9 +87,11 @@ module.exports = (io, store) => {
     //In EditEventModal
     socket.on('getEventInfoInside', (data) => {
       Event.findById(data.eventId, (err, event) => {
+
         io.to(data.eventId).emit('getEventInside', {
-          event: event
+          event: event,
         })
+
       })
     })
 

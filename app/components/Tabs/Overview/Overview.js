@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { Header, Progress, Grid, Segment, Icon } from 'semantic-ui-react'
+import { Header, Progress, Grid, Segment, Icon, Label } from 'semantic-ui-react'
+import moment from 'moment'
 import EditEventModal from '../../Modals/EditEventModal'
 import './Overview.css'
 
@@ -7,20 +8,31 @@ export default class Overview extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      event: {}
+      event: {},
+      userName: '',
     }
   }
 
   componentDidMount() {
     this.props.socket.emit('getEventInfo', {eventId: this.props.eventId})
     this.props.socket.on('getEvent', (data) => {
-      this.setState({event: data.event})
+      // this.props.loaded()
+      this.setState({event: data.event, userName: data.user})
     })
   }
 
+  updateEvent = (event) => {
+    let saveEvent = this.state.event
+    saveEvent.title = event.title
+    saveEvent.date = event.date
+    saveEvent.startTime = event.startTime
+    saveEvent.endTime = event.endTime
+    this.setState({
+      event: saveEvent
+    })
+  }
   //time
   convertTime = (time) => {
-    console.log(time)
     let timeSplit = time.split(':')
     let hour = timeSplit[0]
     if(timeSplit[0]>12) {
@@ -32,22 +44,15 @@ export default class Overview extends React.Component {
   }
 
   render() {
-    console.log(this.state.event)
 
     //Date
     const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
-    let date = 0;
-    let day = '';
-    let month = '';
-    let year = 0;
+    let fullDay = '';
     let startTime = '';
     let endTime = '';
     if (this.state.event.date && this.state.event.startTime && this.state.event.endTime) {
-      date = new Date(this.state.event.date).getDate()+1;
-      day = dayNames[new Date(this.state.event.date).getDay()];
-      month = monthNames[new Date(this.state.event.date).getMonth()];
-      year = new Date(this.state.event.date).getFullYear();
+      fullDay = moment(this.state.event.date.substring(0,10)).format('dddd, MMMM, Do YYYY')
       startTime = this.convertTime(this.state.event.startTime);
       endTime = this.convertTime(this.state.event.endTime);
     }
@@ -56,13 +61,37 @@ export default class Overview extends React.Component {
     //Collaborators
     let collaborators = this.state.event.collaborators
     let collaboratorRender = [];
+    let ownerRender;
     if (collaborators) {
+      let colors = [
+        'red',
+        'orange',
+        'yellow',
+        'olive',
+        'green',
+        'teal',
+        'blue',
+        'violet',
+        'purple',
+        'pink',
+        'brown',
+        'grey',
+        'black'
+      ]
       collaborators.forEach((person) => {
+        let randomIndex = Math.floor(Math.random() * Math.floor(13));
         collaboratorRender.push(
-          <div>
-            {person}
-          </div>)
+          <Label circular color={colors[randomIndex]} key={colors[randomIndex]}>
+            {person.name.substring(0,1)}
+          </Label>
+        )
       })
+      let randomOwner = Math.floor(Math.random() * Math.floor(13));
+      ownerRender = (
+        <Label circular color={colors[randomOwner]} key={colors[randomOwner]}>
+          {this.state.userName}
+        </Label>
+      )
     }
 
     //THIS IS INFO FOR ALL INVITEES -- CAN SHOW INFO BASED ON THE STATUS
@@ -121,9 +150,25 @@ export default class Overview extends React.Component {
     let venueDetails = [];
     if (logistics) {
       this.state.event.allLogistics.forEach((venue) => {
-        console.log(venue)
-        if (venue.status === 'Confirmed') {
-          venueDetails.push({venueName: venue.name, venueAddress: venue.address})
+        if (venue.vORp === 'venue') {
+          venue.data.forEach(venueData => {
+            if(venueData.status === 'Confirmed') {
+              venueDetails.push({venueName: venueData.name, venueAddress: venueData.address})
+            }
+          })
+        }
+      })
+    }
+    let catererDetails = [];
+    if(logistics) {
+      this.state.event.allLogistics.forEach((caterer) => {
+        if (caterer.vORp === 'caterer') {
+          caterer.data.forEach(catererData => {
+            if(catererData.status === 'Confirmed') {
+              catererDetails.push({catererName: catererData.name, catererContact: catererData.contact})
+              console.log(catererDetails)
+            }
+          })
         }
       })
     }
@@ -145,108 +190,123 @@ export default class Overview extends React.Component {
       fundraisingPercent = parseInt(totalFundsRaised/totalGoal*100)
     }
 
-    //Need to figure out how we want to display the budget information Consult Perry and Ellie
-
     return(
       <div>
         <div className='overview-header'>
-
-          <Header className='header' as='h1'>{this.state.event.title}</Header>
-          <br />
-          <span className='eventInfo'>
-            {day}, {month} {date}, {year}
+          <div className='collaborators'>
+            Event Shared With:
             <br />
-            {startTime} to {endTime}
-            <br />
-          </span>
-          <EditEventModal socket={this.props.socket} eventId={this.props.eventId} />
+            {collaboratorRender.map((render) => {
+              return render
+            })}
+            {ownerRender}
+          </div>
+          <div>
+            <Header className='header' as='h1'>{this.state.event.title}</Header>
+            <span>
+              {fullDay}
+              <br />
+              {startTime} to {endTime}
+              <br />
+            </span>
+          </div>
+          <div className='edit-event-button'>
+            <EditEventModal updateEvent={this.updateEvent} socket={this.props.socket} eventId={this.props.eventId} />
+          </div>
         </div>
-          <Segment.Group raised clearing>
-            <Segment>
-              <div className='logisticsInfo'>
-                <h3>Logistics</h3>
-                <div>
-                  Venue:
-                  {venueDetails.map((venue) => <ul><li>{venue.venueName} | {venue.venueAddress}</li></ul>)}
-                </div>
-                <div>
-                  Caterers:
-
-                </div>
+        <Segment.Group raised clearing>
+          <Segment>
+            <div className='segment-block space-between'>
+              <div className='logistics-title'>
+                <h2>Logistics</h2>
+                <Icon color='teal' name='clipboard' size='massive'/>
               </div>
-            </Segment>
-            <Segment>
-              <Grid text-align='center' className='dashboardGrid'>
-                <Grid.Row>
-                  <Grid.Column width={5} className='icon-column'>
-                    <Icon color='teal' name='users' size='massive'/>
-                  </Grid.Column>
-                  <Grid.Column width={11}>
-                    <div className='peopleInfo'>
-                      <h3>People</h3>
-                      <div>
-                        Invited: {total}
-                      </div>
-                      <div>
-                        Attending: {attending}
-                      </div>
-                      <div>
-                        Pending: {pending}
-                      </div>
-                      <div>
-                        Not Coming: {notComing}
-                      </div>
-                    </div>
-                  </Grid.Column>
-                </Grid.Row>
-              </Grid>
-            </Segment>
-            <Segment>
-              <Grid text-align='center' className='dashboardGrid'>
-                <Grid.Row>
-                  <Grid.Column width={11} className='icon-column'>
-                    <div className='budget'>
-                      <h3>Budget</h3>
-                      {budgetPercent > 100 ?
-                        <Progress className='pbar' percent={budgetPercent} progress error />
-                        :
-                        <Progress className='pbar' percent={budgetPercent} progress inverted color='blue'/>
-                      }
-                      <div>
-                        Allocated: ${allocated}
-                      </div>
-                      <div>
-                        Total Budget: ${totalBudget}
-                      </div>
-                    </div>
-                  </Grid.Column>
-                  <Grid.Column width={5}>
-                    <Icon color='teal' name='money' size='massive'/>
-                  </Grid.Column>
-                </Grid.Row>
-              </Grid>
-            </Segment>
-            <Segment>
-              <div className='funds'>
-                <h3>Fundraising</h3>
-                {fundraisingPercent > 100 ?
-                  <Progress className='pbar' percent={fundraisingPercent} progress success />
+              <div className='logistics-fields'>
+                Venue:
+                {venueDetails.map((venue) => <ul><li>{venue.venueName} | {venue.venueAddress}</li></ul>)}
+              </div>
+              <div className='logistics-fields'>
+                Caterers:
+                {catererDetails.map((caterer) => <ul><li>{caterer.catererName} | {caterer.catererWebsite}</li></ul>)}
+              </div>
+            </div>
+          </Segment>
+          <Segment>
+            <div className='segment-block space-between'>
+              <div className='people-fields'>
+                Invited:
+                <div>{total}</div>
+              </div>
+              <div className='people-fields'>
+                Attending:
+                <div>{attending}</div>
+              </div>
+              <div className='people-fields'>
+                Pending:
+                <div>{pending}</div>
+              </div>
+              <div className='people-fields'>
+                Not Coming:
+                <div>{notComing}</div>
+              </div>
+              <div className='people-title'>
+                <h2 className='people-header'>People</h2>
+                <Icon color='teal' name='users' size='massive'/>
+              </div>
+            </div>
+          </Segment>
+          <Segment>
+            <div className='segment-block'>
+              <div className='budget-title'>
+                <h2>Budget</h2>
+                <Icon color='teal' name='usd' size='massive'/>
+              </div>
+              <div className='budget-block'>
+                {budgetPercent > 100 ?
+                  <Progress className='pbar' percent={budgetPercent} progress active error />
                   :
-                  <Progress className='pbar' percent={fundraisingPercent} progress inverted color='teal'/>
+                  <Progress className='pbar' percent={budgetPercent} progress active inverted color='blue'/>
                 }
-                <div>
-                  Campaigns:
-                  {campaigns.map((campaign) => <ul><li>{campaign}</li></ul>)}
-                </div>
-                <div>
-                  Total Raised: ${totalFundsRaised}
-                </div>
-                <div>
-                  Total Goal: ${totalGoal}
+                <div className='budget-info-block'>
+                  <div className='budget-fields'>
+                    Allocated: ${allocated}
+                  </div>
+                  <div className='budget-fields'>
+                    Total Budget: ${totalBudget}
+                  </div>
                 </div>
               </div>
-            </Segment>
-          </Segment.Group>
+            </div>
+          </Segment>
+          <Segment>
+            <div className='segment-block space-between'>
+              <div className='fundraising-block'>
+                {fundraisingPercent > 100 ?
+                  <Progress className='pbar' percent={fundraisingPercent} progress indicating success />
+                  :
+                  <Progress className='pbar' percent={fundraisingPercent} progress indicating inverted color='violet'/>
+                }
+                <div className='fundraising-info-block'>
+                  <div className='fundraising-fields'>
+                    Total Raised: ${totalFundsRaised}
+                  </div>
+                  <div className='fundraising-fields'>
+                    Total Goal: ${totalGoal}
+                  </div>
+                </div>
+              </div>
+              <div className='fundraising-fields'>
+                Campaigns:
+                {campaigns.map((campaign) => <ul><li>{campaign}</li></ul>)}
+              </div>
+              <div className='fundraising-title'>
+                <h2 className='fundraising-header'>Fundraising</h2>
+                <Icon color='teal' name='money' size='massive'/>
+              </div>
+            </div>
+          </Segment>
+          <Segment className='bottom-segment'></Segment>
+        </Segment.Group>
       </div>
     )
   }
