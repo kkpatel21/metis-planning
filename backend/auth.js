@@ -64,6 +64,7 @@ module.exports = passport => {
                 res.send(err);
                 return;
               }
+              res.send(true)
               res.redirect('/')
             });
           }
