@@ -125,7 +125,7 @@ class UserDash extends React.Component {
               Drag an Event to Delete
               <Icon
                 inverted
-                
+                color='black'
                 name="trash alternate"
               />
             </Button>

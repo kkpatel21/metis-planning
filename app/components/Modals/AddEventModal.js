@@ -84,6 +84,7 @@ class AddEventModal extends React.Component {
             Click to Create Event
             <Icon
               inverted
+              color='black'
               name="add"
               onClick={() => this.onTrigger()}
             />
