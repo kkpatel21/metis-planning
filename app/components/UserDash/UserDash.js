@@ -121,7 +121,14 @@ class UserDash extends React.Component {
           </div>
 
           <Droppable type={['event']} className="trashIcon" onDrop={() => this.deleteDrop(this.state.idBeingDeleted)}>
-            <Icon inverted color='grey' name='trash alternate' size="big" />
+            <Button icon labelPosition='left'>
+              Drag an Event to Delete
+              <Icon
+                inverted
+                color="blue"
+                name="trash alternate"
+              />
+            </Button>
           </Droppable>
         </div>
       )

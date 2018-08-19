@@ -86,7 +86,6 @@ class AddEventModal extends React.Component {
               inverted
               color="blue"
               name="add"
-              size='big'
               onClick={() => this.onTrigger()}
             />
           </Button>
