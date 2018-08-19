@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Menu, Input, Table, Icon, Label} from 'semantic-ui-react'
+import { Menu, Input, Table, Icon, Label, Button} from 'semantic-ui-react'
 import './UserDash.css';
 import CalendarView from '../CalendarView/CalendarView.js'
 import Toggle from 'react-toggle'
