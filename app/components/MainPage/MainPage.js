@@ -11,7 +11,7 @@ import io from 'socket.io-client';
 class MainPage extends React.Component {
   constructor(props) {
     super(props);
-    this.socket = io('https://sleepy-mesa-74794.herokuapp.com/')
+    this.socket = io('https://metisplanning.herokuapp.com/')
     this.state = {
       logged: false
     };
