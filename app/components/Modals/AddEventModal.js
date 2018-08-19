@@ -80,7 +80,7 @@ class AddEventModal extends React.Component {
     return (
       <Modal
         trigger={
-          <Button icon labelPosition='left' onClick={() => this.onTrigger()}>
+          <Button disabled icon labelPosition='left' onClick={() => this.onTrigger()}>
             Click to Create Event
             <Icon
               inverted
