@@ -80,12 +80,13 @@ class AddEventModal extends React.Component {
     return (
       <Modal
         trigger={
-          <Button basic color='white' icon labelPosition='left' onClick={() => this.onTrigger()}>
+          <Button basic color='blue' icon labelPosition='left' onClick={() => this.onTrigger()}>
             Click to Create Event
             <Icon
               inverted
-              color="grey"
+              color="blue"
               name="add"
+              size='big'
               onClick={() => this.onTrigger()}
             />
           </Button>
