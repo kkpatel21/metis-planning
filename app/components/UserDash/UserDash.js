@@ -58,7 +58,7 @@ class UserDash extends React.Component {
   deleteDrop = (eventId) => {
     this.props.socket.emit('deleteEvent', {id: eventId}, (data) => {
         if (data.err) {
-          console.log('Uh Oh, DeleteDrop Is Fucking Up')
+          console.log('Uh Oh, DeleteDrop Is Not Working')
         } else {
           this.getObjects()
         }
